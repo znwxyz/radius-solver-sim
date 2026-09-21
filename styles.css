@@ -1,0 +1,353 @@
+/* 한 번 해보면서 배우는 솔버 — 시뮬레이션
+   화면에는 헤더와 폰 목업만 있다. 설명은 전부 폰 안의 바닥 시트에서 한다.
+
+   색·서체는 Radius 브랜드 가이드(Version 01)를 따른다.
+   Flowline 그라데이션(#00BC9A → #00DEF0 → #009AC6)이 유일한 강조색.
+   토큰 블록은 solver-a-map, solver-wireframes 와 같은 값이다. 브랜드 색이 바뀌면 함께 고친다. */
+
+:root {
+  color-scheme: light;
+  --black: #000;
+  --ink: #111110;
+  --muted: #6d6d68;
+  --faint: #9a9a94;
+  --paper: #fff;
+  --canvas: #eef0f0;
+  --app-bg: #fbfcfc;
+  --hair: #e8eaea;
+  --hair-2: #f0f2f2;
+
+  --flow-green: #00bc9a;
+  --flow-cyan: #00def0;
+  --flow-blue: #009ac6;
+  --flowline: linear-gradient(115deg, var(--flow-green) 0%, var(--flow-cyan) 52%, var(--flow-blue) 100%);
+  --tint: rgba(0, 222, 240, .08);
+  --tint-line: rgba(0, 154, 198, .45);
+
+  --body: "DM Sans", "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
+  --mono: "DM Mono", "SFMono-Regular", ui-monospace, monospace;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 400 14px/1.6 var(--body); word-break: keep-all; overflow-wrap: anywhere; }
+h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+b, strong { font-weight: 600; }
+img { display: block; }
+:focus-visible { outline: 2.5px solid var(--flow-blue); outline-offset: 3px; }
+.skip-link { position: absolute; z-index: 20; top: -100px; left: 16px; background: var(--black); color: #fff; padding: 12px 18px; border-radius: 8px; }
+.skip-link:focus { top: 10px; }
+
+/* ── 머리 ────────────────────────────────────────
+   거래 종류 탭은 폰 안으로 들어갔다. 여기 남는 건 로고뿐이다. */
+.top { display: flex; align-items: center; justify-content: center; padding: 22px 30px 14px; }
+.wordmark img { height: 17px; width: auto; }
+/* 무엇을 해 볼까 — 이름만 쓰지 않고 무슨 축이 바뀌는지 함께 적는다.
+   유저가 이걸 읽고 직접 설정하게 하는 것이 목적이다. */
+.quests { display: grid; gap: 9px; }
+.quest { position: relative; display: grid; gap: 5px; text-align: left; border: 0; border-radius: 15px; background: var(--canvas); padding: 15px 16px; cursor: pointer; font-family: var(--body); }
+.quest-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.quest-top b { font-size: 15px; }
+.quest-top b em { font-style: normal; font-weight: 400; font-size: 12px; color: var(--muted); }
+.quest-axis { font: 11.5px var(--mono); color: var(--muted); }
+.quest.on { background: var(--paper); }
+.quest.on::before { content: ""; position: absolute; inset: 0; border-radius: 15px; padding: 2px; background: var(--flowline); pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; }
+/* 고른 카드 아래에만 열리는 예시 한 줄 */
+.eg-open { display: grid; grid-template-rows: 0fr; animation: open .54s var(--ease) forwards; }
+@keyframes open { to { grid-template-rows: 1fr; } }
+.eg { overflow: hidden; display: grid; gap: 5px; padding-top: 11px; border-top: 1px solid var(--hair-2); }
+.eg-spot { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 11px; padding: 6px 8px; box-shadow: inset 0 0 0 1.6px color-mix(in srgb, var(--c) 52%, #fff); }
+.eg-go { padding-left: 9px; font: 11px var(--mono); font-style: normal; color: var(--muted); }
+.eg-go::before { content: "↓ "; }
+/* 해 본 것은 지워진 할 일처럼 보여야 한다. 고른 것(.on)과 헷갈리면 안 된다.
+   선은 제목 줄을 가로질러 긋는다. 카드 높이는 예시를 열면 달라지므로 한가운데를 쓰지 않는다. */
+.quest .got-mark { position: relative; z-index: 1; flex: none; border-radius: 99px; background: #dfe2e2; color: var(--muted); padding: 3px 9px; font: 600 10.5px var(--body); }
+.quest.got .quest-top b, .quest.got .quest-axis { color: var(--faint); }
+.quest.got .quest-top b em { color: var(--faint); }
+.quest.got .quest-top::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; border-radius: 2px; background: #c3c7c7; }
+
+/* 잠긴 칩 — 눌러도 열리지 않고 왜 막혔는지 말해 준다 */
+.tap.locked { cursor: not-allowed; opacity: .62; }
+.lockmark { font-style: normal; font-size: 9px; margin-left: 2px; }
+.guide { margin: 10px 0 2px; border-radius: 12px; background: var(--black); color: var(--paper); padding: 11px 13px; font-size: 12px; line-height: 1.65; animation: rise .34s var(--ease); }
+.guide b { color: var(--paper); }
+.opt.off { opacity: .5; cursor: not-allowed; }
+.off-why { margin-left: auto; font-size: 10.5px; color: var(--muted); text-align: right; max-width: 55%; line-height: 1.4; }
+
+/* 결과 요약 */
+.recap { border-radius: 15px; background: var(--canvas); padding: 12px 14px; }
+.recap .block-lab { margin-bottom: 6px; }
+.recap-sum { font-size: 13px; line-height: 1.7; color: var(--ink); }
+
+/* 거래 종류 판정 — 고를 때마다 바로 바뀐다. 이 화면의 교육 장치다. */
+.verdict { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; border-radius: 13px; background: var(--canvas); padding: 10px 14px; }
+.verdict-name { font-size: 14.5px; font-weight: 600; }
+.verdict-axis { font-size: 11.5px; color: var(--muted); }
+
+/* 고를 수 있는 칩 */
+.tap { border: 0; cursor: pointer; font-family: var(--body); }
+.tap:hover { filter: brightness(.97); }
+.caret { font-style: normal; font-size: 9px; opacity: .55; margin-left: 1px; }
+
+/* 네트워크·토큰 고르기 시트 */
+.picker { border-radius: 22px 22px 40px 40px; background: var(--paper); box-shadow: 0 -14px 40px rgba(0,0,0,.14); padding: 16px 16px 20px; animation: rise .4s var(--ease); }
+@keyframes rise { from { transform: translateY(16px); opacity: 0; } }
+.picker-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.picker-head b { font-size: 14px; }
+.picker .close { width: 28px; height: 28px; border: 0; border-radius: 50%; background: var(--canvas); color: var(--muted); font-size: 12px; cursor: pointer; }
+/* 고를 게 많으면 4개쯤 보이고 아래가 잘린다. 더 있다는 것이 보여야 고르는 화면이 된다. */
+.opts-wrap { position: relative; }
+.opts { display: grid; gap: 7px; max-height: 226px; overflow-y: auto; scrollbar-width: none; }
+.opts::-webkit-scrollbar { display: none; }
+.opts-wrap[data-more]::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46px; pointer-events: none; background: linear-gradient(to bottom, rgba(255,255,255,0), var(--paper) 86%); }
+.opt { display: flex; align-items: center; gap: 10px; border: 0; border-radius: 13px; padding: 11px 13px; cursor: pointer; font-family: var(--body); background: var(--paper); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 46%, #fff); }
+.opt img { width: 24px; height: 24px; object-fit: contain; border-radius: 50%; }
+.opt b { font-size: 14px; font-weight: 600; color: color-mix(in srgb, var(--c) 72%, #111110); }
+.opt .now-mark { margin-left: auto; color: color-mix(in srgb, var(--c) 78%, #111110); font-size: 13px; }
+.opt.on { box-shadow: inset 0 0 0 2.4px color-mix(in srgb, var(--c) 85%, #fff); }
+.opt:hover { filter: brightness(.97); }
+.picking .canvas { filter: saturate(.55) brightness(.99); }
+
+/* ── 진행 위치 바 ────────────────────────────────
+   지금 어느 단계인지 보이고, 눌러서 앞뒤로 옮길 수 있다.
+   앱 화면 구간과 복기 구간이 길이로 구분된다. */
+.track { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 14px 4px; }
+.track .arrow { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.75); color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; }
+.track .arrow:hover { background: #fff; color: var(--ink); }
+.beads { display: flex; align-items: center; gap: 5px; flex: 0 1 auto; min-width: 0; }
+.beads li { flex: 0 1 26px; min-width: 7px; }
+.beads li.at, .beads li:has(.at) { flex-basis: 46px; }
+.beads button { display: block; width: 100%; height: 6px; border: 0; border-radius: 99px; background: #d8dcdc; cursor: pointer; padding: 0; transition: background .3s ease; }
+.beads button.replay { background: #c9cdcd; }
+.beads button.done { background: #b6bcbc; }
+.beads button.replay.done { background: #9aa0a0; }
+.beads button.at { background: var(--flowline); }
+.beads button:hover { filter: brightness(.94); }
+
+/* ── 폰 목업 ─────────────────────────────────────── */
+.stage { display: grid; place-items: center; padding: 18px 16px 30px; }
+/* 검은 테두리는 뺀다. 두께가 화면보다 눈에 띄면 목업이 내용을 가린다. */
+.bezel { position: relative; width: 372px; border-radius: 44px; background: var(--app-bg); padding: 12px 12px 14px; box-shadow: 0 20px 52px rgba(0,0,0,.13); }
+.statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
+.sbar { width: 48px; height: 10px; border-radius: 99px; background: #dcdfdf; }
+.homebar { width: 124px; height: 5px; border-radius: 99px; background: #d5d8d8; margin: 10px auto 2px; }
+
+/* 아이폰 화면 비율 393 : 852 을 그대로 따른다. 348 x 754 = 같은 비율. */
+.screen { display: flex; flex-direction: column; height: 754px; }
+.canvas { flex: 1; display: flex; flex-direction: column; gap: 11px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.canvas::-webkit-scrollbar { display: none; }
+
+/* 앱 바 */
+.appbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0 8px; }
+.app-title { font-size: 17px; font-weight: 600; letter-spacing: -.2px; min-width: 0; }
+.app-logo { height: 25px; width: auto; }
+.appbar .addr { flex: none; }
+.addr { font: 11px var(--mono); color: var(--muted); background: var(--canvas); border-radius: 99px; padding: 5px 11px; }
+.appbar.replay .addr { background: var(--canvas); }
+.badge { border-radius: 99px; background: var(--black); color: var(--paper); padding: 5px 13px; font: 600 11px var(--mono); }
+
+/* 체인 배지 + 토큰 — "어디에 기록됐나 · 무슨 자산인가" */
+.chain-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; padding: 4px 11px 4px 5px; background: color-mix(in srgb, var(--c) 9%, #fff); box-shadow: inset 0 0 0 1.4px color-mix(in srgb, var(--c) 42%, #fff); }
+.chain-tag img { width: 15px; height: 15px; object-fit: contain; }
+.chain-tag b { font: 11px var(--mono); font-weight: 500; white-space: nowrap; color: color-mix(in srgb, var(--c) 72%, #111110); }
+.token-pill { display: inline-flex; align-items: center; gap: 7px; border-radius: 99px; padding: 5px 12px 5px 5px; background: color-mix(in srgb, var(--c) 13%, #fff); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 38%, #fff); }
+.token-pill img { width: 24px; height: 24px; object-fit: contain; border-radius: 50%; box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px color-mix(in srgb, var(--c) 42%, #fff); }
+.token-pill b { font-size: 14px; font-weight: 600; white-space: nowrap; color: color-mix(in srgb, var(--c) 78%, #111110); }
+.token-pill i { font-style: normal; font-size: 9px; color: var(--muted); }
+/* 지갑처럼 토큰이 나란히 놓이는 곳에서도 토큰끼리 색으로 갈린다.
+   배경을 지우면 안 된다. 여기가 토큰 구분이 가장 필요한 자리다. */
+.token-pill.plain { padding: 4px 14px 4px 4px; background: color-mix(in srgb, var(--c) 13%, #fff); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 36%, #fff); }
+.token-pill.plain img { width: 28px; height: 28px; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px color-mix(in srgb, var(--c) 45%, #fff); }
+.token-pill.plain b { color: color-mix(in srgb, var(--c) 78%, #111110); }
+
+/* 0 단계 · 연결 전 */
+.connect { flex: 1; display: grid; place-content: center; justify-items: center; gap: 8px; text-align: center; }
+.orb { width: 62px; height: 62px; border-radius: 50%; background: var(--flowline); margin-bottom: 6px; }
+.orb.pulse { animation: breathe 2.6s var(--ease) infinite; }
+@keyframes breathe { 0%,100% { transform: scale(.86); opacity: .45; } 50% { transform: scale(1); opacity: .9; } }
+.big { font-size: 17px; font-weight: 600; }
+.sub { font-size: 12.5px; color: var(--muted); }
+
+/* 0 단계 · 보유 자산 */
+.scroller { display: grid; gap: 9px; align-content: start; }
+/* 테두리도 긁히는 순서대로 물든다. 줄마다 --d 만큼 늦게 시작한다. */
+.netgroup { border-radius: 15px; padding: 11px 13px 6px; background: var(--paper); box-shadow: inset 0 0 0 1.7px color-mix(in srgb, var(--c) 52%, #fff); transition: box-shadow .48s var(--ease) calc(var(--d, 0ms) + 120ms); }
+.netgroup .chain-tag { margin-bottom: 4px; }
+.hold { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 2px; border-top: 1px solid var(--hair-2); }
+.netgroup .hold:first-of-type { border-top: 0; }
+.hold .amt { text-align: right; font-size: 14.5px; font-weight: 600; white-space: nowrap; }
+.hold .amt small { display: block; font-size: 10.5px; font-weight: 400; color: var(--faint); }
+.hold.zero { opacity: .5; }
+
+/* 1 단계 · 스왑 UI */
+.side { border-radius: 17px; padding: 13px 14px 11px; background: var(--paper); box-shadow: inset 0 0 0 1.7px color-mix(in srgb, var(--c) 52%, #fff); }
+.side-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.side-lab { font: 11px var(--mono); color: var(--faint); letter-spacing: .06em; }
+.side-mid { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.amt-in { display: block; font: 600 25px/1.2 var(--body); letter-spacing: -.6px; white-space: nowrap; }
+.side-mid > .slot, .side-mid > .amt-in { flex: 1; min-width: 0; }
+.side-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; font-size: 11px; color: var(--faint); }
+.flip { display: grid; place-items: center; margin: -19px 0; position: relative; z-index: 2; }
+.flip span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 11px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair), 0 2px 6px rgba(0,0,0,.06); color: var(--muted); font-size: 14px; }
+.quote { border-radius: 15px; background: var(--canvas); padding: 11px 13px; }
+.quote-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 12px; }
+.quote-row span { color: var(--muted); }
+.quote-row b { font-weight: 600; }
+
+/* 3 단계 · 결과 */
+.done { display: grid; place-items: center; gap: 7px; padding: 18px 0 14px; }
+.tick { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--flowline); color: var(--black); font-size: 23px; }
+.changed { border-radius: 15px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); padding: 12px 13px; }
+.block-lab { font: 11px var(--mono); color: var(--faint); margin-bottom: 8px; }
+.delta { border-radius: 12px; padding: 9px 10px; background: var(--paper); box-shadow: inset 0 0 0 1.6px color-mix(in srgb, var(--c) 52%, #fff); }
+.delta + .delta { margin-top: 8px; }
+.delta-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ba { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; margin-top: 7px; font-size: 14px; white-space: nowrap; }
+.ba s { color: var(--faint); text-decoration-thickness: 1px; font-size: 12.5px; }
+.ba i { font-style: normal; color: var(--muted); font-size: 11px; }
+.ba b { font-weight: 600; }
+
+/* ── 등장 ────────────────────────────────────────
+   블록이 위에서부터 차례로 올라온다. .fresh(= 단계가 바뀜)일 때만 돈다. */
+@keyframes enter { from { opacity: 0; transform: translateY(9px); } }
+.fresh .rise { animation: enter .82s var(--ease) calc(var(--i, 0) * .17s) both; }
+
+/* ── 복기로 넘어가는 장면 ────────────────────────
+   0.0s 두 카드가 벌어진다 → 0.7s 틈에서 동그라미가 자란다 → 1.4s 화면을 덮는다
+   → 1.9s 응답한 솔버들이 온다 → 2.9s 말풍선 → 3.3/3.9/4.5s 세 가지 물음.
+   자리를 밀어내는 속성은 쓰지 않는다. */
+.play { position: relative; flex: 1; min-height: 0; display: grid; place-items: center; overflow: hidden; }
+.play .act { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 10px; }
+
+.cards { animation: leave .75s var(--ease) 2.25s forwards; }
+.mini { display: block; width: 84%; }
+.mini .eg-spot { width: 100%; background: var(--paper); }
+.mini.up   { animation: driftUp   1.35s var(--ease) .38s both; }
+.mini.down { animation: driftDown 1.35s var(--ease) .38s both; }
+@keyframes driftUp   { from { transform: translateY(34px); } to { transform: translateY(-14px); } }
+@keyframes driftDown { from { transform: translateY(-34px); } to { transform: translateY(14px); } }
+@keyframes leave { to { opacity: 0; } }
+
+.bloom { position: absolute; width: 62px; height: 62px; border-radius: 50%; background: var(--flowline); animation: bloom 2.4s var(--ease) 1.05s both; }
+@keyframes bloom {
+  0%   { transform: scale(0);  opacity: 0; }
+  22%  { transform: scale(1);  opacity: 1; }
+  44%  { transform: scale(1);  opacity: 1; }
+  88%  { transform: scale(15); opacity: 1; }
+  100% { transform: scale(18); opacity: 0; }
+}
+
+.play .crowd { --rail: min(100%, 316px); gap: 30px; animation: arrive .75s var(--ease) 2.9s both; }
+@keyframes arrive { from { opacity: 0; } to { opacity: 1; } }
+/* 칸을 고르게 나눠 다섯이 나란히 선다 */
+.faces { width: var(--rail); display: grid; grid-template-columns: repeat(var(--n), 1fr); align-items: end; }
+.face { display: grid; justify-items: center; gap: 5px; animation: faceIn .68s var(--ease) calc(3s + var(--i) * .14s) both; }
+@keyframes faceIn { from { opacity: 0; transform: translateY(12px) scale(.9); } }
+.face .head { width: 30px; height: 30px; border-radius: 50%; background: #dfe3e3; }
+.face b { font: 600 9.5px var(--mono); color: var(--faint); white-space: nowrap; }
+.face.is-radius .head { background: var(--flowline); }
+.face.is-radius b { color: var(--ink); }
+
+/* 고민은 누구 하나의 것이 아니라 다 같이 하는 것이라 머리 위아래로 흩뿌린다 */
+.asks { width: var(--rail); display: grid; justify-items: start; gap: 7px; }
+.asks li { position: relative; max-width: calc(100% - 24px); border-radius: 14px; background: var(--paper); box-shadow: 0 4px 14px rgba(0,0,0,.07), inset 0 0 0 1.4px var(--hair); padding: 8px 12px; font-size: 12.5px; line-height: 1.45;
+  transform: translateX(var(--x, 0)); animation: askIn .75s var(--ease) calc(4.05s + var(--i) * .42s) both; }
+/* 흩뿌리는 자리. 오른쪽에 붙인 것은 왼쪽으로만, 왼쪽에 붙인 것은 오른쪽으로만 민다.
+   그래야 어긋난 방향으로 밀려 화면 밖으로 나가지 않는다. */
+.crowd > .asks:first-of-type li:nth-child(1) { justify-self: start; --x: 0; }
+.crowd > .asks:first-of-type li:nth-child(2) { justify-self: end;   --x: -8px; }
+.crowd > .asks:first-of-type li:nth-child(3) { justify-self: start; --x: 20px; }
+.crowd > .asks:last-of-type  li:nth-child(1) { justify-self: end;   --x: -16px; }
+.crowd > .asks:last-of-type  li:nth-child(2) { justify-self: start; --x: 12px; }
+.crowd > .asks:last-of-type  li:nth-child(3) { justify-self: end;   --x: -4px; }
+/* 생각 꼬리 — 위쪽 줄은 아래로, 아래쪽 줄은 위로 */
+.asks li::after { content: ""; position: absolute; left: 18px; bottom: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1.4px var(--hair); }
+.crowd > .asks:last-of-type li::after { bottom: auto; top: -4px; }
+.asks li:nth-child(even)::after { left: auto; right: 18px; }
+@keyframes askIn { from { opacity: 0; transform: translateX(var(--x, 0)) translateY(6px) scale(.96); } }
+
+.row.picked .state { color: rgba(255,255,255,.7); font-weight: 600; }
+
+/* ── 가림 라벨 — 긁어서 여는 복권 ────────────────
+   색칠된 곳만 따라 누르면 진행된다. 값보다 "이 자리가 무엇인지"를 먼저 읽게 한다.
+   라벨은 실제 내용 위에 겹쳐 놓이고, 긁으면 왼쪽부터 벗겨지며 아래가 드러난다.
+   여러 자리가 동시에 열릴 때는 --d 지연으로 위에서 아래, 왼쪽에서 오른쪽 차례가 보인다. */
+/* 슬롯은 언제나 "열린 뒤의 내용" 크기를 그대로 차지한다.
+   라벨을 그 위에 띄워 두기 때문에, 긁기 전후로 글자 위치가 움직이지 않는다.
+   (라벨 크기에 맞춰 잡으면 열리는 순간 숫자가 튄다.) */
+.slot { position: relative; display: inline-block; vertical-align: middle; }
+/* 라벨은 열린 뒤 내용이 놓일 바로 그 자리에 붙인다.
+   가운데에 두면 슬롯 너비가 값마다 달라서 라벨이 들쭉날쭉하고,
+   벗겨지는 순간 숫자가 옆으로 옮겨 간 것처럼 보인다. */
+.slot > .veil { position: absolute; top: 50%; left: 0; transform: translateY(-50%); }
+/* 어느 모서리에 붙일지는 자리가 아니라 항목이 정한다.
+   같은 줄에 토큰(왼쪽)과 잔액(오른쪽)이 함께 있어서, 줄 단위로 정하면 한쪽이 어긋난다. */
+.slot[data-kind="balance"] > .veil,
+.slot[data-kind="addr"] > .veil { left: auto; right: 0; }
+.slot .real { display: inline-block; opacity: 0; transform: scale(.96); }
+.slot.open .real { opacity: 1; transform: none; }
+.slot.opening .real { opacity: 1; transform: none; transition: opacity .5s var(--ease) calc(var(--d, 0ms) + 180ms), transform .66s var(--ease) calc(var(--d, 0ms) + 180ms); }
+.slot .veil { z-index: 2; }
+.slot.opening .veil { animation: peel .69s var(--ease) var(--d, 0ms) forwards; pointer-events: none; }
+@keyframes peel {
+  0%   { clip-path: inset(0 0 0 0);      opacity: 1; }
+  55%  { clip-path: inset(0 0 0 52%);    opacity: 1; }
+  100% { clip-path: inset(0 0 0 100%);   opacity: 0; }
+}
+.veil { position: relative; display: inline-flex; align-items: center; gap: 6px; overflow: hidden; border: 0; border-radius: 99px; padding: 6px 12px; font: 600 11.5px var(--body); line-height: 1.25; white-space: nowrap; }
+.veil.now { background: var(--flowline); color: var(--black); cursor: pointer; box-shadow: 0 0 0 4px rgba(0,222,240,.22); }
+.veil.now i { width: 5px; height: 5px; border-radius: 50%; background: rgba(0,0,0,.38); }
+.veil.now::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.6) 50%, transparent 62%); transform: translateX(-110%); animation: sweep 3.6s var(--ease) infinite; }
+.veil.now:hover { filter: brightness(1.06); }
+.veil.now:active { transform: translateY(-50%) scale(.97); }   /* 세로 보정을 잃지 않게 함께 쓴다 */
+.veil.wait { background: #e7eaea; color: #a6a9a9; font-weight: 500; }
+.pick-blank { position: static; transform: none; }
+@keyframes sweep { 0% { transform: translateX(-110%); } 55%, 100% { transform: translateX(110%); } }
+@keyframes wink { 0%, 100% { box-shadow: 0 0 0 4px rgba(0,222,240,.22); } 50% { box-shadow: 0 0 0 7px rgba(0,222,240,.1); } }
+.veil.now { animation: wink 3s var(--ease) infinite; }
+.side-mid .veil.wait { font-size: 13px; padding: 9px 15px; }
+.side-mid .veil { font-size: 13px; padding: 9px 15px; }
+.tap-hint { display: flex; align-items: center; gap: 7px; margin-top: 10px; font-size: 11.5px; color: #bdbdb7; }
+.tap-hint em { font-style: normal; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--flowline); }
+
+
+/* 솔버를 거쳐서 얻는 것 — 좋은 점 한 줄, 왜 그런지 한 줄 */
+.perk-head { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+.perks { display: grid; gap: 9px; }
+.perks li { border-radius: 14px; background: var(--canvas); padding: 12px 14px; }
+.perks b { display: block; font-size: 13.5px; }
+.perks p { margin-top: 4px; font-size: 11.5px; line-height: 1.6; color: var(--muted); }
+
+/* ── 아래 버튼 바 — 설명은 화면 안에 있고 여기는 다음으로 가는 곳이다 ── */
+.bar { padding: 8px 16px 6px; }
+.cta { width: 100%; border: 0; border-radius: 14px; padding: 15px 16px; font: 600 13.5px var(--body); cursor: pointer; }
+.cta.now { background: var(--flowline); color: var(--black); box-shadow: 0 0 0 4px rgba(0,222,240,.2); }
+.cta.waiting { background: var(--canvas); color: #9a9a94; }
+
+/* ── 단서 ────────────────────────────────────────── */
+.foot { max-width: 620px; margin: 0 auto; padding: 4px 22px 54px; }
+.foot summary { cursor: pointer; padding: 12px 0; font-size: 12.5px; color: var(--muted); }
+.foot ul { display: grid; gap: 4px; padding-bottom: 10px; }
+.foot li { position: relative; padding-left: 16px; font-size: 12px; line-height: 1.8; color: var(--muted); }
+.foot li::before { content: ""; position: absolute; left: 0; top: 10px; width: 7px; height: 2px; border-radius: 2px; background: #b8bcbc; }
+.foot b { color: var(--ink); }
+.foot code { font: 11px var(--mono); background: var(--paper); border-radius: 5px; padding: 1px 5px; }
+
+@media (max-width: 460px) {
+  .top { padding: 14px 14px 10px; gap: 12px; justify-content: center; }
+  .tabs button { padding: 8px 12px; font-size: 12px; }
+  .stage { padding: 6px 8px 22px; }
+  .bezel { width: 100%; max-width: 372px; border-radius: 38px; box-shadow: 0 12px 30px rgba(0,0,0,.11); }
+  .foot { padding: 4px 16px 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* 장면 전환은 시간이 곧 설명이다. 끄면 마지막 장면을 바로 보여 준다. */
+  .cards, .bloom { display: none; }
+  .crowd, .face, .asks li, .fresh .rise { animation: none; }
+  .orb.pulse, .veil.now, .veil.now::after, .slot.opening .veil { animation: none; }
+  .slot.opening .real { transition: none; }
+  .netgroup { transition: none; }
+}
+@media print { .top, .cta, .skip-link { display: none; } }

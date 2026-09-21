@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="지갑 연결부터 스왑·브릿지·크로스체인 스왑까지, 앱 화면 안에서 체인과 토큰과 솔버를 배우는 시뮬레이션.">
+  <title>한 번 해보면서 배우는 솔버 · Radius</title>
+  <!-- 폰트를 웹에서 받아 온다. 설치된 기기에서는 로컬 폰트를 먼저 쓰고, 없으면 여기서 받는다.
+       네트워크가 없으면 시스템 폰트로 떨어질 뿐 화면은 그대로 돈다. -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#screen">앱 화면으로 바로 가기</a>
+
+  <div class="top">
+    <a class="wordmark" href="./index.html" aria-label="처음으로"><img src="brand/Radius_horizontallogo_black.svg" alt="Radius"></a>
+  </div>
+
+  <nav class="track" aria-label="진행 위치">
+    <button class="arrow" type="button" data-move="-1" aria-label="이전 단계">‹</button>
+    <ol class="beads" id="beads"></ol>
+    <button class="arrow" type="button" data-move="1" aria-label="다음 단계">›</button>
+  </nav>
+
+  <main class="stage">
+    <div class="bezel">
+      <div class="statusbar"><span>9:41</span><span class="sbar" aria-hidden="true"></span></div>
+      <div class="screen" id="screen" role="region" aria-live="polite"></div>
+      <div class="homebar" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <details>
+      <summary>주의사항</summary>
+      <ul>
+        <li>참여·경쟁·정산 방식은 프로토콜마다 다르다.</li>
+        <li>같은 체인 스왑이라고 솔버가 없는 것이 아니다. 솔버를 거칠지 말지는 거래 종류의 성질이 아니라 쓰는 서비스가 정하는 경로다.</li>
+        <li>유저는 솔버를 고를 수 없다. 여러 솔버 중 누가 실행하게 되는지는 프로토콜의 규칙이 정한다.</li>
+        <li>거래 체결이 반드시 보장되는 것은 아니다. 조건에 맞는 참여자가 없으면 거래가 성립하지 않는 때도 있다. 이 시뮬레이션은 체결된 경우만 보여 준다.</li>
+        <li>받는 수량·환율·수수료는 시세와 조건에 따라 달라진다. 이 화면은 설명을 위해 만든 것이며, 수치는 전부 예시일 뿐 실제 거래 앱이 아니다.</li>
+      </ul>
+    </details>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="sim.js"></script>
+</body>
+</html>
