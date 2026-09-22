@@ -342,9 +342,13 @@ img { display: block; }
     튀는 건 앞의 1초뿐이고 나머지는 쉰다 — 계속 튀면 시끄럽다. */
 .lid i { width: 12px; height: 12px; border-radius: 50%; background: var(--flowline);
   animation: bob 2.2s var(--ease) calc(var(--i, 0) * .14s) infinite;
-  /* 무한 애니메이션이 있으면 점이 따로 떠서 카드 평면에서 빠져나간다.
-     그러면 카드를 뒤집을 때 뒷면 너머로 점만 비친다. 스스로 등을 가리게 한다. */
-  backface-visibility: hidden; }
+  /* 뒤집을 때 점만 남아 비쳤다. backface-visibility 로는 못 막는다 —
+     부모(.lid)가 transform-style: flat 이라 점은 그 평면에 눌려 들어가고,
+     제 등이 뒤로 돌아가는 일이 없어서 hidden 이 걸리지 않는다.
+     그래서 3D 에 기대지 않고 뒤집는 순간 그냥 지운다.
+     돌아올 때는 앞면이 실제로 보이기 시작한 뒤(.32s)에 나타난다. */
+  transition: opacity .2s var(--ease) .32s; }
+.card.on .lid i { opacity: 0; animation: none; transition-delay: 0s; }
 @keyframes bob {
   0%   { transform: translateY(0); }
   12%  { transform: translateY(-6px); }
