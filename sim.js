@@ -106,10 +106,9 @@
   }
 
   /* 이 미션에서 유저가 직접 골라야 하는 받는 쪽 항목. 잠긴 쪽은 따라오므로 뺀다. */
-  function needs() {
-    var lock = S.kinds[mission].lock;
-    return ['chain', 'token'].filter(function (w) { return w !== lock; });
-  }
+  /* 받는 쪽은 둘 다 직접 고른다. 따라오는 축이라고 미리 채워 두면
+     내가 고르지도 않은 것이 정해져 있는 화면이 된다. 고르는 순간 규칙이 설명된다. */
+  function needs() { return ['chain', 'token']; }
 
   /* 아직 고르지 않은 것 중 첫 번째. 그 자리 하나만 빛난다. */
   function nextPick() {
@@ -136,7 +135,10 @@
         if (mission === 'swap' && side === 'from' && S.tokensOn[c].length < 2) {
           return { key: c, ok: false, why: '이 네트워크엔 토큰이 하나뿐이야. 바꿀 상대가 없지.' };
         }
-        if (side === 'to' && c === from.chain) return { key: c, ok: false, why: m.sameChainGuide };
+        // 체인이 따라오는 거래(스왑)는 오히려 같은 네트워크만 맞다. 반대로 막으면 안 된다.
+        if (side === 'to' && c === from.chain && m.lock !== 'chain') {
+          return { key: c, ok: false, why: m.sameChainGuide };
+        }
         if (side === 'to' && S.tokensOn[c].indexOf(to.token) < 0 && mission === 'bridge') {
           return { key: c, ok: false, why: '이 네트워크엔 ' + S.tokens[to.token].name + ' 가 없어. 없는 토큰은 받을 수 없지.' };
         }
@@ -147,7 +149,8 @@
       if (mission === 'bridge' && side === 'from' && chainsWith(t, from.chain).length === 0) {
         return { key: t, ok: false, why: '이 토큰은 다른 네트워크에 없어. 옮길 데가 없지.' };
       }
-      if (side === 'to' && t === from.token && mission !== 'bridge') {
+      // 토큰이 따라오는 거래(브릿지)는 같은 토큰이 맞다.
+      if (side === 'to' && t === from.token && m.lock !== 'token') {
         return { key: t, ok: false, why: '내는 토큰과 같으면 바뀌는 게 없지. 다른 토큰을 골라야 해.' };
       }
       return { key: t, ok: true };
