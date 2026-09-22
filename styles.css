@@ -309,6 +309,10 @@ img { display: block; }
 .veil.now:active { transform: translateY(-50%) scale(.97); }   /* 세로 보정을 잃지 않게 함께 쓴다 */
 .veil.wait { background: #e7eaea; color: #a6a9a9; font-weight: 500; }
 .pick-blank { position: static; transform: none; }
+/* 빈칸은 절대 위치가 아니라 세로 보정이 필요 없다. 위 규칙을 그대로 받으면
+   누르는 순간 제 높이의 절반만큼 위로 튀어, 아래쪽을 누른 손가락 밑에서 빠져나간다.
+   그러면 click 이 아예 생기지 않아 "여러 번 눌러야 열린다"가 된다. */
+.veil.now.pick-blank:active { transform: scale(.97); }
 @keyframes sweep { 0% { transform: translateX(-110%); } 55%, 100% { transform: translateX(110%); } }
 @keyframes wink { 0%, 100% { box-shadow: 0 0 0 4px rgba(0,222,240,.22); } 50% { box-shadow: 0 0 0 7px rgba(0,222,240,.1); } }
 .veil.now { animation: wink 3s var(--ease) infinite; }
