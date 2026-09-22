@@ -335,12 +335,33 @@ img { display: block; }
 .foot b { color: var(--ink); }
 .foot code { font: 11px var(--mono); background: var(--paper); border-radius: 5px; padding: 1px 5px; }
 
-@media (max-width: 460px) {
-  .top { padding: 14px 14px 10px; gap: 12px; justify-content: center; }
-  .tabs button { padding: 8px 12px; font-size: 12px; }
-  .stage { padding: 6px 8px 22px; }
-  .bezel { width: 100%; max-width: 372px; border-radius: 38px; box-shadow: 0 12px 30px rgba(0,0,0,.11); }
-  .foot { padding: 4px 16px 40px; }
+/* 폰에서 보는 경우 —
+   목업은 833px 인데 폰 화면은 640~750px 이라 아래 버튼이 잘린다. 버튼이 다음으로 가는
+   유일한 수단이라 잘리면 안 된다. 그렇다고 통째로 줄이면 본문이 8~11px 이 되어 못 읽는다.
+
+   그래서 폰에서는 아이폰 비율 흉내를 그만둔다. 보는 사람의 폰이 곧 폰이다.
+   화면 높이를 보이는 만큼으로 두면 글자는 제 크기 그대로고 버튼은 늘 바닥에 붙는다.
+   내용이 길면 폰 안쪽(.canvas)에서 스크롤된다 — 원래 그렇게 만들어 뒀다. */
+@media (max-width: 720px) {
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+
+  .top { padding: 12px 14px 6px; }
+  .wordmark img { height: 15px; }
+  .track { padding: 0 12px 2px; }
+
+  .stage { flex: 1; min-height: 0; padding: 0 8px 8px; }
+  /* min-height:0 이 없으면 격자 칸 안에서 내용 크기 아래로 안 줄어든다 */
+  .bezel { width: 100%; max-width: 372px; height: 100%; min-height: 0; display: flex; flex-direction: column;
+           border-radius: 30px; padding: 6px 10px 8px;
+           box-shadow: 0 8px 24px rgba(0,0,0,.10); }
+  .screen { height: auto; flex: 1; min-height: 0; }
+  .canvas { min-height: 0; }        /* 안 넣으면 내용이 폰 밖으로 샌다 */
+  .statusbar { padding: 6px 14px; }
+  .homebar { margin: 6px auto 0; }
+
+  .foot { flex: none; padding: 2px 16px 18px; }
+  .foot summary { padding: 8px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   /* 장면 전환은 시간이 곧 설명이다. 끄면 마지막 장면을 바로 보여 준다. */
