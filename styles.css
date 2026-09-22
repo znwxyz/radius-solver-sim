@@ -331,8 +331,8 @@ img { display: block; }
 /* 앞면 — 덮여 있다는 것이 보여야 누른다 */
 .lid { background: var(--canvas); grid-auto-flow: column; justify-content: space-between; align-items: center; }
 .lid b { font-size: 13.5px; font-weight: 600; color: var(--muted); }
-.lid i { font: 500 10.5px var(--mono); font-style: normal; color: var(--faint);
-  border-radius: 99px; background: var(--paper); padding: 4px 9px; }
+ /* 눌러야 할 곳이라는 표시. 다른 화면에서 쓰던 그 동그라미와 같은 것이다. */
+.lid i { width: 12px; height: 12px; border-radius: 50%; background: var(--flowline); }
 .card:hover .lid { background: #e7eaea; }
 
 /* 뒷면 — 답 */

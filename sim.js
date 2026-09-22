@@ -436,7 +436,7 @@
       return '<li class="perk rise" style="--i:' + (i + 1) + '">' +
         '<button class="card' + (on ? ' on' : '') + '" type="button" data-perk="' + i + '" ' +
         'aria-expanded="' + on + '">' +
-        '<span class="lid"><b>' + esc(p.key) + '</b><i aria-hidden="true">뒤집기</i></span>' +
+        '<span class="lid"><b>' + esc(p.key) + '</b><i aria-hidden="true"></i></span>' +
         '<span class="answer"><b>' + esc(p.good) + '</b><p>' + esc(p.why) + '</p></span>' +
         '</button></li>';
     }).join('');
