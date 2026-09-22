@@ -341,7 +341,10 @@ img { display: block; }
     다섯이 한꺼번에 튀면 정신없어서 --i 만큼 늦게 시작해 물결처럼 간다.
     튀는 건 앞의 1초뿐이고 나머지는 쉰다 — 계속 튀면 시끄럽다. */
 .lid i { width: 12px; height: 12px; border-radius: 50%; background: var(--flowline);
-  animation: bob 2.2s var(--ease) calc(var(--i, 0) * .14s) infinite; }
+  animation: bob 2.2s var(--ease) calc(var(--i, 0) * .14s) infinite;
+  /* 무한 애니메이션이 있으면 점이 따로 떠서 카드 평면에서 빠져나간다.
+     그러면 카드를 뒤집을 때 뒷면 너머로 점만 비친다. 스스로 등을 가리게 한다. */
+  backface-visibility: hidden; }
 @keyframes bob {
   0%   { transform: translateY(0); }
   12%  { transform: translateY(-6px); }
