@@ -336,8 +336,19 @@ img { display: block; }
 /* 앞면 — 덮여 있다는 것이 보여야 누른다 */
 .lid { background: var(--canvas); grid-auto-flow: column; justify-content: space-between; align-items: center; }
 .lid b { font-size: 13.5px; font-weight: 600; color: var(--muted); }
- /* 눌러야 할 곳이라는 표시. 다른 화면에서 쓰던 그 동그라미와 같은 것이다. */
-.lid i { width: 12px; height: 12px; border-radius: 50%; background: var(--flowline); }
+ /* 눌러야 할 곳이라는 표시. 다른 화면에서 쓰던 그 동그라미와 같은 것이다.
+    가만히 있으면 그냥 점이다. 통통 튀어야 눌러 보고 싶어진다.
+    다섯이 한꺼번에 튀면 정신없어서 --i 만큼 늦게 시작해 물결처럼 간다.
+    튀는 건 앞의 1초뿐이고 나머지는 쉰다 — 계속 튀면 시끄럽다. */
+.lid i { width: 12px; height: 12px; border-radius: 50%; background: var(--flowline);
+  animation: bob 2.2s var(--ease) calc(var(--i, 0) * .14s) infinite; }
+@keyframes bob {
+  0%   { transform: translateY(0); }
+  12%  { transform: translateY(-6px); }
+  24%  { transform: translateY(0); }
+  32%  { transform: translateY(-2px); }
+  42%, 100% { transform: translateY(0); }
+}
 .card:hover .lid { background: #e7eaea; }
 
 /* 뒷면 — 답 */
@@ -408,7 +419,7 @@ img { display: block; }
 @media (prefers-reduced-motion: reduce) {
   /* 장면 전환은 시간이 곧 설명이다. 끄면 마지막 장면을 바로 보여 준다. */
   .cards, .bloom { display: none; }
-  .crowd, .face, .asks li, .fresh .rise, .fresh .bar { animation: none; }
+  .crowd, .face, .asks li, .fresh .rise, .fresh .bar, .lid i { animation: none; }
   .card { transition: none; }
   .orb.pulse, .veil.now, .veil.now::after, .slot.opening .veil { animation: none; }
   .slot.opening .real { transition: none; }
