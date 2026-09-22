@@ -20,6 +20,7 @@
 
   var opened = Object.create(null);
   var done = Object.create(null);        // 만들어 본 거래 종류
+  var flipped = Object.create(null);     // 뒤집어 본 장점 카드
   var mission = null;                    // 지금 만들어 보기로 한 거래. 고르기 전엔 없다
   var chosen = Object.create(null);      // 받는 쪽에서 유저가 직접 고른 것
   var guide = '';                        // 막혔을 때 띄우는 안내
@@ -69,6 +70,7 @@
   function setMission(k) {
     mission = k;
     chosen = Object.create(null);        // 미션이 바뀌면 다시 고르게 한다
+    flipped = Object.create(null);       // 장점 카드도 다시 덮는다
     from = { chain: START[k].from.chain, token: START[k].from.token };
     to   = { chain: START[k].to.chain,   token: START[k].to.token };
   }
@@ -425,10 +427,18 @@
       '</div>';
   }
 
-  /* 솔버를 거쳐서 유저가 얻는 것. 좋은 점 한 줄과 '왜 그런가' 한 줄을 붙여 둔다. */
+  /* 솔버를 거쳐서 유저가 얻는 것.
+     한꺼번에 쏟지 않는다. 앞면에는 무엇에 대한 이야기인지만 두고, 뒤집어야 답이 나온다.
+     지갑 화면에서 라벨을 긁어 여는 것과 같은 방식이다 — 읽는 사람이 한 장씩 만나게 된다. */
   function perksScreen() {
     var rows = S.perks.list.map(function (p, i) {
-      return '<li class="rise" style="--i:' + (i + 1) + '"><b>' + esc(p.good) + '</b><p>' + esc(p.why) + '</p></li>';
+      var on = Boolean(flipped[i]);
+      return '<li class="perk rise" style="--i:' + (i + 1) + '">' +
+        '<button class="card' + (on ? ' on' : '') + '" type="button" data-perk="' + i + '" ' +
+        'aria-expanded="' + on + '">' +
+        '<span class="lid"><b>' + esc(p.key) + '</b><i aria-hidden="true">뒤집기</i></span>' +
+        '<span class="answer"><b>' + esc(p.good) + '</b><p>' + esc(p.why) + '</p></span>' +
+        '</button></li>';
     }).join('');
     return replayBar(kind().name) +
       '<h3 class="perk-head rise" style="--i:0">' + esc(S.perks.head) + '</h3>' +
@@ -557,6 +567,15 @@
     var opt = t.closest('[data-choose]');
     if (opt) return choose(opt.dataset.choose);
     if (t.closest('[data-close]')) { picker = null; return render(); }
+    var perk = t.closest('[data-perk]');
+    if (perk) {
+      // 다시 그리지 않는다. 새로 만든 카드는 이미 뒤집힌 채로 나타나서 뒤집는 동작이 사라진다.
+      var at2 = perk.dataset.perk;
+      flipped[at2] = !flipped[at2];
+      perk.classList.toggle('on', Boolean(flipped[at2]));
+      perk.setAttribute('aria-expanded', String(Boolean(flipped[at2])));
+      return;
+    }
     var quest = t.closest('[data-quest]');
     if (quest) { setMission(quest.dataset.quest); guide = ''; return render(); }
     var pick = t.closest('[data-pick]');

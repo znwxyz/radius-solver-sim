@@ -313,12 +313,32 @@ img { display: block; }
 .tap-hint em { font-style: normal; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--flowline); }
 
 
-/* 솔버를 거쳐서 얻는 것 — 좋은 점 한 줄, 왜 그런지 한 줄 */
+/* 솔버를 거쳐서 얻는 것 — 앞면은 무엇에 대한 이야기인지, 뒤집으면 답.
+   앞뒤가 같은 상자를 써야 뒤집을 때 줄이 밀리지 않아서 높이를 고정한다. */
 .perk-head { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
 .perks { display: grid; gap: 9px; }
-.perks li { border-radius: 14px; background: var(--canvas); padding: 12px 14px; }
-.perks b { display: block; font-size: 13.5px; }
-.perks p { margin-top: 4px; font-size: 11.5px; line-height: 1.6; color: var(--muted); }
+.perk { perspective: 900px; }
+.card { position: relative; display: block; width: 100%; height: 86px; border: 0; padding: 0;
+  background: none; font-family: var(--body); cursor: pointer; text-align: left;
+  transform-style: preserve-3d; transition: transform .62s var(--ease); }
+.card.on { transform: rotateY(180deg); }
+/* 이름은 .lid / .answer 다. 장면 화면의 솔버 아바타가 이미 .face 를 쓰고 있어서
+   같은 이름을 쓰면 그쪽 글꼴·정렬이 넘어온다. */
+.lid, .answer { position: absolute; inset: 0; display: grid; align-content: center;
+  justify-items: start; gap: 4px; border-radius: 14px; padding: 12px 14px;
+  backface-visibility: hidden; color: var(--ink); }
+
+/* 앞면 — 덮여 있다는 것이 보여야 누른다 */
+.lid { background: var(--canvas); grid-auto-flow: column; justify-content: space-between; align-items: center; }
+.lid b { font-size: 13.5px; font-weight: 600; color: var(--muted); }
+.lid i { font: 500 10.5px var(--mono); font-style: normal; color: var(--faint);
+  border-radius: 99px; background: var(--paper); padding: 4px 9px; }
+.card:hover .lid { background: #e7eaea; }
+
+/* 뒷면 — 답 */
+.answer { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--hair); transform: rotateY(180deg); }
+.answer b { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.answer p { font-size: 11.5px; line-height: 1.55; color: var(--muted); }
 
 /* ── 아래 버튼 바 — 설명은 화면 안에 있고 여기는 다음으로 가는 곳이다 ── */
 .bar { padding: 8px 16px 6px; }
@@ -384,6 +404,7 @@ img { display: block; }
   /* 장면 전환은 시간이 곧 설명이다. 끄면 마지막 장면을 바로 보여 준다. */
   .cards, .bloom { display: none; }
   .crowd, .face, .asks li, .fresh .rise, .fresh .bar { animation: none; }
+  .card { transition: none; }
   .orb.pulse, .veil.now, .veil.now::after, .slot.opening .veil { animation: none; }
   .slot.opening .real { transition: none; }
   .netgroup { transition: none; }
