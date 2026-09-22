@@ -27,6 +27,7 @@
   var picker = null;
   var pass = null, busy = false;
   var at = 0;
+  var waitWhy = '';                      // 아직 못 넘어가는 이유
   var shown = -1;                        // 마지막으로 등장 모션을 돌린 단계
   var shownAt = 0;                       // 그 모션이 시작된 시각
   var ENTER_MS = 1680;                   // .fresh .rise 가 마지막 덩어리까지 끝나는 데 걸리는 시간
@@ -170,6 +171,8 @@
 
   /* ── 가림 라벨(빵조각) ───────────────────────── */
 
+  function fill(text, what) { return text.replace('{WHAT}', what); }
+
   function veil(k, inner) {
     // 열린 뒤에도 같은 상자를 그대로 둔다. 껍데기를 벗기면 줄 높이가 미세하게 달라져
     // 네 장의 카드가 동시에 움찔한다.
@@ -179,8 +182,9 @@
     if (lit) pass.lit = true;
     return '<span class="slot" data-kind="' + k + '">' +
       '<span class="real">' + inner + '</span>' +
-      (lit ? '<button class="veil now" type="button" data-kind="' + k + '">' + esc(LABELS[k]) + '<i aria-hidden="true"></i></button>'
-           : '<span class="veil wait" aria-hidden="true">' + esc(LABELS[k]) + '</span>') + '</span>';
+      '<button class="veil ' + (lit ? 'now' : 'wait') + '" type="button" data-kind="' + k + '"' +
+      (lit ? '' : ' data-early="1"') + '>' + esc(LABELS[k]) +
+      (lit ? '<i aria-hidden="true"></i>' : '') + '</button></span>';
   }
 
   function planPass(draw) {
@@ -524,12 +528,13 @@
     var notice = guide
       ? '<button class="guide" type="button" role="status" data-hide-guide="1">' + guide + '</button>'
       : '';
+    // 무엇이 남아서 아직 못 넘어가는지. 회색으로 보이기만 하고 넘어가 버리면 더 나쁘다.
+    waitWhy = target ? fill(S.waitWhy.veil, LABELS[target])
+      : (step.type === 'menu' && !mission) ? S.waitWhy.mission
+      : (step.type === 'swap' && nextPick()) ? S.waitWhy.pick
+      : '';
     screen.innerHTML = notice + '<div class="canvas">' + canvas + '</div>' +
-      (picker ? pickerSheet()
-              : actionBar({ cta: step.cta,
-                            waiting: Boolean(target) ||
-                                     (step.type === 'menu' && !mission) ||
-                                     (step.type === 'swap' && Boolean(nextPick())) }));
+      (picker ? pickerSheet() : actionBar({ cta: step.cta, waiting: Boolean(waitWhy) }));
     drawTrack(steps, at);
   }
 
@@ -576,7 +581,15 @@
     var t = e.target;
     if (!t || !t.closest) return;
     var v = t.closest('button[data-kind]');
-    if (v) { if (!busy) scratch(v.dataset.kind); return; }
+    if (v) {
+      if (v.dataset.early) {
+        var nowLabel = screen.querySelector('.veil.now');
+        guide = fill(S.openOrder, nowLabel ? nowLabel.textContent.trim() : LABELS[ORDER[0]]);
+        return render();
+      }
+      if (!busy) scratch(v.dataset.kind);
+      return;
+    }
     var opt = t.closest('[data-choose]');
     if (opt) return choose(opt.dataset.choose);
     if (t.closest('[data-close]')) { picker = null; return render(); }
@@ -599,7 +612,10 @@
       guide = '';
       return render();
     }
-    if (t.closest('#cta')) return advance();
+    if (t.closest('#cta')) {
+      if (waitWhy) { guide = waitWhy; return render(); }   // 막힌 척만 하고 넘어가면 안 된다
+      return advance();
+    }
     var jump = t.closest('[data-step]');
     if (jump) { at = Number(jump.dataset.step); return render(); }
     var move = t.closest('[data-move]');
