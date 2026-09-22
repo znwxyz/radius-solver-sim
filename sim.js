@@ -251,11 +251,13 @@
   }
 
   /* 아직 고르지 않은 자리. 지금 골라야 할 하나만 빛나고 나머지는 회색으로 기다린다. */
+  /* 아직 차례가 아닌 자리도 누를 수는 있다. 눌리지 않으면 고장 난 줄 안다.
+     누르면 왜 지금이 아닌지 말해 준다 — 미리 막지 않고 눌렀을 때 설명하는 것이 이 화면의 방식이다. */
   function blank(what, label) {
     var now = nextPick() === what;
-    if (!now) return '<span class="veil wait pick-blank" aria-hidden="true">' + esc(label) + '</span>';
-    return '<button class="veil now pick-blank" type="button" data-pick="' + what + '" data-side="to">' +
-      esc(label) + '<i aria-hidden="true"></i></button>';
+    return '<button class="veil ' + (now ? 'now' : 'wait') + ' pick-blank" type="button" ' +
+      'data-pick="' + what + '" data-side="to"' + (now ? '' : ' data-early="1"') + '>' +
+      esc(label) + (now ? '<i aria-hidden="true"></i>' : '') + '</button>';
   }
 
   /* 첫 화면은 앱의 얼굴이다. 이름 대신 로고를 세운다. */
@@ -589,6 +591,7 @@
     if (t.closest('[data-hide-guide]')) { guide = ''; return render(); }
     var pick = t.closest('[data-pick]');
     if (pick) {
+      if (pick.dataset.early) { guide = S.pickOrder; return render(); }
       picker = { side: pick.dataset.side, what: pick.dataset.pick };
       guide = '';
       return render();
