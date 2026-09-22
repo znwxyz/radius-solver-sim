@@ -69,12 +69,8 @@ img { display: block; }
 .quest.got .quest-top::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; border-radius: 2px; background: #c3c7c7; }
 
 /* 잠긴 칩 — 눌러도 열리지 않고 왜 막혔는지 말해 준다 */
-.tap.locked { cursor: not-allowed; opacity: .62; }
-.lockmark { font-style: normal; font-size: 9px; margin-left: 2px; }
 .guide { margin: 10px 0 2px; border-radius: 12px; background: var(--black); color: var(--paper); padding: 11px 13px; font-size: 12px; line-height: 1.65; animation: rise .34s var(--ease); }
 .guide b { color: var(--paper); }
-.opt.off { opacity: .5; cursor: not-allowed; }
-.off-why { margin-left: auto; font-size: 10.5px; color: var(--muted); text-align: right; max-width: 55%; line-height: 1.4; }
 
 /* 결과 요약 */
 .recap { border-radius: 15px; background: var(--canvas); padding: 12px 14px; }

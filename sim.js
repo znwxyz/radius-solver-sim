@@ -116,8 +116,10 @@
     return needs().filter(function (w) { return !chosen[w]; })[0] || null;
   }
 
-  /* 그 칩이 이 미션에서 잠겨 있는가. 잠긴 칩을 누르면 안내가 뜬다. */
-  function lockedChip(side, what) {
+  /* 이 미션에서 따라오는(유저가 고를 필요 없는) 축인가.
+     미리 잠그지는 않는다. 열어서 고르게 두고, 미션을 깨는 선택을 했을 때 막는다.
+     막혀 있는 것을 보는 것보다 골라 보고 막히는 쪽이 왜 그런지 남는다. */
+  function followsAlong(side, what) {
     var m = S.kinds[mission];
     return Boolean(m && m.lock && side === 'to' && what === m.lock);
   }
@@ -129,24 +131,24 @@
     if (what === 'chain') {
       return Object.keys(S.chains).map(function (c) {
         if (side === 'from' && listFor('from', c).length === 0) {
-          return { key: c, ok: false, why: '여기엔 가진 토큰이 없다' };
+          return { key: c, ok: false, why: '여기엔 가진 토큰이 없어. 내가 가진 게 있는 네트워크에서 보내야 해.' };
         }
         if (mission === 'swap' && side === 'from' && S.tokensOn[c].length < 2) {
-          return { key: c, ok: false, why: '토큰이 하나뿐인데 무엇으로 바꿀까?' };
+          return { key: c, ok: false, why: '이 네트워크엔 토큰이 하나뿐이야. 바꿀 상대가 없지.' };
         }
         if (side === 'to' && c === from.chain) return { key: c, ok: false, why: m.sameChainGuide };
         if (side === 'to' && S.tokensOn[c].indexOf(to.token) < 0 && mission === 'bridge') {
-          return { key: c, ok: false, why: '여기엔 ' + S.tokens[to.token].name + ' 가 없다' };
+          return { key: c, ok: false, why: '이 네트워크엔 ' + S.tokens[to.token].name + ' 가 없어. 없는 토큰은 받을 수 없지.' };
         }
         return { key: c, ok: true };
       });
     }
     return listFor(side, spot.chain).map(function (t) {
       if (mission === 'bridge' && side === 'from' && chainsWith(t, from.chain).length === 0) {
-        return { key: t, ok: false, why: '다른 네트워크에 없는데 어디로 옮길까?' };
+        return { key: t, ok: false, why: '이 토큰은 다른 네트워크에 없어. 옮길 데가 없지.' };
       }
       if (side === 'to' && t === from.token && mission !== 'bridge') {
-        return { key: t, ok: false, why: '같은 토큰이면 무엇이 바뀔까?' };
+        return { key: t, ok: false, why: '내는 토큰과 같으면 바뀌는 게 없지. 다른 토큰을 골라야 해.' };
       }
       return { key: t, ok: true };
     });
@@ -228,10 +230,8 @@
     var body = '<img src="' + c.icon + '" alt=""><b>' + esc(c.name) + '</b>' + caret;
     if (side) {
       if (side === 'to' && needs().indexOf('chain') >= 0 && !chosen.chain) return blank('chain', '네트워크 고르기');
-      var lk = lockedChip(side, 'chain');
-      return '<button class="chain-tag tap' + (lk ? ' locked' : '') + '" type="button" style="--c:' + c.color + '" ' +
-        'data-pick="chain" data-side="' + side + '">' + body +
-        (lk ? '<i class="lockmark" aria-hidden="true">🔒</i>' : '') + '</button>';
+      return '<button class="chain-tag tap" type="button" style="--c:' + c.color + '" ' +
+        'data-pick="chain" data-side="' + side + '">' + body + '</button>';
     }
     return veil('chain', '<span class="chain-tag" style="--c:' + (opened.chain ? c.color : '#d9dcdc') + '">' + body + '</span>');
   }
@@ -244,10 +244,8 @@
     var cls = 'token-pill' + (opts.plain ? ' plain' : '');
     if (opts.side) {
       if (opts.side === 'to' && needs().indexOf('token') >= 0 && !chosen.token) return blank('token', '토큰 고르기');
-      var lk = lockedChip(opts.side, 'token');
-      return '<button class="' + cls + ' tap' + (lk ? ' locked' : '') + '" type="button" style="--c:' + t.color + '" ' +
-        'data-pick="token" data-side="' + opts.side + '">' + body +
-        (lk ? '<i class="lockmark" aria-hidden="true">🔒</i>' : '') + '</button>';
+      return '<button class="' + cls + ' tap" type="button" style="--c:' + t.color + '" ' +
+        'data-pick="token" data-side="' + opts.side + '">' + body + '</button>';
     }
     return veil('token', '<span class="' + cls + '" style="--c:' + t.color + '">' + body + '</span>');
   }
@@ -459,11 +457,11 @@
     var rows = optionsFor(picker.side, picker.what).map(function (o) {
       var on = (isChain ? spot.chain : spot.token) === o.key;
       var meta = isChain ? S.chains[o.key] : S.tokens[o.key];
-      return '<button class="opt' + (on ? ' on' : '') + (o.ok ? '' : ' off') + '" type="button" ' +
+      // 고를 수 없는 것도 똑같이 보인다. 골라 봐야 왜 안 되는지 알게 된다.
+      return '<button class="opt' + (on ? ' on' : '') + '" type="button" ' +
         'style="--c:' + meta.color + '" data-choose="' + o.key + '">' +
         '<img src="' + meta.icon + '" alt=""><b>' + esc(meta.name) + '</b>' +
-        (o.ok ? (on ? '<span class="now-mark" aria-hidden="true">✓</span>' : '')
-              : '<span class="off-why">' + esc(o.why || '') + '</span>') + '</button>';
+        (on ? '<span class="now-mark" aria-hidden="true">✓</span>' : '') + '</button>';
     }).join('');
     return '<div class="picker" role="dialog" aria-label="' + (isChain ? '네트워크' : '토큰') + ' 고르기">' +
       '<div class="picker-head"><b>' + (isChain ? '네트워크 고르기' : '토큰 고르기') + '</b>' +
@@ -546,6 +544,13 @@
   }
 
   function choose(key) {
+    var spotNow = picker.side === 'from' ? from : to;
+    var same = (picker.what === 'chain' ? spotNow.chain : spotNow.token) === key;
+    // 따라오는 축을 굳이 바꾸려 하면 미션이 깨진다. 막고 왜 그런지 말해 준다.
+    if (!same && followsAlong(picker.side, picker.what)) {
+      guide = S.kinds[mission].guide;
+      return render();
+    }
     var opt = optionsFor(picker.side, picker.what).filter(function (o) { return o.key === key; })[0];
     if (opt && !opt.ok) { guide = opt.why; return render(); }
     var spot = picker.side === 'from' ? from : to;
@@ -580,10 +585,6 @@
     if (quest) { setMission(quest.dataset.quest); guide = ''; return render(); }
     var pick = t.closest('[data-pick]');
     if (pick) {
-      if (lockedChip(pick.dataset.side, pick.dataset.pick)) {
-        guide = S.kinds[mission].guide;                 // 막고, 왜 막았는지 말해 준다
-        return render();
-      }
       picker = { side: pick.dataset.side, what: pick.dataset.pick };
       guide = '';
       return render();

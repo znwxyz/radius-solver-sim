@@ -105,7 +105,7 @@ window.SIM = {
       name: '스왑', en: 'Swap', axis: '체인 유지 · 토큰 변경',
       example: { from: { chain: 'arbitrum', token: 'usdc' }, to: { chain: 'arbitrum', token: 'eth' } },
       lock: 'chain',
-      guide: '스왑은 <b>같은 네트워크</b> 안에서 <b>토큰만</b> 바꾸는 거래다. 네트워크는 그대로 두자.',
+      guide: '네트워크를 바꾸면 그건 스왑이 아니지. 스왑은 같은 네트워크 안에서 토큰만 바꾸는 거래야.',
       sum: function (c) {
         return c.fromChain + ' 네트워크 안에서 ' + c.send + ' ' + c.fromToken +
                ' 를 ' + c.recv + ' ' + c.toToken + ' 로 스왑했다';
@@ -123,8 +123,8 @@ window.SIM = {
       name: '브릿지', en: 'Bridge', axis: '체인 변경 · 토큰 유지',
       example: { from: { chain: 'ethereum', token: 'usdc' }, to: { chain: 'base', token: 'usdc' } },
       lock: 'token',
-      guide: '브릿지는 <b>토큰은 그대로</b> 두고 <b>다른 네트워크</b>로 옮기는 거래다.',
-      sameChainGuide: '옮기는 거래인데 같은 네트워크를 고르면 무엇이 옮겨질까? 다른 네트워크를 고르자.',
+      guide: '토큰을 바꾸면 그건 브릿지가 아니지. 브릿지는 같은 토큰을 다른 네트워크로 옮기는 거래야.',
+      sameChainGuide: '같은 네트워크를 고르면 옮길 데가 없지. 보내는 체인과 받는 체인은 달라야 해.',
       sum: function (c) {
         return c.send + ' ' + c.fromToken + ' 를 ' + c.fromChain +
                ' 네트워크에서 ' + c.toChain + ' 네트워크로 브릿지했다';
@@ -142,8 +142,8 @@ window.SIM = {
       name: '크로스체인 스왑', en: 'Cross-chain Swap', axis: '체인 변경 · 토큰 변경',
       example: { from: { chain: 'ethereum', token: 'eth' }, to: { chain: 'arc', token: 'eurc' } },
       lock: null,
-      guide: '크로스체인 스왑은 <b>네트워크도 토큰도</b> 함께 바꾸는 거래다.',
-      sameChainGuide: '네트워크가 같으면 크로스체인이라고 할 수 있을까? 다른 네트워크를 고르자.',
+      guide: '크로스체인 스왑은 네트워크도 토큰도 함께 바꾸는 거래야.',
+      sameChainGuide: '같은 네트워크를 고르면 크로스체인이 아니지. 보내는 체인과 받는 체인은 달라야 해.',
       sum: function (c) {
         return c.fromChain + ' 네트워크의 ' + c.send + ' ' + c.fromToken + ' 를 ' +
                c.toChain + ' 네트워크의 ' + c.recv + ' ' + c.toToken + ' 로 크로스체인 스왑했다';
