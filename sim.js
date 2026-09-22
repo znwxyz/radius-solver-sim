@@ -515,8 +515,11 @@
     screen.className = 'screen phase-' + step.phase + ' type-' + step.type +
       (picker ? ' picking' : '') + (moved ? ' fresh' : '');
     // 고르는 동안에는 설명 시트를 그리지 않는다. 두 시트가 겹치면 글자가 비친다.
-    var notice = guide ? '<p class="guide" role="status">' + guide + '</p>' : '';
-    screen.innerHTML = '<div class="canvas">' + canvas + notice + '</div>' +
+    // 안내는 화면 위로 뜬다. canvas 안에 두면 스크롤에 딸려 가고 잘린다.
+    var notice = guide
+      ? '<button class="guide" type="button" role="status" data-hide-guide="1">' + guide + '</button>'
+      : '';
+    screen.innerHTML = notice + '<div class="canvas">' + canvas + '</div>' +
       (picker ? pickerSheet()
               : actionBar({ cta: step.cta,
                             waiting: Boolean(target) ||
@@ -583,6 +586,7 @@
     }
     var quest = t.closest('[data-quest]');
     if (quest) { setMission(quest.dataset.quest); guide = ''; return render(); }
+    if (t.closest('[data-hide-guide]')) { guide = ''; return render(); }
     var pick = t.closest('[data-pick]');
     if (pick) {
       picker = { side: pick.dataset.side, what: pick.dataset.pick };

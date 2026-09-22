@@ -69,8 +69,17 @@ img { display: block; }
 .quest.got .quest-top::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; border-radius: 2px; background: #c3c7c7; }
 
 /* 잠긴 칩 — 눌러도 열리지 않고 왜 막혔는지 말해 준다 */
-.guide { margin: 10px 0 2px; border-radius: 12px; background: var(--black); color: var(--paper); padding: 11px 13px; font-size: 12px; line-height: 1.65; animation: rise .34s var(--ease); }
+/* 막았을 때 뜨는 말. 화면 위로 떠야 눈에 들어온다.
+   고르는 시트 위쪽에 둔다 — 선택지를 가리면 다시 고를 수가 없다. */
+.guide { position: absolute; z-index: 30; top: 52px; left: 14px; right: 14px;
+  display: block; width: auto; text-align: left; border: 0; cursor: pointer;
+  border-radius: 14px; background: var(--black); color: var(--paper);
+  padding: 13px 15px; font: 400 12.5px/1.6 var(--body);
+  box-shadow: 0 14px 34px rgba(0,0,0,.3);
+  animation: pop .34s var(--ease); }
 .guide b { color: var(--paper); }
+.guide:active { transform: scale(.99); }
+@keyframes pop { from { opacity: 0; transform: translateY(-10px); } }
 
 /* 결과 요약 */
 .recap { border-radius: 15px; background: var(--canvas); padding: 12px 14px; }
@@ -131,7 +140,7 @@ img { display: block; }
 .homebar { width: 124px; height: 5px; border-radius: 99px; background: #d5d8d8; margin: 10px auto 2px; }
 
 /* 아이폰 화면 비율 393 : 852 을 그대로 따른다. 348 x 754 = 같은 비율. */
-.screen { display: flex; flex-direction: column; height: 754px; }
+.screen { position: relative; display: flex; flex-direction: column; height: 754px; }
 .canvas { flex: 1; display: flex; flex-direction: column; gap: 11px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; }
 .canvas::-webkit-scrollbar { display: none; }
 
