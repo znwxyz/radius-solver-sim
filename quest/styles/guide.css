@@ -10,8 +10,6 @@
 .sheet-head { display: flex; align-items: center; justify-content: space-between; }
 .sheet-head b { font-size: 15px; }
 .sheet-head .n { font: 500 11px var(--mono); color: var(--faint); }
-.sheet-app { display: flex; align-items: center; gap: 9px; margin-top: 10px; border-radius: 12px; padding: 9px 11px; background: var(--paper-2); font-size: 12px; color: var(--muted); }
-.sheet-app img { height: 14px; width: auto; filter: invert(var(--logo-invert)); }
 .sheet-lab { margin-top: 12px; font: 500 10.5px var(--mono); letter-spacing: .04em; color: var(--faint); }
 .changes { margin-top: 6px; display: grid; gap: 6px; }
 .chg { display: flex; align-items: center; gap: 10px; border-radius: 12px; padding: 9px 11px; box-shadow: inset 0 0 0 1px var(--hair); }

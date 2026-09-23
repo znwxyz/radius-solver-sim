@@ -321,7 +321,6 @@ window.SCREENS = (function () {
         change('plus', sheet.to, (sheet.min ? '≥ ' : '') + amountOf(sheet.to.token, sheet.to.amount), sheet.to.chain);
     return '<div class="scrim" data-act="reject"></div><div class="sheet" role="dialog" aria-label="' + esc(w.title) + '"><div class="sheet-grab" aria-hidden="true"></div>' +
       '<div class="sheet-head"><b>' + esc(w.title) + ' · ' + esc(sheet.name) + '</b><span class="n">' + esc(sheet.count) + '</span></div>' +
-      '<div class="sheet-app"><img src="../brand/Radius_horizontallogo_black.svg" alt="">' + esc(w.from) + '</div>' +
       '<div class="sheet-lab">' + esc(w.changes) + '</div><div class="changes">' + changes + '</div>' +
       '<div class="sheet-fee' + (sheet.gas ? '' : ' free') + '"><span>' + esc(w.fee) + '</span><b>' + (sheet.gas ? money(sheet.gas) + ' · ' + fmt(sheet.gas / S.tokens.eth.price, 5) + ' ETH' : esc(S.sign.free)) + '</b></div>' +
       '<div class="sheet-btns"><button class="reject" type="button" data-act="reject">' + esc(w.reject) + '</button><button class="confirm" type="button" data-act="confirm">' + esc(w.confirm) + '</button></div></div>';

@@ -212,7 +212,7 @@ window.MODE = {
   },
 
   /* 지갑 서명 시트 — 실제 지갑 앱의 서명 요청을 본떴다 */
-  sign: { title: '서명 요청', from: 'Radius Swap (예시 앱)', confirm: '확인', reject: '거절', changes: '예상 변화', fee: '네트워크 수수료(가스)', free: '$0 · 가스 없음', approveWhat: '브릿지 컨트랙트가 네 USDC를 쓸 수 있게 허용' },
+  sign: { title: '서명 요청', confirm: '확인', reject: '거절', changes: '예상 변화', fee: '네트워크 수수료(가스)', free: '$0 · 가스 없음', approveWhat: '브릿지 컨트랙트가 네 USDC를 쓸 수 있게 허용' },
 
   /* 대기 화면. 실제 시간을 다 기다리게 하지 않고 빨리 감는다 — 그렇다고 말한다. */
   pending: { title: '처리 중', ff: '빨리 감기', done: '완료', explorer: '익스플로러에서 보기', order: '주문' },
