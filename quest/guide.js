@@ -2,7 +2,7 @@
    문장은 data.js 의 coach 에 있다. 여기는 자리를 재고 그리는 일만 한다. */
 window.COACH = (function () {
   'use strict';
-  var PAD = 6;
+  var PAD = 6, INSET = 4;
 
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
@@ -20,9 +20,13 @@ window.COACH = (function () {
     }
   }
 
+  /* 대상 둘레에 PAD 만큼 여유를 두되, 폰 화면 가장자리 안쪽(INSET)으로 잘라 넣는다.
+     체인 탭처럼 화면 폭 끝까지 붙은 요소는 그냥 두면 링이 화면 밖으로 나가 잘린다. */
   function box(target, screen) {
     var r = target.getBoundingClientRect(), s = screen.getBoundingClientRect();
-    return { top: r.top - s.top - PAD, left: r.left - s.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2, sh: s.height };
+    var left = Math.max(INSET, r.left - s.left - PAD), right = Math.min(s.width - INSET, r.right - s.left + PAD);
+    var top = Math.max(INSET, r.top - s.top - PAD), bottom = Math.min(s.height - INSET, r.bottom - s.top + PAD);
+    return { top: top, left: left, width: right - left, height: bottom - top, sh: s.height };
   }
 
   /* 대상 둘레의 네 조각 그늘. 한 장의 거대한 그림자로 뚫으면 캡처·저사양 기기에서
