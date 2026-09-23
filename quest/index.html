@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="같은 지갑, 같은 Quest. 일반 모드로 직접 해 보고 솔버 모드를 켜서 무엇이 달라지는지 겪어 보는 인터랙티브 시뮬레이션.">
+  <title>일반 모드 vs 솔버 모드 · Radius</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/app.css">
+  <link rel="stylesheet" href="styles/guide.css">
+</head>
+<body>
+  <a class="skip-link" href="#screen">앱 화면으로 바로 가기</a>
+
+  <header class="top">
+    <a class="wordmark" href="./index.html" aria-label="처음으로"><img src="../brand/Radius_horizontallogo_black.svg" alt="Radius"></a>
+  </header>
+
+  <main class="stage">
+    <div class="spacer" aria-hidden="true"></div>
+
+    <!-- 가운데: 진행 표시 + 폰. 설명은 전부 폰 안에 있다. 밖에서 두 번 읽게 하지 않는다. -->
+    <div class="phone-col">
+      <nav class="track" aria-label="진행 위치">
+        <button class="arrow" type="button" data-move="-1" aria-label="이전 단계">‹</button>
+        <ol class="beads" id="beads"></ol>
+        <button class="arrow" type="button" data-move="1" aria-label="다음 단계">›</button>
+      </nav>
+      <div class="bezel">
+        <div class="statusbar"><span>9:41</span><span class="sbar" aria-hidden="true"></span></div>
+        <div class="screen" id="screen" role="region" aria-live="polite"></div>
+        <div class="homebar" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 테마·언어 토글, 그 아래 기록판 -->
+    <div class="side-col">
+      <div class="switches">
+        <button class="theme-btn" type="button" data-act="theme" aria-label="밝은 화면과 어두운 화면 바꾸기"><span class="sun" aria-hidden="true"></span><span class="moon" aria-hidden="true"></span></button>
+        <div class="lang" role="group" aria-label="언어">
+          <span class="lang-thumb" aria-hidden="true"></span>
+          <button class="lang-btn on" type="button" data-act="lang:ko" aria-pressed="true">KOR</button>
+          <button class="lang-btn" type="button" data-act="lang:en" aria-pressed="false">EN</button>
+        </div>
+        <p class="side-note" id="side-note" role="status" aria-live="polite"></p>
+      </div>
+      <aside class="board" id="board" aria-label="기록판"></aside>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <details>
+      <summary>주의사항</summary>
+      <ul>
+        <li>시나리오의 체인·토큰·수수료·시간은 설명하려고 만든 예시값이야. 실제 거래 앱이나 특정 캠페인 이야기가 아니야.</li>
+        <li>참여·경쟁·정산 방식은 프로토콜마다 달라. 이 화면은 공통된 뼈대만 보여 줘.</li>
+        <li>유저는 솔버를 고를 수 없어. 여러 솔버 중 누가 실행할지는 프로토콜 규칙이 정해. 이 예시에서 Radius가 골라졌다고 매번 그런 건 아니야.</li>
+        <li>거래 체결이 늘 보장되는 건 아니야. 조건에 맞는 참여자가 없으면 성립하지 않을 수도 있어. 이 시뮬레이션은 체결된 경우만 보여 줘.</li>
+        <li>모든 스왑에 솔버가 붙는 건 아니야. 어떤 경로를 쓸지는 앱과 프로토콜이 정해.</li>
+        <li>Robinhood Chain 아이콘은 임시야. 공식 로고가 아니야.</li>
+      </ul>
+    </details>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="guide.js"></script>
+  <script src="screens.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

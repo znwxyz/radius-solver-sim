@@ -308,7 +308,7 @@ img { display: block; }
 .veil.now:hover { filter: brightness(1.06); }
 .veil.now:active { transform: translateY(-50%) scale(.97); }   /* 세로 보정을 잃지 않게 함께 쓴다 */
 .veil.wait { background: #e7eaea; color: #a6a9a9; font-weight: 500; }
-.pick-blank { position: static; transform: none; }
+.pick-blank { position: relative; transform: none; }   /* relative 여야 ::after 반짝임이 칩 안에 갇힌다. static 이면 폰 화면 크기로 부푼다 */
 /* 빈칸은 절대 위치가 아니라 세로 보정이 필요 없다. 위 규칙을 그대로 받으면
    누르는 순간 제 높이의 절반만큼 위로 튀어, 아래쪽을 누른 손가락 밑에서 빠져나간다.
    그러면 click 이 아예 생기지 않아 "여러 번 눌러야 열린다"가 된다. */

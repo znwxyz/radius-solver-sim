@@ -171,7 +171,16 @@
 
   /* ── 가림 라벨(빵조각) ───────────────────────── */
 
-  function fill(text, what) { return text.replace('{WHAT}', what); }
+  /* 라벨 이름 뒤에 붙는 조사. 마지막 한글 글자의 받침으로 을/를 을 고른다.
+     "체인 (네트워크)" 처럼 괄호로 끝나면 그 앞의 한글을 본다. */
+  function josa(word, withFinal, noFinal) {
+    var m = String(word).match(/[가-힣](?=[^가-힣]*$)/);
+    if (!m) return withFinal;
+    return ((m[0].charCodeAt(0) - 0xac00) % 28) ? withFinal : noFinal;
+  }
+  function fill(text, what) {
+    return text.replace('{WHAT}{을}', what + josa(what, '을', '를')).replace('{WHAT}', what);
+  }
 
   function veil(k, inner) {
     // 열린 뒤에도 같은 상자를 그대로 둔다. 껍데기를 벗기면 줄 높이가 미세하게 달라져

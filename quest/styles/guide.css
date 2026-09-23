@@ -1,0 +1,63 @@
+/* 폰 위에 덮이는 것들 — 지갑 서명 시트, 처리 중 카드, 코치마크.
+   전부 .screen 안에서 절대 위치다. 폰 밖으로 나가지 않는다. */
+
+/* 서명 요청 시트 — 지갑 앱의 서명 요청 화면을 본떴다 */
+.scrim { position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.42); animation: fade .3s ease; }
+@keyframes fade { from { opacity: 0; } }
+.sheet { position: absolute; z-index: 21; left: 0; right: 0; bottom: 0; border-radius: 24px 24px 22px 22px; background: var(--paper); box-shadow: var(--sheet-shadow); padding: 14px 16px 16px; animation: up .42s var(--ease); }
+@keyframes up { from { transform: translateY(24px); opacity: 0; } }
+.sheet-grab { width: 36px; height: 4px; border-radius: 99px; background: var(--hair); margin: 0 auto 12px; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; }
+.sheet-head b { font-size: 15px; }
+.sheet-head .n { font: 500 11px var(--mono); color: var(--faint); }
+.sheet-app { display: flex; align-items: center; gap: 9px; margin-top: 10px; border-radius: 12px; padding: 9px 11px; background: var(--paper-2); font-size: 12px; color: var(--muted); }
+.sheet-app img { height: 14px; width: auto; filter: invert(var(--logo-invert)); }
+.sheet-lab { margin-top: 12px; font: 500 10.5px var(--mono); letter-spacing: .04em; color: var(--faint); }
+.changes { margin-top: 6px; display: grid; gap: 6px; }
+.chg { display: flex; align-items: center; gap: 10px; border-radius: 12px; padding: 9px 11px; box-shadow: inset 0 0 0 1px var(--hair); }
+.chg .tok-ic { width: 28px; height: 28px; }
+.chg .tok-ic .t { width: 28px; height: 28px; }
+.chg .tok-ic .c { width: 13px; height: 13px; }
+.chg .what { font-size: 12px; color: var(--muted); }
+.chg .what b { display: block; font: 500 13px var(--mono); color: var(--ink); }
+.chg.minus .what b { color: #c94b3e; }
+.chg.plus .what b { color: var(--ok); }
+.sheet-fee { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 2px; font-size: 12px; color: var(--muted); }
+.sheet-fee b { font: 500 12px var(--mono); color: var(--ink); }
+.sheet-fee.free b { background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 600; }
+.sheet-btns { display: grid; grid-template-columns: 1fr 1.6fr; gap: 8px; margin-top: 14px; }
+.sheet-btns button { border: 0; border-radius: 13px; padding: 13px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.sheet-btns .reject { background: var(--paper-2); color: var(--muted); }
+.sheet-btns .confirm { background: var(--black); color: var(--on-black); }
+.solver-on .sheet-btns .confirm { background: var(--flowline); color: #061012; }
+
+/* 처리 중 — 실제 시간을 다 기다리게 하지 않는다. 빨리 감는다고 적는다. */
+.pend { position: absolute; z-index: 21; left: 14px; right: 14px; bottom: 14px; border-radius: 18px; background: var(--paper); box-shadow: var(--sheet-shadow); padding: 14px 15px; animation: up .42s var(--ease); }
+.pend-top { display: flex; align-items: center; gap: 10px; }
+.spin { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--hair); border-top-color: var(--ink); animation: turn .9s linear infinite; flex: none; }
+.solver-on .spin { border-top-color: var(--flow-cyan); }
+@keyframes turn { to { transform: rotate(360deg); } }
+.pend-top b { font-size: 14px; }
+.pend-top small { display: block; font: 11px var(--mono); color: var(--muted); }
+.prog { margin-top: 12px; height: 5px; border-radius: 99px; background: var(--hair-2); overflow: hidden; }
+.prog i { display: block; height: 100%; width: 0; background: var(--ink); animation: fill var(--ff, 2600ms) linear forwards; }
+.solver-on .prog i { background: var(--flowline); }
+@keyframes fill { to { width: 100%; } }
+.ff { margin-top: 8px; display: flex; justify-content: space-between; font: 10.5px var(--mono); color: var(--faint); }
+
+/* 코치마크 — 처음 온 화면에서 요소를 하나씩 짚어 준다.
+   .spot 이 대상 자리에 놓이고, 거대한 그림자가 나머지를 어둡힌다. */
+.coach { position: absolute; inset: 0; z-index: 30; }
+.shade { position: absolute; background: rgba(0,0,0,.58); animation: fade .3s ease; }
+.spot { position: absolute; border-radius: 16px; box-shadow: 0 0 0 2px var(--flow-cyan); pointer-events: none; }
+.bubble { position: absolute; left: 14px; right: 14px; border-radius: 16px; background: var(--paper); color: var(--ink); padding: 13px 14px 12px; box-shadow: 0 18px 44px rgba(0,0,0,.35); animation: pop .34s var(--ease); }
+.bubble::before { content: ""; position: absolute; left: var(--ax, 28px); width: 12px; height: 12px; background: var(--paper); transform: rotate(45deg); }
+.bubble.below::before { top: -6px; }
+.bubble.above::before { bottom: -6px; }
+.b-title { font-size: 14px; font-weight: 600; }
+.b-text { margin-top: 3px; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.b-btns { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.b-count { font: 500 11px var(--mono); color: var(--faint); }
+.b-btns .btns { display: flex; gap: 6px; }
+.b-btns button { border: 0; border-radius: 99px; padding: 7px 13px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--paper-2); color: var(--muted); }
+.b-btns button.go { background: var(--black); color: var(--on-black); }

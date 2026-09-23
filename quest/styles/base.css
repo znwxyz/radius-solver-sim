@@ -1,0 +1,191 @@
+/* IDEA 2 — 일반 모드 vs 솔버 모드 · 페이지 뼈대
+   토큰 → 페이지 → 헤더 → 폰 목업 → 소개·기록판 → 반응형 순서다. 폰 안쪽은 app.css.
+
+   두 가지 테마를 한 벌의 의미 토큰으로 돈다. 밝은 쪽이 기본(Radius 웹앱과 같다).
+   어두운 쪽은 <html data-theme="dark"> 로 켠다. 색을 고를 때 hex 를 직접 쓰지 말고
+   아래 토큰을 쓴다 — 그래야 양쪽이 같이 움직인다.
+   Flowline 그라데이션은 "지금 눌러야 할 곳"과 솔버 모드에만 쓴다. 체인 색과 섞지 않는다. */
+
+:root {
+  color-scheme: light;
+  --ink: #111110;            /* 본문 글자 */
+  --muted: #6d6d68;
+  --faint: #a2a29c;
+  --paper: #ffffff;          /* 카드·폰 화면 */
+  --paper-2: #f4f6f6;        /* 카드 안의 한 단 낮은 면 */
+  --canvas: #eceeee;         /* 페이지 바탕 */
+  --app-bg: #fbfcfc;         /* 폰 베젤 */
+  --hair: rgba(17, 17, 16, .09);
+  --hair-2: rgba(17, 17, 16, .05);
+  --black: #000;
+  --on-black: #fff;
+  --shadow: 0 22px 56px rgba(0, 0, 0, .13);
+  --sheet-shadow: 0 -16px 44px rgba(0, 0, 0, .16);
+  --chip-base: #fff;         /* 체인·토큰 칩의 바탕에 섞는 색 */
+  --chip-mix: 10%;           /* 그 칩에 브랜드 색을 얼마나 섞나 */
+  --chip-line: 44%;
+  --mesh-a: rgba(0, 222, 240, .16);
+  --mesh-b: rgba(0, 188, 154, .12);
+  --logo-invert: 0;
+
+  --flow-green: #00bc9a;
+  --flow-cyan: #00def0;
+  --flow-blue: #009ac6;
+  --flowline: linear-gradient(115deg, var(--flow-green) 0%, var(--flow-cyan) 52%, var(--flow-blue) 100%);
+  --tint: rgba(0, 222, 240, .09);
+  --tint-line: rgba(0, 154, 198, .5);
+  --ok: #15a36c;
+
+  --body: "DM Sans", "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
+  --mono: "DM Mono", "SFMono-Regular", ui-monospace, monospace;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --fast: 140ms;
+  --normal: 320ms;
+  --slow: 640ms;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f1f2f2;
+  --muted: #9a9fa2;
+  --faint: #5f6468;
+  --paper: #15181b;
+  --paper-2: #1d2124;
+  --canvas: #08090b;
+  --app-bg: #0f1113;
+  --hair: rgba(255, 255, 255, .09);
+  --hair-2: rgba(255, 255, 255, .05);
+  --black: #f1f2f2;
+  --on-black: #0b0c0e;
+  --shadow: 0 26px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+  --sheet-shadow: 0 -16px 44px rgba(0, 0, 0, .6);
+  --chip-base: #15181b;
+  --chip-mix: 22%;
+  --chip-line: 55%;
+  --mesh-a: rgba(0, 222, 240, .13);
+  --mesh-b: rgba(0, 188, 154, .10);
+  --logo-invert: 1;
+  --tint: rgba(0, 222, 240, .12);
+  --ok: #3ad38f;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--canvas); }
+body {
+  margin: 0; min-height: 100svh; color: var(--ink); background: var(--canvas);
+  font: 400 14px/1.6 var(--body); word-break: keep-all; overflow-wrap: anywhere;
+  transition: background var(--normal) ease, color var(--normal) ease;
+}
+/* 바탕의 공기. 평평한 회색 한 장이면 폰이 떠 보이지 않는다. */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 18% 10%, var(--mesh-a), transparent 70%),
+    radial-gradient(50% 45% at 88% 88%, var(--mesh-b), transparent 70%);
+}
+h1, h2, h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+b, strong { font-weight: 600; }
+img { display: block; }
+button { font-family: var(--body); color: inherit; }
+:focus-visible { outline: 2.5px solid var(--flow-blue); outline-offset: 3px; }
+.skip-link { position: absolute; z-index: 20; top: -100px; left: 16px; background: var(--black); color: var(--on-black); padding: 12px 18px; border-radius: 8px; }
+.skip-link:focus { top: 10px; }
+
+/* ── 헤더: 로고만 ─────────────────────────────── */
+.top { display: flex; align-items: center; padding: 18px 26px 4px; }
+.wordmark img { height: 17px; width: auto; filter: invert(var(--logo-invert)); transition: filter var(--normal) ease; }
+.track { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.track .arrow { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--paper); color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.track .arrow:hover { color: var(--ink); }
+.beads { display: flex; align-items: center; gap: 6px; }
+.beads button { display: flex; align-items: center; gap: 6px; height: 26px; border: 0; border-radius: 99px; padding: 0 10px; background: transparent; color: var(--faint); font: 500 11.5px var(--mono); cursor: pointer; }
+.beads button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.beads button.done { color: var(--muted); }
+.beads button.at { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.beads button.at::before { background: var(--flowline); }
+
+/* 테마·언어 토글 — 기록판 위. 폰 밖에 있어야 폰 안의 일반/솔버 토글과 헷갈리지 않는다. */
+.theme-btn { position: relative; flex: none; width: 52px; height: 30px; border: 0; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); cursor: pointer; }
+.theme-btn .sun, .theme-btn .moon { position: absolute; top: 5px; width: 20px; height: 20px; border-radius: 50%; transition: transform var(--normal) var(--ease), opacity var(--normal) ease; }
+.theme-btn .sun { left: 5px; background: radial-gradient(circle at 50% 50%, #ffd36a 0 42%, transparent 44%), repeating-conic-gradient(#ffb02e 0 8deg, transparent 8deg 45deg); }
+.theme-btn .moon { left: 5px; background: var(--ink); -webkit-mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); opacity: 0; transform: translateX(22px) rotate(-40deg); }
+:root[data-theme="dark"] .theme-btn .sun { opacity: 0; transform: translateX(22px) rotate(90deg); }
+:root[data-theme="dark"] .theme-btn .moon { opacity: 1; transform: translateX(22px) rotate(0); }
+
+/* ── 무대: (빈 칸) · 폰 · 기록판 ────────────────────
+   왼쪽은 비워 둔다. 설명은 폰 안에 있고, 밖에서 두 번 읽게 하지 않는다.
+   빈 칸이 있어야 넓은 화면에서 폰이 가운데에 온다. */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: 34px; padding: 10px 40px 36px; max-width: 1360px; margin: 0 auto; }
+.phone-col { display: flex; flex-direction: column; align-items: center; }
+.side-col { justify-self: start; width: 100%; max-width: 330px; }
+
+/* 토글 줄 — 진행 표시와 같은 높이에 놓여 폰 위 줄과 기록판 위 줄이 맞는다 */
+.switches { position: relative; display: flex; align-items: center; gap: 8px; height: 30px; margin-bottom: 12px; }
+.lang { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 30px; padding: 3px; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+.lang-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 99px; background: var(--black); transition: transform var(--normal) var(--ease); }
+.lang-btn { position: relative; z-index: 1; border: 0; background: transparent; padding: 0 12px; border-radius: 99px; font: 600 11px var(--mono); color: var(--muted); cursor: pointer; }
+.lang-btn.on { color: var(--on-black); }
+/* EN 을 눌렀을 때 뜨는 말. 기록판 위에 겹치므로 말풍선처럼 바탕을 준다 */
+.side-note { position: absolute; z-index: 5; top: 38px; right: 0; margin: 0; max-width: 100%; border-radius: 12px; background: var(--black); color: var(--on-black); padding: 9px 12px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 26px rgba(0,0,0,.22); opacity: 0; transform: translateY(-4px); transition: opacity var(--fast) ease, transform var(--fast) ease; pointer-events: none; }
+.side-note.show { opacity: 1; transform: none; }
+
+/* 폰 목업 — 아이폰 393:852 비율. 348 x 754 */
+.bezel { position: relative; width: 372px; border-radius: 44px; background: var(--app-bg); padding: 12px 12px 14px; box-shadow: var(--shadow); transition: background var(--normal) ease; }
+.statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
+.sbar { width: 48px; height: 10px; border-radius: 99px; background: var(--hair); }
+.homebar { width: 124px; height: 5px; border-radius: 99px; background: var(--hair); margin: 10px auto 2px; }
+.screen { position: relative; display: flex; flex-direction: column; height: 754px; overflow: hidden; border-radius: 22px; }
+
+/* 기록판 — 두 모드가 같은 줄에 쌓인다. 폰 안에서도 같은 판이 비교 화면으로 나온다. */
+.board { width: 100%; }
+.board-card { border-radius: 20px; background: var(--paper); padding: 18px 18px 14px; box-shadow: inset 0 0 0 1px var(--hair); }
+.board-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.board-title b { font-size: 14px; }
+.board-title span { font: 11px var(--mono); color: var(--faint); }
+.board-grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 0; }
+.board-grid > * { padding: 9px 0; border-top: 1px solid var(--hair-2); font-size: 12.5px; }
+.board-grid .h { border-top: 0; padding-top: 0; padding-bottom: 8px; font: 500 11px var(--mono); color: var(--faint); }
+.board-grid .h.on { color: var(--ink); }
+.board-grid .h.on.solver { background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.board-grid .lab { color: var(--muted); }
+.board-grid .v { font: 500 13px var(--mono); color: var(--ink); text-align: right; padding-right: 6px; }
+.board-grid .v.zero { color: var(--faint); font-weight: 400; }
+.board-grid .v small { font: inherit; font-size: 10.5px; color: var(--faint); margin-left: 2px; }
+.board-foot { margin-top: 10px; display: grid; grid-template-columns: 1.25fr 1fr 1fr; font: 10.5px var(--mono); color: var(--faint); }
+.board-foot .s { text-align: right; padding-right: 6px; }
+.board-foot .s.done { color: var(--ok); }
+.board-note { margin-top: 12px; font-size: 11.5px; line-height: 1.6; color: var(--muted); }
+
+/* 주의사항 */
+.foot { max-width: 620px; margin: 0 auto; padding: 4px 24px 34px; color: var(--muted); font-size: 12px; }
+.foot summary { cursor: pointer; font-weight: 500; color: var(--faint); }
+.foot ul { margin-top: 10px; display: grid; gap: 6px; }
+.foot li { position: relative; padding-left: 14px; line-height: 1.6; }
+.foot li::before { content: ""; position: absolute; left: 0; top: 9px; width: 6px; height: 2px; border-radius: 2px; background: var(--faint); }
+
+/* ── 반응형 ──
+   1180 아래: 소개는 폰 위 한 줄, 기록판은 폰 옆.
+   820 아래: 헤더 한 줄, 폰이 화면을 차지, 기록판·소개는 아래. */
+@media (max-width: 1180px) {
+  .stage { grid-template-columns: auto minmax(0, 1fr); gap: 18px 28px; padding: 6px 28px 30px; }
+  .spacer { display: none; }
+  .side-col { max-width: 360px; }
+}
+@media (max-width: 820px) {
+  .top { padding: 8px 12px 2px; }
+  .wordmark img { height: 15px; }
+  .track { margin-bottom: 6px; }
+  .beads { gap: 2px; }
+  .beads button { padding: 0 7px; font-size: 10.5px; white-space: nowrap; }
+  .stage { grid-template-columns: 1fr; justify-items: center; gap: 14px; padding: 0 8px 20px; }
+  .phone-col { width: 100%; max-width: 372px; }
+  .bezel { width: 100%; height: calc(100svh - 92px); min-height: 560px; display: flex; flex-direction: column; border-radius: 30px; padding: 6px 10px 8px; }
+  .screen { height: auto; flex: 1; min-height: 0; }
+  .statusbar { padding: 6px 14px; }
+  .homebar { margin: 6px auto 0; }
+  .side-col { max-width: 372px; }
+  .switches { justify-content: flex-end; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
