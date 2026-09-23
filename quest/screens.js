@@ -275,29 +275,28 @@ window.SCREENS = (function () {
     return '<div class="board-grid">' + head + rows + '</div><div class="board-foot"><div></div>' + status(T.normal) + status(T.solver) + '</div>';
   }
   function board(st) {
-    return '<div class="board-card"><div class="board-title"><b>' + esc(S.board.title) + '</b><span>' + esc(S.board.sub) + '</span></div>' + boardGrid(st) + '</div>' +
-      '<p class="board-note">' + esc(S.board.note) + '</p>';
+    return '<div class="board-card"><div class="board-title"><b>' + esc(S.board.title) + '</b><span>' + esc(S.board.sub) + '</span></div>' + boardGrid(st) + '</div>';
   }
 
   /* ── 비교 ── */
   /* 두 모드가 다 끝났을 때만. 숫자를 보고 어느 문장을 쓸지 고른다. */
   function verdict(st) {
-    var T = st.tally;
-    if (!T.normal.done || !T.solver.done) return '';
-    var n = ledger(st, 'normal'), s = ledger(st, 'solver'), v = S.compare.verdict;
+    var T = st.tally, c = S.compare;
+    if (!T.normal.done || !T.solver.done) return '<p class="cmp-half">' + esc(c.half) + '</p>';
+    var n = ledger(st, 'normal'), s = ledger(st, 'solver');
+    var head = c.headline.replace('{SIGS_N}', T.normal.sigs).replace('{SIGS_S}', T.solver.sigs)
+      .replace('{GAS_N}', money(T.normal.gas)).replace('{GAS_S}', money(T.solver.gas))
+      .replace('{WAIT_N}', dur(T.normal.wait)).replace('{WAIT_S}', dur(T.solver.wait));
     var diff = fmt(n.paid - s.paid, 4), got = fmt(Math.abs(s.got - n.got), 2);   // 단위는 문장에 이미 있다
     var line = s.got >= n.got
-      ? v.cheaper.replace('{DIFF}', diff).replace('{GOT}', got)
-      : v.mixed.replace('{DIFF}', diff).replace('{GOT}', got).replace('{WAIT}', dur(T.normal.wait));
-    return '<p class="cmp-verdict">' + esc(line) + '</p>';
+      ? c.verdict.cheaper.replace('{DIFF}', diff).replace('{GOT}', got)
+      : c.verdict.mixed.replace('{DIFF}', diff).replace('{GOT}', got).replace('{WAIT}', dur(T.normal.wait));
+    return '<div class="cmp-verdict"><b>' + esc(head) + '</b><p>' + esc(line) + '</p></div>';
   }
   function compare(st) {
     var c = S.compare;
-    var bridge = S.normal.plan[1], who = st.tally.normal.done ? resolve(bridge, st.normal.picked[1]).option.name : null;
-    return '<div class="canvas cmp">' + appBar('비교') + '<h2 class="cmp-title">' + esc(c.title) + '</h2><p class="cmp-sub">' + esc(c.sub) +
-      (who ? ' ' + esc(c.pickLine.replace('{WHO}', who)) : '') + '</p>' + verdict(st) +
-      '<div class="board-card">' + boardGrid(st) + '</div>' +
-      '<ul class="cmp-notes">' + c.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>' +
+    return '<div class="canvas cmp">' + appBar('비교') + '<h2 class="cmp-title">' + esc(c.title) + '</h2>' + verdict(st) +
+      '<div class="board-card">' + boardGrid(st) + '</div></div>' +
       cta(c.cta, 'now', 'restart');
   }
 
