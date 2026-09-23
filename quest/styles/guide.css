@@ -2,9 +2,9 @@
    전부 .screen 안에서 절대 위치다. 폰 밖으로 나가지 않는다. */
 
 /* 서명 요청 시트 — 지갑 앱의 서명 요청 화면을 본떴다 */
-.scrim { position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.42); animation: fade .3s ease; }
+.scrim { position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.42); animation: fade .45s ease; }
 @keyframes fade { from { opacity: 0; } }
-.sheet { position: absolute; z-index: 21; left: 0; right: 0; bottom: 0; border-radius: 24px 24px 22px 22px; background: var(--sheet-bg); box-shadow: var(--sheet-shadow), inset 0 0 0 1px var(--hair); box-shadow: var(--sheet-shadow); padding: 14px 16px 16px; animation: up .42s var(--ease); }
+.sheet { position: absolute; z-index: 21; left: 0; right: 0; bottom: 0; border-radius: 24px 24px 22px 22px; background: var(--sheet-bg); box-shadow: var(--sheet-shadow), inset 0 0 0 1px var(--hair); box-shadow: var(--sheet-shadow); padding: 14px 16px 16px; animation: up .6s var(--ease); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } }
 .sheet-grab { width: 36px; height: 4px; border-radius: 99px; background: var(--hair); margin: 0 auto 12px; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; }
@@ -30,7 +30,7 @@
 .solver-on .sheet-btns .confirm { background: var(--flowline); color: #061012; }
 
 /* 처리 중 — 실제 시간을 다 기다리게 하지 않는다. 빨리 감는다고 적는다. */
-.pend { position: absolute; z-index: 21; left: 14px; right: 14px; bottom: 14px; border-radius: 18px; background: var(--sheet-bg); box-shadow: var(--sheet-shadow), inset 0 0 0 1px var(--hair); box-shadow: var(--sheet-shadow); padding: 14px 15px; animation: up .42s var(--ease); }
+.pend { position: absolute; z-index: 21; left: 14px; right: 14px; bottom: 14px; border-radius: 18px; background: var(--sheet-bg); box-shadow: var(--sheet-shadow), inset 0 0 0 1px var(--hair); box-shadow: var(--sheet-shadow); padding: 14px 15px; animation: up .6s var(--ease); }
 .pend-top { display: flex; align-items: center; gap: 10px; }
 .spin { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--hair); border-top-color: var(--ink); animation: turn .9s linear infinite; flex: none; }
 .solver-on .spin { border-top-color: var(--flow-cyan); }
@@ -42,7 +42,7 @@
 .solver-on .prog i { background: var(--flowline); }
 @keyframes fill { to { width: 100%; } }
 /* 완료 — 스피너 자리에 체크, 바는 꽉 찬 채로 잠깐 머문다 */
-.tick-s { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--ok); color: #fff; font-size: 12px; font-weight: 700; flex: none; animation: popIn .35s var(--ease); }
+.tick-s { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--ok); color: #fff; font-size: 12px; font-weight: 700; flex: none; animation: popIn .5s var(--ease); }
 .pend.done .prog i { width: 100%; animation: none; background: var(--ok); }
 @keyframes popIn { from { transform: scale(.4); opacity: 0; } }
 .ff { margin-top: 8px; display: flex; justify-content: space-between; font: 10.5px var(--mono); color: var(--faint); }
@@ -50,10 +50,10 @@
 /* 코치마크 — 처음 온 화면에서 요소를 하나씩 짚어 준다.
    .spot 이 대상 자리에 놓이고, 거대한 그림자가 나머지를 어둡힌다. */
 .coach { position: absolute; inset: 0; z-index: 30; }
-.shade { position: absolute; inset: 0; display: block; animation: fade .3s ease; }
+.shade { position: absolute; inset: 0; display: block; animation: fade .45s ease; }
 .spot { position: absolute; border-radius: 16px;   /* guide.js 의 RADIUS 와 같아야 구멍과 링이 맞물린다 */ box-shadow: 0 0 0 2px var(--flow-cyan); pointer-events: none; }
 /* 어두운 테마에선 밝은 말풍선 — 그늘·폰·말풍선이 다 검으면 아무것도 안 보인다 */
-.bubble { position: absolute; left: 14px; right: 14px; border-radius: 16px; background: var(--pop-bg); color: var(--pop-ink); padding: 13px 14px 12px; box-shadow: 0 18px 44px rgba(0,0,0,.35); animation: pop .34s var(--ease); }
+.bubble { position: absolute; left: 14px; right: 14px; border-radius: 16px; background: var(--pop-bg); color: var(--pop-ink); padding: 13px 14px 12px; box-shadow: 0 18px 44px rgba(0,0,0,.35); animation: pop .5s var(--ease); }
 .bubble::before { content: ""; position: absolute; left: var(--ax, 28px); width: 12px; height: 12px; background: var(--pop-bg); transform: rotate(45deg); }
 .bubble.below::before { top: -6px; }
 .bubble.above::before { bottom: -6px; }

@@ -126,12 +126,12 @@ window.MODE = {
     /* 응답한 솔버들의 견적. 유저가 고르지 않는다 — 규칙이 조건이 가장 좋은 것을 고른다. */
     /* delay 는 견적이 도착하는 시점(ms). 서로 다른 시점에 하나씩 튀어 들어온다. */
     quotes: [
-      { name: '솔버 B',  amount: 538.40, time: '~20초', delay: 500 },
-      { name: 'Radius',  amount: 540.90, time: '~25초', delay: 1150, radius: true },
-      { name: '솔버 A',  amount: 539.12, time: '~30초', delay: 1700 },
-      { name: '솔버 C',  amount: 536.75, time: '~45초', delay: 2350 }
+      { name: '솔버 B',  amount: 538.40, time: '~20초', delay: 800 },
+      { name: 'Radius',  amount: 540.90, time: '~25초', delay: 1700, radius: true },
+      { name: '솔버 A',  amount: 539.12, time: '~30초', delay: 2500 },
+      { name: '솔버 C',  amount: 536.75, time: '~45초', delay: 3300 }
     ],
-    pickAfter: 700,   /* 마지막 견적 뒤 규칙이 고르기까지 */
+    pickAfter: 1000,   /* 마지막 견적 뒤 규칙이 고르기까지 */
     lines: [['최소 받을 수량', '{MIN} USDC'], ['네트워크 수수료(가스)', '$0'], ['도착 체인 가스', '불필요'], ['예상 시간', '~25초']],
     sig: { name: 'Sign order', gas: 0 },
     wait: 25,

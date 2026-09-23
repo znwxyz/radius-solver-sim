@@ -3,17 +3,17 @@
    수수료·시간·경로 줄, 하단 버튼. 색은 base.css 의 토큰만 쓴다.
    일반 모드는 무채색, 솔버 모드가 켜지면 Flowline 이 들어온다 — 모드가 색으로 읽힌다. */
 
-.canvas { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; scroll-behavior: smooth; }
+.canvas { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; }
 /* 화면·모드가 바뀔 때 내용이 아래서 살짝 떠오른다. 통째로 다시 그려도 뚝 끊기지 않게. */
-.canvas.screen-in { animation: screenIn .5s var(--ease); }
+.canvas.screen-in { animation: screenIn .75s var(--ease); }
 @keyframes screenIn { from { opacity: 0; transform: translateY(10px); } }
 /* 모드 토글의 손잡이가 반대쪽에서 미끄러져 온다 — DOM 을 새로 그려도 움직임이 남게 */
-.screen.flip-solver .seg-thumb { animation: thumbR .38s var(--ease); }
-.screen.flip-normal .seg-thumb { animation: thumbL .38s var(--ease); }
+.screen.flip-solver .seg-thumb { animation: thumbR .55s var(--ease); }
+.screen.flip-normal .seg-thumb { animation: thumbL .55s var(--ease); }
 @keyframes thumbR { from { transform: translateX(0); background: var(--paper); } }
 @keyframes thumbL { from { transform: translateX(100%); background: var(--flowline); } }
 /* 방금 차례가 된 단계 카드 — 살짝 커졌다 자리 잡으며 테두리가 한 번 빛난다 */
-.pstep.now.just { animation: nowIn .7s var(--ease); }
+.pstep.now.just { animation: nowIn 1.1s var(--ease); }
 @keyframes nowIn { 0% { transform: scale(.985); box-shadow: inset 0 0 0 1.5px var(--ink), 0 0 0 0 rgba(0,222,240,.5); } 50% { box-shadow: inset 0 0 0 1.5px var(--ink), 0 0 0 10px rgba(0,222,240,0); } 100% { transform: none; } }
 .canvas::-webkit-scrollbar { display: none; }
 .bar { padding: 8px 16px 6px; }
@@ -172,7 +172,7 @@
 .q-head { display: flex; align-items: baseline; justify-content: space-between; }
 .q-head b { font-size: 13px; }
 .q-head span { font: 11px var(--mono); color: var(--faint); }
-.q { display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 10px; border-radius: 13px; padding: 9px 12px; background: var(--paper-2); animation: enter .5s var(--ease) both; animation-delay: calc(var(--i) * 120ms); }
+.q { display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 10px; border-radius: 13px; padding: 9px 12px; background: var(--paper-2); animation: enter .75s var(--ease) both; animation-delay: calc(var(--i) * 160ms); }
 .q .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--hair); }
 .q .dot.radius { background: var(--flowline); }
 .q .who { font-size: 13px; font-weight: 500; }
@@ -187,13 +187,13 @@
 .q.sk .amt-q i:nth-child(3) { animation-delay: .36s; }
 @keyframes blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
 /* 도착 — 오른쪽에서 튀어 들어온다 */
-.q.in { animation: qin .55s var(--ease) both; animation-delay: 0ms; }
+.q.in { animation: qin .85s var(--ease) both; animation-delay: 0ms; }
 @keyframes qin { from { opacity: 0; transform: translateX(28px) scale(.94); } 60% { transform: translateX(-3px) scale(1.01); } to { opacity: 1; transform: none; } }
 /* 규칙이 고른 줄 — 링이 퍼지며 자리 잡는다 */
-.q.pick { animation: ring 1.1s var(--ease) both; }
+.q.pick { animation: ring 1.6s var(--ease) both; }
 @keyframes ring { 0% { box-shadow: inset 0 0 0 1.5px var(--tint-line), 0 0 0 0 rgba(0,222,240,.55); } 60% { box-shadow: inset 0 0 0 1.5px var(--tint-line), 0 0 0 12px rgba(0,222,240,0); } 100% { box-shadow: inset 0 0 0 1.5px var(--tint-line), 0 0 0 0 rgba(0,222,240,0); } }
 /* 받는 수량 — 0 에서 올라온 뒤 반짝 켜진다 */
-.amt.lit { animation: lit 1.3s var(--ease) both; }
+.amt.lit { animation: lit 1.9s var(--ease) both; }
 @keyframes lit {
   0%   { text-shadow: 0 0 0 rgba(0,222,240,0); }
   30%  { color: var(--flow-cyan); text-shadow: 0 0 18px rgba(0,222,240,.85), 0 0 2px rgba(0,222,240,.9); transform: scale(1.04); }
@@ -206,7 +206,7 @@
 
 /* 뒤에서 일어난 일 — 짧은 타임라인 */
 .behind { display: grid; gap: 0; padding: 4px 2px 0 6px; }
-.behind li { position: relative; padding: 0 0 12px 20px; font-size: 12.5px; line-height: 1.55; color: var(--muted); animation: enter .5s var(--ease) both; animation-delay: calc(var(--i) * 160ms); }
+.behind li { position: relative; padding: 0 0 12px 20px; font-size: 12.5px; line-height: 1.55; color: var(--muted); animation: enter .75s var(--ease) both; animation-delay: calc(var(--i) * 240ms); }
 .behind li::before { content: ""; position: absolute; left: 0; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: var(--flowline); }
 .behind li::after { content: ""; position: absolute; left: 3.5px; top: 17px; bottom: -2px; width: 1px; background: var(--hair); }
 .behind li:last-child::after { display: none; }
@@ -224,10 +224,10 @@
 .cmp .board-card { padding: 14px 14px 10px; }
 .cmp-title { white-space: pre-line; }
 /* 비교 표의 솔버 모드 열 — 굵게, 그리고 위에서부터 하나씩 튀어 들어온다 */
-.cmp .board-grid .v.hot { font-weight: 700; font-size: 14.5px; color: var(--ink); animation: hotIn .6s var(--ease) both; animation-delay: calc(140ms + var(--i) * 110ms); }
+.cmp .board-grid .v.hot { font-weight: 700; font-size: 14.5px; color: var(--ink); animation: hotIn .9s var(--ease) both; animation-delay: calc(200ms + var(--i) * 170ms); }
 .cmp .board-grid .v.hot small { color: var(--muted); }
 /* 표 아래 카피 — 표의 값이 다 들어온 뒤 떠오른다 */
-.cmp-tag { padding: 10px 4px 4px; animation: enter .7s var(--ease) both; animation-delay: 1000ms; }
+.cmp-tag { padding: 10px 4px 4px; animation: enter 1s var(--ease) both; animation-delay: 1500ms; }
 .cmp-tagline { white-space: pre-line; font-size: 20px; line-height: 1.45; font-weight: 700; letter-spacing: -.02em; }
 .cmp-tagsub { margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
 @keyframes hotIn {
@@ -245,5 +245,5 @@
 .cta.waiting { background: var(--paper-2); color: var(--faint); cursor: default; }
 
 /* 막혔을 때 뜨는 말 */
-.toast { position: absolute; z-index: 40; top: 52px; left: 14px; right: 14px; border-radius: 14px; background: var(--pop-bg); color: var(--pop-ink); box-shadow: 0 14px 34px rgba(0,0,0,.3), inset 0 0 0 1px var(--hair); padding: 12px 15px; font-size: 12.5px; line-height: 1.6; box-shadow: 0 14px 34px rgba(0,0,0,.3); animation: pop .34s var(--ease); }
+.toast { position: absolute; z-index: 40; top: 52px; left: 14px; right: 14px; border-radius: 14px; background: var(--pop-bg); color: var(--pop-ink); box-shadow: 0 14px 34px rgba(0,0,0,.3), inset 0 0 0 1px var(--hair); padding: 12px 15px; font-size: 12.5px; line-height: 1.6; box-shadow: 0 14px 34px rgba(0,0,0,.3); animation: pop .5s var(--ease); }
 @keyframes pop { from { opacity: 0; transform: translateY(-10px); } }

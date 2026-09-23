@@ -44,9 +44,9 @@
   --body: "DM Sans", "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
   --mono: "DM Mono", "SFMono-Regular", ui-monospace, monospace;
   --ease: cubic-bezier(.22, 1, .36, 1);
-  --fast: 140ms;
-  --normal: 320ms;
-  --slow: 640ms;
+  --fast: 220ms;
+  --normal: 480ms;
+  --slow: 900ms;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
