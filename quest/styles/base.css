@@ -48,21 +48,23 @@
   --ink: #f1f2f2;
   --muted: #9a9fa2;
   --faint: #5f6468;
-  --paper: #15181b;
-  --paper-2: #1d2124;
-  --canvas: #08090b;
-  --app-bg: #0f1113;
+  /* 배경은 중간 톤으로 두고 폰·기록판을 더 어둡게 눌러야 폰이 앞으로 나온다.
+     전부 같은 어둡기면 어디를 봐야 할지 모른다. */
+  --paper: #121517;
+  --paper-2: #1b1f22;
+  --canvas: #2b2f33;
+  --app-bg: #0b0d0f;
   --hair: rgba(255, 255, 255, .09);
   --hair-2: rgba(255, 255, 255, .05);
   --black: #f1f2f2;
   --on-black: #0b0c0e;
-  --shadow: 0 26px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+  --shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .07);
   --sheet-shadow: 0 -16px 44px rgba(0, 0, 0, .6);
   --chip-base: #15181b;
   --chip-mix: 22%;
   --chip-line: 55%;
-  --mesh-a: rgba(0, 222, 240, .13);
-  --mesh-b: rgba(0, 188, 154, .10);
+  --mesh-a: rgba(0, 222, 240, .10);
+  --mesh-b: rgba(0, 188, 154, .08);
   --logo-invert: 1;
   --tint: rgba(0, 222, 240, .12);
   --ok: #3ad38f;
