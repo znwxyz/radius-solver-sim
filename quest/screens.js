@@ -143,10 +143,10 @@ window.SCREENS = (function () {
       '<button class="seg-btn' + (mode === 'normal' ? ' on' : '') + '" type="button" role="tab" aria-selected="' + (mode === 'normal') + '" data-act="mode:normal">' + esc(S.normal.label) + '</button>' +
       '<button class="seg-btn' + (mode === 'solver' ? ' on' : '') + '" type="button" role="tab" aria-selected="' + (mode === 'solver') + '" data-act="mode:solver">' + esc(S.solver.label) + '</button></div>';
   }
-  function pane(label, spot, amount, foot, coach, dim) {
+  function pane(label, spot, amount, foot, coach, dim, count) {
     var t = S.tokens[spot.token];
     return '<div class="pane" data-coach="' + coach + '"><div class="pane-top"><span class="lab">' + esc(label) + '</span>' + chainTag(spot.chain) + '</div>' +
-      '<div class="pane-mid"><span class="amt' + (dim ? ' dim' : '') + '">' + (amount === null ? '—' : amountOf(spot.token, amount)) + '</span>' + tokenPill(spot.token) + '</div>' +
+      '<div class="pane-mid"><span class="amt' + (dim ? ' dim' : '') + '"' + (count ? ' data-count="' + amount + '"' : '') + '>' + (amount === null ? '—' : amountOf(spot.token, amount)) + '</span>' + tokenPill(spot.token) + '</div>' +
       '<div class="pane-foot"><span>' + (amount === null ? '' : money(amount * t.price)) + '</span><span>' + foot + '</span></div></div>';
   }
   function flip() { return '<div class="flip" aria-hidden="true"><span>↓</span></div>'; }
@@ -198,9 +198,9 @@ window.SCREENS = (function () {
       pane(S.ui.swap.pay, m.pay, m.pay.amount, balanceFoot(st, m.pay), 'pay') + flip() +
       pane(S.ui.swap.get, { chain: S.mission.need.chain, token: S.mission.need.token }, recv, '', 'get', !got) +
       (got ? doneBanner(m, st.tally.normal) : '') +
-      '<div class="plan-head" data-coach="plan"><b>' + esc(S.ui.swap.plan) + '</b></div>' +
+      '<section class="plan-panel"><div class="plan-head" data-coach="plan"><b>' + esc(S.ui.swap.plan) + '</b><span class="plan-tag">' + esc(S.ui.swap.planTag) + '</span></div>' +
       m.plan.map(function (s, i) { return stepCard(s, i, st); }).join('') +
-      '</div>' + normalBar(st);
+      '</section></div>' + normalBar(st);
   }
 
   /* ── 스왑: 솔버 모드 ── */
@@ -208,17 +208,25 @@ window.SCREENS = (function () {
     return '<div class="min-row" data-coach="min"><span class="lab">' + esc(S.ui.swap.min) + '<b>' + fmt(st.solver.min, 2) + ' USDC</b></span>' +
       '<span class="stp"><button type="button" data-act="min:-1" aria-label="줄이기">−</button><button type="button" data-act="min:1" aria-label="늘리기">+</button></span></div>';
   }
+  function quoteRow(x, i, cls) {
+    return '<div class="q ' + cls + '" style="--i:' + i + '"><span class="dot' + (x.radius ? ' radius' : '') + '"></span>' +
+      '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + ' · 가스 포함</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' USDC</span></div>';
+  }
+  /* 답하는 중: 도착한 순서대로 튀어 들어오고, 아직인 자리는 기다리는 줄.
+     다 모이면: 규칙이 고른 줄에 링이 들어온다. */
   function quoteRows(st) {
-    var q = S.solver.quotes, best = q.reduce(function (a, b) { return b.amount > a.amount ? b : a; });
-    if (st.solver.phase === 'quoting') {
-      return '<div class="quotes"><div class="q-head"><b>' + esc(S.ui.swap.quoting) + '</b><span>…</span></div>' +
-        q.map(function (_, i) { return '<div class="q sk" style="--i:' + i + '"></div>'; }).join('') + '</div>';
+    var q = S.solver.quotes, ph = st.solver.phase, arrived = st.solver.arrived || [];
+    var best = q.reduce(function (a, b) { return b.amount > a.amount ? b : a; });
+    if (ph === 'quoting') {
+      var rows = arrived.map(function (i, k) { return quoteRow(q[i], k, 'in'); });
+      for (var n = arrived.length; n < q.length; n++) rows.push('<div class="q sk" style="--i:' + n + '"><span class="dot"></span><span class="who">' + esc(S.ui.swap.waitingOne) + '</span><span class="amt-q"><i></i><i></i><i></i></span></div>');
+      var head = arrived.length < q.length ? S.ui.swap.quoting : S.ui.swap.picking;
+      return '<div class="quotes"><div class="q-head"><b>' + esc(head) + '</b><span>' + arrived.length + ' / ' + q.length + '</span></div>' + rows.join('') + '</div>';
     }
+    var order = arrived.length === q.length ? arrived : q.map(function (_, i) { return i; });
     return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>견적 ' + q.length + '</b><span>' + esc(S.ui.swap.picked) + '</span></div>' +
-      q.map(function (x, i) {
-        return '<div class="q' + (x === best ? ' best' : '') + '" style="--i:' + i + '"><span class="dot' + (x.radius ? ' radius' : '') + '"></span>' +
-          '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + ' · 가스 포함</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' USDC</span></div>';
-      }).join('') + '<p class="q-pick">' + esc(S.ui.swap.picked) + ': ' + esc(S.ui.swap.pickNote.replace('{WHO}', best.name)) + '</p></div>';
+      order.map(function (i, k) { return quoteRow(q[i], k, q[i] === best ? 'best pick' : ''); }).join('') +
+      '<p class="q-pick">' + esc(S.ui.swap.picked) + ': ' + esc(S.ui.swap.pickNote.replace('{WHO}', best.name)) + '</p></div>';
   }
   function behind() {
     return '<ul class="behind">' + S.solver.behind.map(function (t, i) { return '<li style="--i:' + i + '">' + esc(t) + '</li>'; }).join('') + '</ul>';
@@ -231,7 +239,7 @@ window.SCREENS = (function () {
     return cta(ph === 'quoting' ? S.ui.swap.quoting : S.pending.title, 'waiting', 'hint');
   }
   function swapSolver(st) {
-    var m = S.solver, ph = st.solver.phase, best = m.quotes[0];
+    var m = S.solver, ph = st.solver.phase, best = m.quotes.reduce(function (a, b) { return b.amount > a.amount ? b : a; });
     var got = ph === 'done', quoted = ph !== 'idle' && ph !== 'quoting';
     var rows = m.lines.map(function (r) {
       return [r[0], r[1].replace('{MIN}', fmt(st.solver.min, 2)), /가스/.test(r[0]) ? 'free' : ''];
@@ -242,7 +250,7 @@ window.SCREENS = (function () {
     else extra = quoteRows(st);
     return '<div class="canvas solver-on">' + appBar('Swap', '<span class="pill"><i aria-hidden="true"></i>' + esc(S.address) + '</span>') + seg('solver') +
       pane(S.ui.swap.pay, m.pay, m.pay.amount, balanceFoot(st, m.pay), 'pay') + flip() +
-      pane(S.ui.swap.get, m.want, quoted ? best.amount : null, '', 'get', !quoted) +
+      pane(S.ui.swap.get, m.want, quoted ? best.amount : null, '', 'get', !quoted, ph === 'quoted') +
       (got ? '' : minRow(st)) + lines(rows) + extra + '</div>' + solverBar(st);
   }
   function swap(st) { return st.mode === 'normal' ? swapNormal(st) : swapSolver(st); }

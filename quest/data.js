@@ -124,12 +124,14 @@ window.MODE = {
     minReceive: 517,
     minStep: 5,
     /* 응답한 솔버들의 견적. 유저가 고르지 않는다 — 규칙이 조건이 가장 좋은 것을 고른다. */
+    /* delay 는 견적이 도착하는 시점(ms). 서로 다른 시점에 하나씩 튀어 들어온다. */
     quotes: [
-      { name: 'Radius',  amount: 540.90, time: '~25초', radius: true },
-      { name: '솔버 A',  amount: 539.12, time: '~30초' },
-      { name: '솔버 B',  amount: 538.40, time: '~20초' },
-      { name: '솔버 C',  amount: 536.75, time: '~45초' }
+      { name: '솔버 B',  amount: 538.40, time: '~20초', delay: 500 },
+      { name: 'Radius',  amount: 540.90, time: '~25초', delay: 1150, radius: true },
+      { name: '솔버 A',  amount: 539.12, time: '~30초', delay: 1700 },
+      { name: '솔버 C',  amount: 536.75, time: '~45초', delay: 2350 }
     ],
+    pickAfter: 700,   /* 마지막 견적 뒤 규칙이 고르기까지 */
     lines: [['최소 받을 수량', '{MIN} USDC'], ['네 지갑에서 나가는 가스', '없어'], ['도착 체인의 가스', '필요 없어, 솔버가 대신 실행해'], ['예상 시간', '~25초']],
     sig: { name: 'Sign order', gas: 0 },
     wait: 25,
@@ -221,8 +223,8 @@ window.MODE = {
     wallet: { total: '총 자산', all: '전체', empty: '이 체인에는 아직 아무것도 없어', cta: '500 USDC 마련하러 가자' },
     swap: {
       pay: '내는 것', get: '받는 것', balance: '잔액', max: 'MAX',
-      plan: '해야 할 일', run: '실행', ran: '완료', optTime: '예상',
-      quote: '견적 받기', quoting: '솔버들이 답하는 중', picked: '규칙이 고른 조건',
+      plan: '해야 할 일', planTag: '이 시뮬레이션에만 있는 안내', run: '실행', ran: '완료', optTime: '예상',
+      quote: '견적 받기', quoting: '솔버들이 답하는 중', waitingOne: '답을 기다리는 중', picking: '규칙이 고르는 중', picked: '규칙이 고른 조건',
       pickNote: '{WHO}의 견적이 골라졌어.',
       quoteHint: '견적 받기를 누르면 솔버들이 각자 조건을 제시해',
       sign: '서명하기', min: '최소 받을 수량',

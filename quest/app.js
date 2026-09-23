@@ -6,8 +6,9 @@
   var screen = document.getElementById('screen');
   var beads = document.getElementById('beads');
   var boardEl = document.getElementById('board');
-  var FF_MS = 2600, QUOTE_MS = 1500, TOAST_MS = 2600, THEME_KEY = 'solver-b-theme';
-  var timer = null, toastTimer = null, noteTimer = null;
+  var FF_MS = 2600, TOAST_MS = 2600, THEME_KEY = 'solver-b-theme';
+  var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
+  var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var noteEl = document.getElementById('side-note');
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -18,7 +19,7 @@
       wallet: { normal: clone(S.holdings), solver: clone(S.holdings) },
       fresh: { normal: {}, solver: {} },
       normal: { step: 0, phase: 'idle', sig: 0, picked: {}, tx: [] },   // picked 는 단계 번호 → 고른 선택지
-      solver: { phase: 'idle', min: S.solver.minReceive, tx: null },
+      solver: { phase: 'idle', min: S.solver.minReceive, tx: null, arrived: [] },   // arrived: 도착한 견적의 번호, 도착 순서
       tally: { normal: tally(), solver: tally() },
       pending: null
     };
@@ -89,11 +90,31 @@
 
   /* ── 솔버 모드 동작 ── */
   function bestQuote() { return S.solver.quotes.reduce(function (a, b) { return b.amount > a.amount ? b : a; }); }
+  /* 견적은 솔버마다 다른 시점에 도착한다. 다 모이면 잠깐 뒤 규칙이 고른다. */
   function quote() {
     if (st.solver.phase !== 'idle') return;
-    setMode('solver', { phase: 'quoting' });
-    timer = setTimeout(function () { setMode('solver', { phase: 'quoted' }); }, QUOTE_MS);
+    setMode('solver', { phase: 'quoting', arrived: [] });
+    var last = 0;
+    S.solver.quotes.forEach(function (q, i) {
+      last = Math.max(last, q.delay);
+      timers.push(setTimeout(function () { setMode('solver', { arrived: st.solver.arrived.concat([i]) }); }, q.delay));
+    });
+    timers.push(setTimeout(function () { setMode('solver', { phase: 'quoted' }); }, last + S.solver.pickAfter));
   }
+  /* 받는 수량이 0 에서 올라가며 켜진다. 같은 견적에서 한 번만. */
+  function countUp() {
+    var el = screen.querySelector('.amt[data-count]');
+    if (!el || litKey === st.solver.phase + ':' + st.solver.tx) return;
+    litKey = st.solver.phase + ':' + st.solver.tx;
+    var target = Number(el.dataset.count), t0 = performance.now(), MS = 900;
+    if (calmMotion()) { el.classList.add('lit'); return; }
+    (function tick(now) {
+      var k = Math.min(1, (now - t0) / MS), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = V.fmt(target * e, 2);
+      if (k < 1) requestAnimationFrame(tick); else el.classList.add('lit');
+    })(t0);
+  }
+  function calmMotion() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
   function nudgeMin(dir) {
     var m = Math.max(0, Math.min(bestQuote().amount - 1, st.solver.min + dir * S.solver.minStep));
     setMode('solver', { min: m });
@@ -138,6 +159,7 @@
   }
   function restart() {
     clearTimeout(timer); clearTimeout(toastTimer);
+    timers.forEach(clearTimeout); timers = []; litKey = null;
     st = fresh(); render();
   }
   function theme(next) {
@@ -205,6 +227,7 @@
     drawBeads();
     boardEl.innerHTML = V.board(st);
     coachAfterRender();
+    if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'quoted') countUp();
   }
 
   /* ── 눌렀을 때 ── */

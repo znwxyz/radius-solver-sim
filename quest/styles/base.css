@@ -27,6 +27,13 @@
   --mesh-a: rgba(0, 222, 240, .16);
   --mesh-b: rgba(0, 188, 154, .12);
   --logo-invert: 0;
+  --pop-bg: #ffffff;         /* 코치마크·토스트처럼 화면 위에 뜨는 것. 어두운 테마에선 밝게 뒤집는다 */
+  --pop-ink: #111110;
+  --pop-muted: #6d6d68;
+  --sheet-bg: #ffffff;       /* 서명 시트·처리 중 카드 */
+  --guide-bg: #f6f1e6;       /* 해야 할 일 — 실제 스왑 UI 에 없는 우리만의 안내 구역 */
+  --guide-line: #e6dcc7;
+  --guide-ink: #7a6a45;
 
   --flow-green: #00bc9a;
   --flow-cyan: #00def0;
@@ -66,6 +73,13 @@
   --mesh-a: rgba(0, 222, 240, .10);
   --mesh-b: rgba(0, 188, 154, .08);
   --logo-invert: 1;
+  --pop-bg: #f3f4f4;
+  --pop-ink: #0b0c0e;
+  --pop-muted: #4d5256;
+  --sheet-bg: #22262a;
+  --guide-bg: #2a2620;
+  --guide-line: #4a4131;
+  --guide-ink: #cdb98a;
   --tint: rgba(0, 222, 240, .12);
   --ok: #3ad38f;
 }
@@ -128,7 +142,7 @@ button { font-family: var(--body); color: inherit; }
 .lang-btn { position: relative; z-index: 1; border: 0; background: transparent; padding: 0 12px; border-radius: 99px; font: 600 11px var(--mono); color: var(--muted); cursor: pointer; }
 .lang-btn.on { color: var(--on-black); }
 /* EN 을 눌렀을 때 뜨는 말. 기록판 위에 겹치므로 말풍선처럼 바탕을 준다 */
-.side-note { position: absolute; z-index: 5; top: 38px; right: 0; margin: 0; max-width: 100%; border-radius: 12px; background: var(--black); color: var(--on-black); padding: 9px 12px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 26px rgba(0,0,0,.22); opacity: 0; transform: translateY(-4px); transition: opacity var(--fast) ease, transform var(--fast) ease; pointer-events: none; }
+.side-note { position: absolute; z-index: 5; top: 38px; right: 0; margin: 0; max-width: 100%; border-radius: 12px; background: var(--pop-bg); color: var(--pop-ink); box-shadow: 0 10px 26px rgba(0,0,0,.22), inset 0 0 0 1px var(--hair); padding: 9px 12px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 26px rgba(0,0,0,.22); opacity: 0; transform: translateY(-4px); transition: opacity var(--fast) ease, transform var(--fast) ease; pointer-events: none; }
 .side-note.show { opacity: 1; transform: none; }
 
 /* 폰 목업 — 아이폰 393:852 비율. 348 x 754 */
