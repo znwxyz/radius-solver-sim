@@ -9,6 +9,7 @@
   var FF_MS = 2600, TOAST_MS = 2600, THEME_KEY = 'solver-b-theme';
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
+  var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
   var noteEl = document.getElementById('side-note');
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -115,6 +116,15 @@
     })(t0);
   }
   function calmMotion() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  /* 견적이 하나 올 때마다 그 줄이 보이게 따라 내려간다. 다 모여 규칙이 고르면 고른 줄까지. */
+  function followQuotes() {
+    var ph = st.solver.phase, n = (st.solver.arrived || []).length;
+    if (ph !== 'quoting' && ph !== 'quoted') { seenArrived = 0; return; }
+    var target = ph === 'quoted' ? screen.querySelector('.q.pick') : screen.querySelectorAll('.q.in')[n - 1];
+    if (!target || (ph === 'quoting' && n === seenArrived)) return;
+    seenArrived = n;
+    target.scrollIntoView({ block: 'nearest', behavior: calmMotion() ? 'auto' : 'smooth' });
+  }
   function nudgeMin(dir) {
     var m = Math.max(0, Math.min(bestQuote().amount - 1, st.solver.min + dir * S.solver.minStep));
     setMode('solver', { min: m });
@@ -227,7 +237,7 @@
     drawBeads();
     boardEl.innerHTML = V.board(st);
     coachAfterRender();
-    if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'quoted') countUp();
+    if (type === 'swap' && st.mode === 'solver') { followQuotes(); if (st.solver.phase === 'quoted') countUp(); }
   }
 
   /* ── 눌렀을 때 ── */
