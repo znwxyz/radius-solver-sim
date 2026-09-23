@@ -223,7 +223,7 @@ window.MODE = {
     wallet: { total: '총 자산', all: '전체', empty: '이 체인에는 아직 아무것도 없어', cta: '500 USDC 마련하러 가자' },
     swap: {
       pay: '내는 것', get: '받는 것', balance: '잔액', max: 'MAX',
-      plan: '해야 할 일', planTag: '이 시뮬레이션에만 있는 안내', run: '실행', ran: '완료', optTime: '예상',
+      plan: '해야 할 일', run: '실행', ran: '완료', optTime: '예상',
       quote: '견적 받기', quoting: '솔버들이 답하는 중', waitingOne: '답을 기다리는 중', picking: '규칙이 고르는 중', picked: '규칙이 고른 조건',
       pickNote: '{WHO}의 견적이 골라졌어.',
       quoteHint: '견적 받기를 누르면 솔버들이 각자 조건을 제시해',

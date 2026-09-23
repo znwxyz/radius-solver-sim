@@ -198,7 +198,7 @@ window.SCREENS = (function () {
       pane(S.ui.swap.pay, m.pay, m.pay.amount, balanceFoot(st, m.pay), 'pay') + flip() +
       pane(S.ui.swap.get, { chain: S.mission.need.chain, token: S.mission.need.token }, recv, '', 'get', !got) +
       (got ? doneBanner(m, st.tally.normal) : '') +
-      '<section class="plan-panel"><div class="plan-head" data-coach="plan"><b>' + esc(S.ui.swap.plan) + '</b><span class="plan-tag">' + esc(S.ui.swap.planTag) + '</span></div>' +
+      '<section class="plan-panel"><div class="plan-head" data-coach="plan"><b>' + esc(S.ui.swap.plan) + '</b></div>' +
       m.plan.map(function (s, i) { return stepCard(s, i, st); }).join('') +
       '</section></div>' + normalBar(st);
   }

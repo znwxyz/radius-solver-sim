@@ -31,9 +31,7 @@
   --pop-ink: #111110;
   --pop-muted: #6d6d68;
   --sheet-bg: #ffffff;       /* 서명 시트·처리 중 카드 */
-  --guide-bg: #f6f1e6;       /* 해야 할 일 — 실제 스왑 UI 에 없는 우리만의 안내 구역 */
-  --guide-line: #e6dcc7;
-  --guide-ink: #7a6a45;
+  --guide-bg: #e6e9e9;       /* 해야 할 일 — 실제 스왑 UI 에 없는 구역. 무채색 회색 블록 */
 
   --flow-green: #00bc9a;
   --flow-cyan: #00def0;
@@ -77,9 +75,7 @@
   --pop-ink: #0b0c0e;
   --pop-muted: #4d5256;
   --sheet-bg: #22262a;
-  --guide-bg: #2a2620;
-  --guide-line: #4a4131;
-  --guide-ink: #cdb98a;
+  --guide-bg: #1f2326;
   --tint: rgba(0, 222, 240, .12);
   --ok: #3ad38f;
 }
