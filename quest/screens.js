@@ -30,7 +30,7 @@ window.SCREENS = (function () {
     var idx = picked == null ? step.options.findIndex(function (x) { return x.pick; }) : picked;
     var o = step.options[idx], L = step.labels;
     return Object.assign({}, step, {
-      app: picked == null ? step.app : o.name, option: o,
+      option: o,
       to: Object.assign({}, step.to, { amount: o.amount }),
       lines: [[L.fee, money(o.fee)], [L.gas, o.gas.map(money).join(' + ')], [L.time, '~' + dur(o.wait)], L.dest],
       sigs: step.sigNames.map(function (name, i) { return { name: name, gas: o.gas[i] }; }),
@@ -164,14 +164,14 @@ window.SCREENS = (function () {
   function stepOptions(step, i) {
     return '<div class="opts">' + step.options.map(function (o, j) {
       return '<button class="opt" type="button" data-act="pick:' + j + '"><b>' + esc(o.name) + '</b><small>' + esc(S.ui.swap.optTime) + ' ' + dur(o.wait) +
-        (o.note ? ' · ' + esc(o.note) : '') + '</small><span class="fee">' + money(o.fee) + '</span></button>';
+        '</small><span class="fee">' + money(o.fee) + '</span></button>';
     }).join('') + '</div>';
   }
   function stepCard(raw, i, st) {
     var p = st.normal, state = i < p.step ? 'done' : i === p.step ? 'now' : 'wait';
     var step = resolve(raw, p.picked[i]);
-    var body = '<div class="p-top"><span class="p-num">' + (state === 'done' ? '✓' : i + 1) + '</span><span class="p-kind">' + esc(step.kind) + '</span><span class="p-app">' + esc(step.app) + '</span></div>' +
-      '<div class="p-title">' + esc(step.title) + '</div><p class="p-why">' + esc(step.why) + '</p>' +
+    var body = '<div class="p-top"><span class="p-num">' + (state === 'done' ? '✓' : i + 1) + '</span>' +
+      '<span class="p-title">' + esc(step.title) + '</span></div><p class="p-why">' + esc(step.why) + '</p>' +
       // 세로로 쌓는다: [체인] 토큰 → ↓ → [체인] 토큰. 가로로 늘어놓으면 폰 폭에서 쪼개진다.
       '<div class="p-flow"><span class="p-spot">' + chainTag(step.from.chain) + tokenPill(step.from.token) + '</span>' +
       '<span class="arr" aria-hidden="true">↓</span>' +
@@ -183,7 +183,7 @@ window.SCREENS = (function () {
     if (state === 'done') {
       body += '<div class="p-tx"><span>' + esc(S.pending.done) + ' · <span class="hash">' + esc(p.tx[i]) + '</span></span><a href="#" data-act="noop">' + esc(S.pending.explorer) + '</a></div>';
     } else if (state === 'now' && p.phase === 'idle') {
-      body += '<button class="p-act" type="button" data-act="run:' + i + '">' + esc(S.ui.swap.run) + ' · ' + step.sigs.length + '회 서명</button>';
+      body += '<button class="p-act" type="button" data-act="run:' + i + '">' + esc(S.ui.swap.run) + '</button>';
     }
     return '<div class="pstep ' + state + '">' + body + '</div>';
   }
@@ -210,7 +210,7 @@ window.SCREENS = (function () {
   }
   function quoteRow(x, i, cls) {
     return '<div class="q ' + cls + '" style="--i:' + i + '"><span class="dot' + (x.radius ? ' radius' : '') + '"></span>' +
-      '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + ' · 가스 포함</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' USDC</span></div>';
+      '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + '</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' USDC</span></div>';
   }
   /* 답하는 중: 도착한 순서대로 튀어 들어오고, 아직인 자리는 기다리는 줄.
      다 모이면: 규칙이 고른 줄에 링이 들어온다. */
@@ -224,7 +224,7 @@ window.SCREENS = (function () {
       return '<div class="quotes"><div class="q-head"><b>' + esc(head) + '</b><span>' + arrived.length + ' / ' + q.length + '</span></div>' + rows.join('') + '</div>';
     }
     var order = arrived.length === q.length ? arrived : q.map(function (_, i) { return i; });
-    return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>견적 ' + q.length + '</b><span>' + esc(S.ui.swap.picked) + '</span></div>' +
+    return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>견적 ' + q.length + '</b></div>' +
       order.map(function (i, k) { return quoteRow(q[i], k, q[i] === best ? 'best pick' : ''); }).join('') +
       '<p class="q-pick">' + esc(S.ui.swap.picked) + ': ' + esc(S.ui.swap.pickNote.replace('{WHO}', best.name)) + '</p></div>';
   }
@@ -284,7 +284,7 @@ window.SCREENS = (function () {
     return '<div class="board-grid">' + head + rows + '</div><div class="board-foot"><div></div>' + status(T.normal) + status(T.solver) + '</div>';
   }
   function board(st) {
-    return '<div class="board-card"><div class="board-title"><b>' + esc(S.board.title) + '</b><span>' + esc(S.board.sub) + '</span></div>' + boardGrid(st) + '</div>';
+    return '<div class="board-card"><div class="board-title"><b>' + esc(S.board.title) + '</b></div>' + boardGrid(st) + '</div>';
   }
 
   /* ── 비교 ── 제목과 표뿐. 솔버 모드 열이 굵게, 값이 위에서부터 하나씩 튀어 들어온다. */
@@ -316,7 +316,7 @@ window.SCREENS = (function () {
   }
   function pendingCard(p) {
     return '<div class="pend"><div class="pend-top"><span class="spin" aria-hidden="true"></span><span><b>' + esc(S.pending.title) + ' · ' + esc(p.name) + '</b>' +
-      '<small>예상 ' + dur(p.wait) + ' · ' + esc(S.pending.ff) + ' ×' + fmt(p.ff, 0) + '</small></span></div>' +
+      '<small>예상 ' + dur(p.wait) + '</small></span></div>' +
       '<div class="prog" style="--ff:' + p.ms + 'ms"><i></i></div><div class="ff"><span>' + esc(p.hash) + '</span><span>' + esc(p.where) + '</span></div></div>';
   }
 

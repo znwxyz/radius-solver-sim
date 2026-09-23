@@ -65,7 +65,7 @@
   /* 느린 선택지는 처리 중 애니메이션을 두 배로 끈다. 실제 시간을 기다리게 하진 않는다. */
   function pendingFor(name, wait, where, slow) {
     var ms = slow ? FF_MS * 2 : FF_MS;
-    return { name: name, wait: wait, ff: Math.max(1, Math.round(wait * 1000 / ms)), ms: ms, hash: hash(), where: where };
+    return { name: name, wait: wait, ms: ms, hash: hash(), where: where };
   }
   function normalSheet() {
     var step = currentStep(), sig = step.sigs[st.normal.sig];

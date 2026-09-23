@@ -69,7 +69,7 @@ window.MODE = {
     pay: { chain: 'ethereum', token: 'eth', amount: 0.1475 },
     plan: [
       {
-        id: 'swap', kind: '스왑', app: 'Uniswap v3',
+        id: 'swap', kind: '스왑',
         title: 'Ethereum에서 ETH를 USDC로 바꾸기',
         why: '브릿지는 USDC 같은 토큰을 다른 체인으로 옮기는 도구야. 그러니까 먼저 Ethereum 위에서 네 ETH를 USDC로 바꿔서, 옮길 USDC를 만들어 두자. 이렇게 같은 체인 안에서 토큰을 바꾸는 걸 스왑이라고 해.',
         from: { chain: 'ethereum', token: 'eth',  amount: 0.1475 },
@@ -80,7 +80,7 @@ window.MODE = {
         decide: '슬리피지 허용치'
       },
       {
-        id: 'bridge', kind: '브릿지', app: '브릿지 고르기',
+        id: 'bridge', kind: '브릿지',
         title: 'USDC를 Ethereum에서 Robinhood Chain으로 옮기기',
         why: 'Ethereum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 장부에 기록돼. 그래서 방금 만든 USDC를 브릿지로 Robinhood Chain에 옮겨야 해. 어느 브릿지를 쓸지는 네가 골라야 하고, 브릿지마다 수수료와 걸리는 시간이 달라.',
         from: { chain: 'ethereum',  token: 'usdc', amount: 541.87 },
@@ -90,21 +90,21 @@ window.MODE = {
            느리게 돌린다 — 실제 7일을 기다리게 하진 않고, 표기만 7일이다.
            pick 은 아직 고르기 전 카드에 미리 보여 주는 기본값이다. */
         options: [
-          { name: '공식 브릿지',      fee: 0,    gas: [1.92, 3.60], wait: 7 * 86400 + 2 * 3600, amount: 541.87, note: '수수료는 없지만 출금 대기가 길어', slow: true },
-          { name: '서드파티 브릿지 A', fee: 1.63, gas: [1.92, 4.10], wait: 12 * 60,             amount: 540.24, note: '', pick: true },
-          { name: '서드파티 브릿지 B', fee: 2.90, gas: [1.92, 4.35], wait: 4 * 60,              amount: 538.97, note: '빠른 대신 수수료가 비싸' }
+          { name: '공식 브릿지',      fee: 0,    gas: [1.92, 3.60], wait: 7 * 86400 + 2 * 3600, amount: 541.87, slow: true },
+          { name: '서드파티 브릿지 A', fee: 1.63, gas: [1.92, 4.10], wait: 12 * 60,             amount: 540.24, pick: true },
+          { name: '서드파티 브릿지 B', fee: 2.90, gas: [1.92, 4.35], wait: 4 * 60,              amount: 538.97 }
         ],
-        labels: { fee: '브릿지 수수료', gas: '네트워크 수수료(가스)', time: '예상 시간', dest: ['도착 체인의 가스', '네가 따로 챙겨야 해'] },
+        labels: { fee: '브릿지 수수료', gas: '네트워크 수수료(가스)', time: '예상 시간', dest: ['도착 체인 가스', '별도 필요'] },
         sigNames: ['Approve USDC', 'Bridge'],
         decide: '어느 브릿지로 갈지'
       },
       {
-        id: 'gas', kind: '브릿지', app: '가스 챙기기',
+        id: 'gas', kind: '브릿지',
         title: 'Robinhood Chain에서 쓸 가스(ETH) 챙기기',
         why: 'Robinhood Chain에서 거래를 하려면 그 체인에서 쓰는 가스, 즉 ETH가 조금 필요해. USDC만 있으면 거래를 보낼 수가 없거든. 그래서 Ethereum에 있는 ETH도 조금 옮겨 두자.',
         from: { chain: 'ethereum',  token: 'eth', amount: 0.004 },
         to:   { chain: 'robinhood', token: 'eth', amount: 0.0039 },
-        lines: [['네트워크 수수료(가스)', '$3.40'], ['예상 시간', '~8분'], ['옮길 양', '거래 몇 번 할 만큼']],
+        lines: [['네트워크 수수료(가스)', '$3.40'], ['예상 시간', '~8분']],
         sigs: [{ name: 'Bridge ETH', gas: 3.40 }],
         wait: 480,
         decide: '가스를 얼마나 챙길지'
@@ -132,7 +132,7 @@ window.MODE = {
       { name: '솔버 C',  amount: 536.75, time: '~45초', delay: 2350 }
     ],
     pickAfter: 700,   /* 마지막 견적 뒤 규칙이 고르기까지 */
-    lines: [['최소 받을 수량', '{MIN} USDC'], ['네 지갑에서 나가는 가스', '없어'], ['도착 체인의 가스', '필요 없어, 솔버가 대신 실행해'], ['예상 시간', '~25초']],
+    lines: [['최소 받을 수량', '{MIN} USDC'], ['네트워크 수수료(가스)', '$0'], ['도착 체인 가스', '불필요'], ['예상 시간', '~25초']],
     sig: { name: 'Sign order', gas: 0 },
     wait: 25,
     decide: '최소 받을 수량',
@@ -152,7 +152,6 @@ window.MODE = {
   /* ── 기록판 ── 두 모드가 같은 항목으로 쌓인다 */
   board: {
     title: '기록판',
-    sub: '같은 지갑 · 같은 Quest',
     rows: [
       { key: 'sigs',   label: '지갑 서명 횟수',        unit: '번' },
       { key: 'gas',    label: '내 지갑에서 나간 가스',  unit: '$' },
@@ -211,7 +210,7 @@ window.MODE = {
   sign: { title: '서명 요청', confirm: '확인', reject: '거절', changes: '예상 변화', fee: '네트워크 수수료(가스)', free: '$0 · 가스 없음', approveWhat: '브릿지 컨트랙트가 네 USDC를 쓸 수 있게 허용' },
 
   /* 대기 화면. 실제 시간을 다 기다리게 하지 않고 빨리 감는다 — 그렇다고 말한다. */
-  pending: { title: '처리 중', ff: '빨리 감기', done: '완료', explorer: '익스플로러에서 보기', order: '주문' },
+  pending: { title: '처리 중', done: '완료', explorer: '익스플로러에서 보기', order: '주문' },
 
   ui: {
     wallet: { total: '총 자산', all: '전체', empty: '이 체인에는 아직 아무것도 없어', cta: '500 USDC 마련하러 가자' },

@@ -119,19 +119,18 @@
 .plan-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 2px; }
 .plan-panel .pstep { background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
 .plan-panel .pstep.now { box-shadow: inset 0 0 0 1.5px var(--ink); }
-.plan-panel .pstep .lines, .plan-panel .pstep .p-kind { background: var(--paper-2); }
+.plan-panel .pstep .lines { background: var(--paper-2); }
 .plan-head b { font-size: 14px; }
 .plan-head span { font: 11px var(--mono); color: var(--faint); }
 .pstep { border-radius: 16px; padding: 12px 13px; background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--hair-2); transition: opacity var(--normal) ease; }
 .pstep.wait { opacity: .5; }
 .pstep.now { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--ink); }
 .pstep.done { box-shadow: inset 0 0 0 1px var(--hair-2); }
-.p-top { display: flex; align-items: center; gap: 8px; }
+.p-top { display: flex; align-items: flex-start; gap: 10px; }
+.p-top .p-title { margin-top: 1px; }
 .p-num { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--black); color: var(--on-black); font: 600 11px var(--mono); flex: none; }
 .pstep.done .p-num { background: var(--ok); color: #fff; }
-.p-kind { font: 500 10.5px var(--mono); color: var(--muted); border-radius: 99px; padding: 2px 8px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
-.p-app { margin-left: auto; font: 11px var(--mono); color: var(--faint); }
-.p-title { margin-top: 8px; font-size: 14px; font-weight: 600; }
+.p-title { font-size: 14px; font-weight: 600; line-height: 1.45; }
 .p-why { margin-top: 3px; font-size: 12px; line-height: 1.55; color: var(--muted); }
 .p-flow { display: grid; gap: 4px; margin-top: 10px; justify-items: start; }
 .p-spot { display: inline-flex; align-items: center; gap: 8px; }
@@ -218,7 +217,7 @@
 .cmp .board-grid .v.hot small { color: var(--muted); }
 /* 표 아래 카피 — 표의 값이 다 들어온 뒤 떠오른다 */
 .cmp-tag { padding: 10px 4px 4px; animation: enter .7s var(--ease) both; animation-delay: 1000ms; }
-.cmp-tagline { white-space: pre-line; font-size: 20px; line-height: 1.32; font-weight: 700; letter-spacing: -.02em; }
+.cmp-tagline { white-space: pre-line; font-size: 20px; line-height: 1.45; font-weight: 700; letter-spacing: -.02em; }
 .cmp-tagsub { margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
 @keyframes hotIn {
   0%   { opacity: 0; transform: translateX(14px) scale(1.12); color: var(--flow-cyan); }
