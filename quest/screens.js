@@ -101,7 +101,7 @@ window.SCREENS = (function () {
   }
   function chainTabs(tab) {
     var all = '<button class="ctab all' + (tab === 'all' ? ' on' : '') + '" type="button" data-act="tab:all">' + esc(S.ui.wallet.all) + '</button>';
-    return '<div class="chain-tabs" data-coach="chains">' + all + S.chainOrder.map(function (k) {
+    return '<div class="chain-tabs" data-coach="chains" data-coach-fit="children">' + all + S.chainOrder.map(function (k) {
       var c = S.chains[k];
       // 이름은 고른 탭에만 붙는다. 넷 다 이름을 붙이면 한 줄에 안 들어와 마지막 체인이 잘린다.
       return '<button class="ctab' + (tab === k ? ' on' : '') + '" type="button" data-act="tab:' + k + '" aria-label="' + esc(c.name) + '"><img src="' + c.icon + '" alt="">' +

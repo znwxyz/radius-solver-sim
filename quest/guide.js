@@ -14,7 +14,7 @@ window.COACH = (function () {
   function reveal(target, screen) {
     var canvas = screen.querySelector('.canvas');
     if (!canvas) return;
-    var r = target.getBoundingClientRect(), c = canvas.getBoundingClientRect();
+    var r = rectOf(target), c = canvas.getBoundingClientRect();
     if (r.top < c.top + 8 || r.bottom > c.bottom - 8) {
       canvas.scrollTop += (r.top - c.top) - 56;
     }
@@ -22,8 +22,22 @@ window.COACH = (function () {
 
   /* 대상 둘레에 PAD 만큼 여유를 두되, 폰 화면 가장자리 안쪽(INSET)으로 잘라 넣는다.
      체인 탭처럼 화면 폭 끝까지 붙은 요소는 그냥 두면 링이 화면 밖으로 나가 잘린다. */
+  /* data-coach-fit="children" 인 대상은 컨테이너가 아니라 자식들이 실제로 차지하는 영역을 잰다.
+     체인 탭 줄처럼 가로 스크롤 영역이 있는 컨테이너는 브라우저에 따라 탭보다 아래로 더 길어
+     링이 밑으로 늘어졌다. */
+  function rectOf(target) {
+    if (target.dataset.coachFit !== 'children' || !target.children.length) return target.getBoundingClientRect();
+    var u = null;
+    Array.prototype.forEach.call(target.children, function (el) {
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return;
+      u = u ? { top: Math.min(u.top, r.top), left: Math.min(u.left, r.left), bottom: Math.max(u.bottom, r.bottom), right: Math.max(u.right, r.right) } : { top: r.top, left: r.left, bottom: r.bottom, right: r.right };
+    });
+    if (!u) return target.getBoundingClientRect();
+    return { top: u.top, left: u.left, bottom: u.bottom, right: u.right, width: u.right - u.left, height: u.bottom - u.top };
+  }
   function box(target, screen) {
-    var r = target.getBoundingClientRect(), s = screen.getBoundingClientRect();
+    var r = rectOf(target), s = screen.getBoundingClientRect();
     var left = Math.max(INSET, r.left - s.left - PAD), right = Math.min(s.width - INSET, r.right - s.left + PAD);
     var top = Math.max(INSET, r.top - s.top - PAD), bottom = Math.min(s.height - INSET, r.bottom - s.top + PAD);
     return { top: top, left: left, width: right - left, height: bottom - top, sh: s.height };
