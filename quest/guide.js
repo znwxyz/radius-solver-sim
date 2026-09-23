@@ -29,14 +29,16 @@ window.COACH = (function () {
     return { top: top, left: left, width: right - left, height: bottom - top, sh: s.height };
   }
 
-  /* 대상 둘레의 네 조각 그늘. 한 장의 거대한 그림자로 뚫으면 캡처·저사양 기기에서
-     이전 화면이 겹쳐 보이는 일이 있어 네 개의 면으로 나눈다. */
+  /* 대상 둘레의 그늘. 링과 같은 반지름으로 둥글게 뚫은 SVG 마스크 한 장이다.
+     네 조각 직사각형으로 뚫으면 둥근 링 밖으로 흰 모서리 네 개가 삐져나온다.
+     거대한 box-shadow 한 장은 캡처·저사양 기기에서 이전 화면이 겹쳐 보였다. */
+  var RADIUS = 16;
   function shades(b) {
-    var bottom = b.top + b.height, right = b.left + b.width;
-    return '<div class="shade" style="top:0;left:0;right:0;height:' + Math.max(0, b.top) + 'px"></div>' +
-      '<div class="shade" style="top:' + bottom + 'px;left:0;right:0;bottom:0"></div>' +
-      '<div class="shade" style="top:' + b.top + 'px;left:0;width:' + Math.max(0, b.left) + 'px;height:' + b.height + 'px"></div>' +
-      '<div class="shade" style="top:' + b.top + 'px;left:' + right + 'px;right:0;height:' + b.height + 'px"></div>';
+    var id = 'coach-hole-' + Date.now();
+    return '<svg class="shade" width="100%" height="100%" aria-hidden="true"><defs><mask id="' + id + '">' +
+      '<rect width="100%" height="100%" fill="#fff"/>' +
+      '<rect x="' + b.left + '" y="' + b.top + '" width="' + b.width + '" height="' + b.height + '" rx="' + RADIUS + '" fill="#000"/>' +
+      '</mask></defs><rect width="100%" height="100%" fill="rgba(0,0,0,.58)" mask="url(#' + id + ')"/></svg>';
   }
 
   function bubbleHtml(step, i, n, words) {

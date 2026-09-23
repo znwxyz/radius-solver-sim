@@ -46,8 +46,8 @@
 /* 코치마크 — 처음 온 화면에서 요소를 하나씩 짚어 준다.
    .spot 이 대상 자리에 놓이고, 거대한 그림자가 나머지를 어둡힌다. */
 .coach { position: absolute; inset: 0; z-index: 30; }
-.shade { position: absolute; background: rgba(0,0,0,.58); animation: fade .3s ease; }
-.spot { position: absolute; border-radius: 16px; box-shadow: 0 0 0 2px var(--flow-cyan); pointer-events: none; }
+.shade { position: absolute; inset: 0; display: block; animation: fade .3s ease; }
+.spot { position: absolute; border-radius: 16px;   /* guide.js 의 RADIUS 와 같아야 구멍과 링이 맞물린다 */ box-shadow: 0 0 0 2px var(--flow-cyan); pointer-events: none; }
 /* 어두운 테마에선 밝은 말풍선 — 그늘·폰·말풍선이 다 검으면 아무것도 안 보인다 */
 .bubble { position: absolute; left: 14px; right: 14px; border-radius: 16px; background: var(--pop-bg); color: var(--pop-ink); padding: 13px 14px 12px; box-shadow: 0 18px 44px rgba(0,0,0,.35); animation: pop .34s var(--ease); }
 .bubble::before { content: ""; position: absolute; left: var(--ax, 28px); width: 12px; height: 12px; background: var(--pop-bg); transform: rotate(45deg); }
