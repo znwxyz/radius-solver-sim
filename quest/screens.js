@@ -315,7 +315,8 @@ window.SCREENS = (function () {
       '<div class="sheet-btns"><button class="reject" type="button" data-act="reject">' + esc(w.reject) + '</button><button class="confirm" type="button" data-act="confirm">' + esc(w.confirm) + '</button></div></div>';
   }
   function pendingCard(p) {
-    return '<div class="pend"><div class="pend-top"><span class="spin" aria-hidden="true"></span><span><b>' + esc(S.pending.title) + ' · ' + esc(p.name) + '</b>' +
+    var mark = p.done ? '<span class="tick-s" aria-hidden="true">✓</span>' : '<span class="spin" aria-hidden="true"></span>';
+    return '<div class="pend' + (p.done ? ' done' : '') + '"><div class="pend-top">' + mark + '<span><b>' + esc(p.done ? S.pending.done : S.pending.title) + ' · ' + esc(p.name) + '</b>' +
       '<small>예상 ' + dur(p.wait) + '</small></span></div>' +
       '<div class="prog" style="--ff:' + p.ms + 'ms"><i></i></div><div class="ff"><span>' + esc(p.hash) + '</span><span>' + esc(p.where) + '</span></div></div>';
   }

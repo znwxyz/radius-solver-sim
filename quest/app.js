@@ -6,10 +6,11 @@
   var screen = document.getElementById('screen');
   var beads = document.getElementById('beads');
   var boardEl = document.getElementById('board');
-  var FF_MS = 2600, TOAST_MS = 2600, THEME_KEY = 'solver-b-theme';
+  var FF_MS = 2600, TOAST_MS = 2600, DONE_MS = 650, THEME_KEY = 'solver-b-theme';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
+  var last = { at: -1, mode: null, step: -1, solverPhase: null, normalDone: false };   // 직전에 그린 상태. 무엇이 바뀌었는지 보고 전환 모션을 건다
   var noteEl = document.getElementById('side-note');
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -79,7 +80,7 @@
       normal: Object.assign({}, st.normal, { sig: st.normal.sig + 1, phase: last ? 'pending' : 'sign' }) };
     if (last) patch.pending = pendingFor(step.option ? step.option.name : step.kind, step.wait, S.chains[step.to.chain].name, step.option && step.option.slow);
     set(patch);
-    if (last) timer = setTimeout(finishNormal, patch.pending.ms);
+    if (last) timer = setTimeout(function () { settle(finishNormal); }, patch.pending.ms);
   }
   function finishNormal() {
     var step = currentStep(), next = st.normal.step + 1, done = next >= S.normal.plan.length;
@@ -138,7 +139,12 @@
     var m = S.solver;
     set({ tally: bump('solver', { sigs: 1, decide: 1 }), solver: Object.assign({}, st.solver, { phase: 'pending' }),
       pending: pendingFor(S.pending.order, m.wait, S.chains[m.want.chain].name, false) });
-    timer = setTimeout(finishSolver, FF_MS);
+    timer = setTimeout(function () { settle(finishSolver); }, FF_MS);
+  }
+  /* 진행 바가 다 차면 완료 표시를 잠깐 보여 주고 나서 넘어간다. 바로 사라지면 끝난 줄 모른다. */
+  function settle(fn) {
+    set({ pending: Object.assign({}, st.pending, { done: true }) });
+    timer = setTimeout(fn, DONE_MS);
   }
   function finishSolver() {
     var m = S.solver, to = { chain: m.want.chain, token: m.want.token, amount: bestQuote().amount };
@@ -170,6 +176,7 @@
   function restart() {
     clearTimeout(timer); clearTimeout(toastTimer);
     timers.forEach(clearTimeout); timers = []; litKey = null;
+    last = { at: -1, mode: null, step: -1, solverPhase: null, normalDone: false };
     st = fresh(); render();
   }
   function theme(next) {
@@ -211,6 +218,28 @@
     if (!C.mount(screen, S.coach[st.coach.key], st.coach.i, S.coach)) coachStep('skip');
   }
 
+  /* ── 전환 모션 ── 다시 그린 뒤, 직전 상태와 비교해 무엇이 바뀌었는지에 따라 건다 */
+  function smooth() { return calmMotion() ? 'auto' : 'smooth'; }
+  function transitions(type) {
+    var canvas = screen.querySelector('.canvas');
+    var stepChanged = last.at !== st.at, modeChanged = !stepChanged && last.mode !== st.mode;
+    if (canvas && (stepChanged || modeChanged)) canvas.classList.add('screen-in');
+    if (modeChanged) screen.classList.add('flip-' + st.mode);
+    if (type === 'swap' && st.mode === 'normal') {
+      var now = screen.querySelector('.pstep.now');
+      if (now && !stepChanged && st.normal.step !== last.step && st.normal.step > 0) {
+        now.classList.add('just');
+        now.scrollIntoView({ block: 'center', behavior: smooth() });
+      }
+      if (st.tally.normal.done && !last.normalDone && !stepChanged && canvas) canvas.scrollTo({ top: 0, behavior: smooth() });
+    }
+    if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'done' && last.solverPhase !== 'done') {
+      var banner = screen.querySelector('.done-banner');
+      if (banner) banner.scrollIntoView({ block: 'start', behavior: smooth() });
+    }
+    last = { at: st.at, mode: st.mode, step: st.normal.step, solverPhase: st.solver.phase, normalDone: st.tally.normal.done };
+  }
+
   /* ── 그리기 ── */
   function drawBeads() {
     beads.innerHTML = S.steps.map(function (s, i) {
@@ -236,6 +265,7 @@
     lastKey = key;
     drawBeads();
     boardEl.innerHTML = V.board(st);
+    transitions(type);
     coachAfterRender();
     if (type === 'swap' && st.mode === 'solver') { followQuotes(); if (st.solver.phase === 'quoted') countUp(); }
   }

@@ -41,6 +41,10 @@
 .prog i { display: block; height: 100%; width: 0; background: var(--ink); animation: fill var(--ff, 2600ms) linear forwards; }
 .solver-on .prog i { background: var(--flowline); }
 @keyframes fill { to { width: 100%; } }
+/* 완료 — 스피너 자리에 체크, 바는 꽉 찬 채로 잠깐 머문다 */
+.tick-s { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--ok); color: #fff; font-size: 12px; font-weight: 700; flex: none; animation: popIn .35s var(--ease); }
+.pend.done .prog i { width: 100%; animation: none; background: var(--ok); }
+@keyframes popIn { from { transform: scale(.4); opacity: 0; } }
 .ff { margin-top: 8px; display: flex; justify-content: space-between; font: 10.5px var(--mono); color: var(--faint); }
 
 /* 코치마크 — 처음 온 화면에서 요소를 하나씩 짚어 준다.
