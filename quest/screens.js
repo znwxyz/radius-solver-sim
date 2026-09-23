@@ -291,8 +291,10 @@ window.SCREENS = (function () {
   function compare(st) {
     var c = S.compare;
     return '<div class="canvas cmp">' + appBar('비교') + '<h2 class="cmp-title">' + esc(c.title) + '</h2>' +
-      '<div class="board-card">' + boardGrid(st, true) + '</div></div>' +
-      cta(c.cta, 'now', 'restart');
+      '<div class="board-card">' + boardGrid(st, true) + '</div>' +
+      (st.tally.normal.done && st.tally.solver.done
+        ? '<div class="cmp-tag"><p class="cmp-tagline">' + esc(c.tagline) + '</p><p class="cmp-tagsub">' + esc(c.tagSub) + '</p></div>' : '') +
+      '</div>' + cta(c.cta, 'now', 'restart');
   }
 
   /* ── 서명 시트 · 처리 중 ── */

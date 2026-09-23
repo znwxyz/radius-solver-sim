@@ -216,6 +216,10 @@
 /* 비교 표의 솔버 모드 열 — 굵게, 그리고 위에서부터 하나씩 튀어 들어온다 */
 .cmp .board-grid .v.hot { font-weight: 700; font-size: 14.5px; color: var(--ink); animation: hotIn .6s var(--ease) both; animation-delay: calc(140ms + var(--i) * 110ms); }
 .cmp .board-grid .v.hot small { color: var(--muted); }
+/* 표 아래 카피 — 표의 값이 다 들어온 뒤 떠오른다 */
+.cmp-tag { padding: 10px 4px 4px; animation: enter .7s var(--ease) both; animation-delay: 1000ms; }
+.cmp-tagline { white-space: pre-line; font-size: 20px; line-height: 1.32; font-weight: 700; letter-spacing: -.02em; }
+.cmp-tagsub { margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
 @keyframes hotIn {
   0%   { opacity: 0; transform: translateX(14px) scale(1.12); color: var(--flow-cyan); }
   55%  { opacity: 1; transform: translateX(-2px) scale(1.04); color: var(--flow-cyan); }
