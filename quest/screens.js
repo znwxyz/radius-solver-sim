@@ -264,7 +264,7 @@ window.SCREENS = (function () {
       got: ((w[need.chain] || {})[need.token]) || 0
     };
   }
-  function cell(row, t, l) {
+  function cell(row, t, l, hot, i) {
     var v = row.key in l ? l[row.key] : t[row.key], zero = !t.done && !v;
     var txt = zero ? '–'
       : row.unit === '$' ? money(v)
@@ -272,13 +272,14 @@ window.SCREENS = (function () {
       : row.unit === 'eth' ? fmt(v, 4) + '<small>ETH</small>'
       : row.unit === 'usdc' ? fmt(v, 2) + '<small>USDC</small>'
       : v + '<small>' + esc(row.unit) + '</small>';
-    return '<div class="v' + (zero ? ' zero' : '') + '">' + txt + '</div>';
+    return '<div class="v' + (zero ? ' zero' : '') + (hot && !zero ? ' hot' : '') + '" style="--i:' + i + '">' + txt + '</div>';
   }
-  function boardGrid(st) {
+  /* emph 가 참이면(비교 화면) 솔버 모드 열을 강조한다 */
+  function boardGrid(st, emph) {
     var b = S.board, T = st.tally, L = { normal: ledger(st, 'normal'), solver: ledger(st, 'solver') };
     var head = '<div class="h">' + esc(b.title) + '</div><div class="h' + (st.mode === 'normal' ? ' on' : '') + '">' + esc(S.normal.label) +
       '</div><div class="h solver' + (st.mode === 'solver' ? ' on' : '') + '">' + esc(S.solver.label) + '</div>';
-    var rows = b.rows.map(function (r) { return '<div class="lab">' + esc(r.label) + '</div>' + cell(r, T.normal, L.normal) + cell(r, T.solver, L.solver); }).join('');
+    var rows = b.rows.map(function (r, i) { return '<div class="lab">' + esc(r.label) + '</div>' + cell(r, T.normal, L.normal, false, i) + cell(r, T.solver, L.solver, emph, i); }).join('');
     var status = function (t) { return '<div class="s' + (t.done ? ' done' : '') + '">' + (t.done ? esc(S.mission.clear) : t.sigs ? esc(b.doing) : esc(b.empty)) + '</div>'; };
     return '<div class="board-grid">' + head + rows + '</div><div class="board-foot"><div></div>' + status(T.normal) + status(T.solver) + '</div>';
   }
@@ -286,25 +287,11 @@ window.SCREENS = (function () {
     return '<div class="board-card"><div class="board-title"><b>' + esc(S.board.title) + '</b><span>' + esc(S.board.sub) + '</span></div>' + boardGrid(st) + '</div>';
   }
 
-  /* ── 비교 ── */
-  /* 두 모드가 다 끝났을 때만. 숫자를 보고 어느 문장을 쓸지 고른다. */
-  function verdict(st) {
-    var T = st.tally, c = S.compare;
-    if (!T.normal.done || !T.solver.done) return '';   // 한쪽만 끝났으면 말 없이 표만
-    var n = ledger(st, 'normal'), s = ledger(st, 'solver');
-    var head = c.headline.replace('{SIGS_N}', T.normal.sigs).replace('{SIGS_S}', T.solver.sigs)
-      .replace('{GAS_N}', money(T.normal.gas)).replace('{GAS_S}', money(T.solver.gas))
-      .replace('{WAIT_N}', dur(T.normal.wait)).replace('{WAIT_S}', dur(T.solver.wait));
-    var diff = fmt(n.paid - s.paid, 4), got = fmt(Math.abs(s.got - n.got), 2);   // 단위는 문장에 이미 있다
-    var line = s.got >= n.got
-      ? c.verdict.cheaper.replace('{DIFF}', diff).replace('{GOT}', got)
-      : c.verdict.mixed.replace('{DIFF}', diff).replace('{GOT}', got).replace('{WAIT}', dur(T.normal.wait));
-    return '<div class="cmp-verdict"><b>' + esc(head) + '</b><p>' + esc(line) + '</p></div>';
-  }
+  /* ── 비교 ── 제목과 표뿐. 솔버 모드 열이 굵게, 값이 위에서부터 하나씩 튀어 들어온다. */
   function compare(st) {
     var c = S.compare;
-    return '<div class="canvas cmp">' + appBar('비교') + '<h2 class="cmp-title">' + esc(c.title) + '</h2>' + verdict(st) +
-      '<div class="board-card">' + boardGrid(st) + '</div></div>' +
+    return '<div class="canvas cmp">' + appBar('비교') + '<h2 class="cmp-title">' + esc(c.title) + '</h2>' +
+      '<div class="board-card">' + boardGrid(st, true) + '</div></div>' +
       cta(c.cta, 'now', 'restart');
   }
 
