@@ -55,12 +55,12 @@
   --faint: #5f6468;
   /* 배경은 중간 톤으로 두고 폰·기록판을 더 어둡게 눌러야 폰이 앞으로 나온다.
      전부 같은 어둡기면 어디를 봐야 할지 모른다. */
-  --paper: #121517;
-  --paper-2: #1b1f22;
+  --paper: #111417;
+  --paper-2: #23282c;        /* 카드는 폰 화면보다 확실히 밝게 — 비슷하면 아무것도 안 보인다 */
   --canvas: #2b2f33;
   --app-bg: #0b0d0f;
-  --hair: rgba(255, 255, 255, .09);
-  --hair-2: rgba(255, 255, 255, .05);
+  --hair: rgba(255, 255, 255, .14);
+  --hair-2: rgba(255, 255, 255, .09);
   --black: #f1f2f2;
   --on-black: #0b0c0e;
   --shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .07);
@@ -75,9 +75,20 @@
   --pop-ink: #0b0c0e;
   --pop-muted: #4d5256;
   --sheet-bg: #22262a;
-  --guide-bg: #1f2326;
+  --guide-bg: #f1f2f2;       /* 어두운 테마에선 흰 블록. 안쪽은 아래에서 밝은 테마 토큰으로 되돌린다 */
   --tint: rgba(0, 222, 240, .12);
   --ok: #3ad38f;
+}
+
+/* 어두운 테마의 '해야 할 일' 블록은 흰 섬이다. 그 안에서는 글자·카드·칩이 밝은 테마 값을 쓴다. */
+:root[data-theme="dark"] .plan-panel {
+  --ink: #111110; --muted: #6d6d68; --faint: #a2a29c;
+  --paper: #ffffff; --paper-2: #f4f6f6;
+  --hair: rgba(17, 17, 16, .09); --hair-2: rgba(17, 17, 16, .05);
+  --black: #000; --on-black: #fff;
+  --chip-base: #fff; --chip-mix: 10%; --chip-line: 44%;
+  --ok: #15a36c;
+  color: var(--ink);
 }
 
 * { box-sizing: border-box; }

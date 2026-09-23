@@ -290,7 +290,7 @@ window.SCREENS = (function () {
   /* 두 모드가 다 끝났을 때만. 숫자를 보고 어느 문장을 쓸지 고른다. */
   function verdict(st) {
     var T = st.tally, c = S.compare;
-    if (!T.normal.done || !T.solver.done) return '<p class="cmp-half">' + esc(c.half) + '</p>';
+    if (!T.normal.done || !T.solver.done) return '';   // 한쪽만 끝났으면 말 없이 표만
     var n = ledger(st, 'normal'), s = ledger(st, 'solver');
     var head = c.headline.replace('{SIGS_N}', T.normal.sigs).replace('{SIGS_S}', T.solver.sigs)
       .replace('{GAS_N}', money(T.normal.gas)).replace('{GAS_S}', money(T.solver.gas))

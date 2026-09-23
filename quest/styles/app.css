@@ -93,7 +93,7 @@
 .seg.solver .seg-btn.on { color: #061012; }
 
 /* 내는 것 / 받는 것 카드 */
-.pane { border-radius: 18px; padding: 13px 14px 12px; background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--hair-2); }
+.pane { border-radius: 18px; padding: 13px 14px 12px; background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--hair); }
 .pane-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .pane-top .lab { font: 500 11px var(--mono); color: var(--faint); letter-spacing: .04em; }
 .pane-mid { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
@@ -107,7 +107,7 @@
 .solver-on .flip span { background: var(--flowline); color: #061012; }
 
 /* 수수료·시간·경로 줄 */
-.lines { display: grid; gap: 6px; border-radius: 14px; padding: 10px 13px; background: var(--paper-2); }
+.lines { display: grid; gap: 6px; border-radius: 14px; padding: 10px 13px; background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--hair-2); }
 .line { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
 .line b { font: 500 12px var(--mono); color: var(--ink); text-align: right; }
 .line.warn b { color: #c96a13; }
@@ -216,7 +216,7 @@
 .cmp-verdict { border-radius: 16px; padding: 13px 15px; background: var(--tint); box-shadow: inset 0 0 0 1.5px var(--tint-line); }
 .cmp-verdict b { display: block; font: 600 13px var(--mono); line-height: 1.6; letter-spacing: -.01em; }
 .cmp-verdict p { margin-top: 6px; font-size: 13px; line-height: 1.6; color: var(--ink); }
-.cmp-half { font-size: 13px; color: var(--muted); }
+
 
 /* ── 아래 버튼 ── */
 .cta { width: 100%; border: 0; border-radius: 14px; padding: 15px 16px; font: 600 13.5px var(--body); cursor: pointer; transition: transform var(--fast) var(--ease), box-shadow 160ms var(--ease); }
