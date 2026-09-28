@@ -27,10 +27,19 @@
     <div class="phone-col">
       <nav class="track" aria-label="진행 위치">
         <button class="arrow" type="button" data-move="-1" aria-label="이전 단계">‹</button>
-        <ol class="beads" id="beads"></ol>
+        <ol class="beads"></ol>
         <button class="arrow" type="button" data-move="1" aria-label="다음 단계">›</button>
       </nav>
       <div class="bezel">
+        <!-- 폰에서만: 시계 줄 대신 로고와 진행 트랙. 폰 안에서 또 폰을 보게 하지 않는다. -->
+        <div class="m-head">
+          <a class="wordmark" href="./index.html" aria-label="처음으로"><img src="../brand/Radius_horizontallogo_black.svg" alt="Radius"></a>
+          <nav class="track" aria-label="진행 위치">
+            <button class="arrow" type="button" data-move="-1" aria-label="이전 단계">‹</button>
+            <ol class="beads"></ol>
+            <button class="arrow" type="button" data-move="1" aria-label="다음 단계">›</button>
+          </nav>
+        </div>
         <div class="statusbar"><span>9:41</span><span class="sbar" aria-hidden="true"></span></div>
         <div class="screen" id="screen" role="region" aria-live="polite"></div>
         <div class="homebar" aria-hidden="true"></div>

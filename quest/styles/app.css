@@ -47,6 +47,11 @@
 .tok-ic .c { position: absolute; right: -3px; bottom: -3px; width: 16px; height: 16px; border-radius: 50%; object-fit: contain; background: var(--paper); box-shadow: 0 0 0 2px var(--paper); }
 
 /* ── 미션 화면 ── 편집 디자인처럼. 앱 화면이 아니라 앱을 열기 전의 브리핑이다. */
+/* 첫 화면의 테마·언어 고르기 — 폰에서만. 데스크톱은 기록판 위 토글을 쓴다. */
+.m-setup { display: none; }
+@media (max-width: 820px) {
+  .m-setup { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 6px; }
+}
 .mission { display: flex; flex-direction: column; gap: 14px; padding-top: 22px; }
 .m-eyebrow { font: 500 11.5px var(--mono); letter-spacing: .06em; color: var(--muted); }
 .m-title { font-size: 26px; line-height: 1.24; letter-spacing: -.02em; font-weight: 700; white-space: pre-line; }

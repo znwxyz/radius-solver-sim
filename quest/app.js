@@ -4,7 +4,7 @@
   'use strict';
   var S = window.MODE, V = window.SCREENS, C = window.COACH;
   var screen = document.getElementById('screen');
-  var beads = document.getElementById('beads');
+  var beadLists = document.querySelectorAll('.beads');   // 데스크톱은 폰 위, 폰에서는 폰 안 머리에 하나씩
   var boardEl = document.getElementById('board');
   var FF_MS = 3200, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
@@ -188,7 +188,9 @@
   function lang(code) {
     if (code === 'ko') return note('');
     note(S.ui.lang.soon);
+    if (isPhone()) toast(S.ui.lang.soon);   // 폰에서는 기록판 위 안내가 숨겨져 있다. 폰 안에 띄운다
   }
+  function isPhone() { return window.matchMedia('(max-width: 820px)').matches; }
   function note(msg) {
     clearTimeout(noteTimer);
     noteEl.textContent = msg; noteEl.classList.toggle('show', !!msg);
@@ -241,9 +243,10 @@
 
   /* ── 그리기 ── */
   function drawBeads() {
-    beads.innerHTML = S.steps.map(function (s, i) {
+    var html = S.steps.map(function (s, i) {
       return '<li><button type="button" class="' + (i === st.at ? 'at' : i < st.at ? 'done' : '') + '" data-act="go:' + i + '">' + V.esc(s.label) + '</button></li>';
     }).join('');
+    Array.prototype.forEach.call(beadLists, function (el) { el.innerHTML = html; });
   }
   function overlay() {
     if (st.pending) return V.pendingCard(st.pending);

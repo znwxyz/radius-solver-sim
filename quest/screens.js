@@ -77,9 +77,18 @@ window.SCREENS = (function () {
   function missionRoute(have, need) {
     return '<div class="m-route" aria-hidden="true">' + missionTile(have, 'from') + '<span class="m-dash"></span>' + missionTile(need, 'to') + '</div>';
   }
+  /* 폰에서는 바깥 토글이 없다. 첫 화면에서 고르고 넘어가게 한다. 데스크톱에선 CSS 가 숨긴다. */
+  function setupRow() {
+    var L = S.ui.lang;
+    return '<div class="m-setup">' +
+      '<button class="theme-btn" type="button" data-act="theme" aria-label="밝은 화면과 어두운 화면 바꾸기"><span class="sun" aria-hidden="true"></span><span class="moon" aria-hidden="true"></span></button>' +
+      '<div class="lang" role="group" aria-label="언어"><span class="lang-thumb" aria-hidden="true"></span>' +
+      '<button class="lang-btn on" type="button" data-act="lang:ko" aria-pressed="true">' + esc(L.ko) + '</button>' +
+      '<button class="lang-btn" type="button" data-act="lang:en" aria-pressed="false">' + esc(L.en) + '</button></div></div>';
+  }
   function mission() {
     var m = S.mission, need = m.need, have = { chain: 'ethereum', token: 'eth', amount: S.holdings.ethereum.eth };
-    return '<div class="canvas"><div class="mission">' +
+    return '<div class="canvas">' + setupRow() + '<div class="mission">' +
       '<p class="m-eyebrow">' + esc(m.eyebrow) + '</p>' +
       '<h2 class="m-title">' + esc(m.title) + '</h2>' +
       '<div class="tickets">' +

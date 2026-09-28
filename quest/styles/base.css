@@ -152,6 +152,9 @@ button { font-family: var(--body); color: inherit; }
 .side-note { position: absolute; z-index: 5; top: 38px; right: 0; margin: 0; max-width: 100%; border-radius: 12px; background: var(--pop-bg); color: var(--pop-ink); box-shadow: 0 10px 26px rgba(0,0,0,.22), inset 0 0 0 1px var(--hair); padding: 9px 12px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 26px rgba(0,0,0,.22); opacity: 0; transform: translateY(-4px); transition: opacity var(--fast) ease, transform var(--fast) ease; pointer-events: none; }
 .side-note.show { opacity: 1; transform: none; }
 
+/* 폰 안 머리(로고 + 진행) — 폰에서만 보인다 */
+.m-head { display: none; }
+
 /* 폰 목업 — 아이폰 393:852 비율. 348 x 754 */
 .bezel { position: relative; width: 372px; border-radius: 44px; background: var(--app-bg); padding: 12px 12px 14px; box-shadow: var(--shadow); transition: background var(--normal) ease; }
 .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
@@ -194,21 +197,20 @@ button { font-family: var(--body); color: inherit; }
   .side-col { max-width: 360px; }
 }
 @media (max-width: 820px) {
-  .top { padding: 8px 12px 2px; }
-  .wordmark img { height: 15px; }
-  .track { margin-bottom: 6px; }
-  .beads { gap: 2px; }
-  .beads button { padding: 0 7px; font-size: 10.5px; white-space: nowrap; }
-  .stage { grid-template-columns: 1fr; justify-items: center; gap: 14px; padding: 0 8px 20px; }
-  .phone-col { width: 100%; max-width: 372px; }
-  /* 폰에서도 아이폰 비율(393:852)을 지킨다. 화면 높이에 맞춰 눌렀더니 목업이 위아래로 찌부됐다.
-     세로가 화면보다 길어지면 페이지가 조금 스크롤된다. */
-  .bezel { width: 100%; aspect-ratio: 393 / 852; height: auto; display: flex; flex-direction: column; border-radius: 30px; padding: 6px 10px 8px; }
-  .screen { height: auto; flex: 1; min-height: 0; }
-  .statusbar { padding: 6px 14px; }
-  .homebar { margin: 6px auto 0; }
-  .side-col { max-width: 372px; }
-  .switches { justify-content: flex-end; }
+  /* 폰에서는 폰 안에서 또 폰을 보게 하지 않는다. 프레임·시계·홈바·기록판·바깥 토글·주의사항을 전부 걷어내고
+     앱이 화면을 통째로 쓴다. 로고와 진행 트랙은 앱 머리로 들어가고, 테마·언어는 첫 화면에서 고른다. */
+  html, body { background: var(--app-bg); }
+  .top, .phone-col > .track, .statusbar, .homebar, .side-col, .foot { display: none; }
+  .stage { display: block; padding: 0; max-width: none; }
+  .phone-col { width: 100%; max-width: none; }
+  .bezel { width: 100%; height: 100svh; border-radius: 0; padding: 0; box-shadow: none; display: flex; flex-direction: column; }
+  .screen { height: auto; flex: 1; min-height: 0; border-radius: 0; }
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 12px 14px 4px; }
+  .m-head .wordmark img { height: 15px; }
+  .m-head .track { margin: 0; gap: 4px; }
+  .m-head .arrow { width: 26px; height: 26px; font-size: 14px; }
+  .beads { gap: 0; }
+  .beads button { padding: 0 6px; font-size: 10.5px; white-space: nowrap; gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
