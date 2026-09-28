@@ -303,6 +303,8 @@ window.SCREENS = (function () {
       '<div class="board-card">' + boardGrid(st, true) + '</div>' +
       (st.tally.normal.done && st.tally.solver.done
         ? '<div class="cmp-tag"><p class="cmp-tagline">' + esc(c.tagline) + '</p><p class="cmp-tagsub">' + esc(c.tagSub) + '</p></div>' : '') +
+      /* 폰에서는 페이지 푸터가 없다. 같은 주의사항을 비교 화면 맨 아래에 접어 둔다(원문은 index.html 푸터 한 곳, app.js 가 넣어 준다) */
+      (api.notice ? '<details class="m-notes">' + api.notice + '</details>' : '') +
       '</div>' + cta(c.cta, 'now', 'restart');
   }
 
@@ -330,8 +332,10 @@ window.SCREENS = (function () {
       '<div class="prog" style="--ff:' + p.ms + 'ms"><i></i></div><div class="ff"><span>' + esc(p.hash) + '</span><span>' + esc(p.where) + '</span></div></div>';
   }
 
-  return {
+  var api = {
+    notice: '',   // 푸터의 주의사항 HTML. app.js 가 시작할 때 채운다
     mission: mission, wallet: wallet, swap: swap, compare: compare, board: board,
     signSheet: signSheet, pendingCard: pendingCard, esc: esc, fmt: fmt, resolve: resolve, dur: dur
   };
+  return api;
 })();

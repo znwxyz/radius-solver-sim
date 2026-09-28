@@ -299,6 +299,10 @@
     if (e.key === 'Escape' && st.coach) coachStep('skip');
   });
 
+  // 주의사항은 푸터 한 곳에만 적는다. 폰에서는 푸터가 숨으니 비교 화면이 같은 내용을 접어 보여 준다.
+  var footNotes = document.querySelector('.foot details');
+  V.notice = footNotes ? footNotes.innerHTML : '';
+
   var saved = null;
   try { saved = localStorage.getItem(THEME_KEY); } catch (e) { saved = null; }
   theme(saved === 'dark' ? 'dark' : 'light');
