@@ -201,7 +201,9 @@ button { font-family: var(--body); color: inherit; }
   .beads button { padding: 0 7px; font-size: 10.5px; white-space: nowrap; }
   .stage { grid-template-columns: 1fr; justify-items: center; gap: 14px; padding: 0 8px 20px; }
   .phone-col { width: 100%; max-width: 372px; }
-  .bezel { width: 100%; height: calc(100svh - 92px); min-height: 560px; display: flex; flex-direction: column; border-radius: 30px; padding: 6px 10px 8px; }
+  /* 폰에서도 아이폰 비율(393:852)을 지킨다. 화면 높이에 맞춰 눌렀더니 목업이 위아래로 찌부됐다.
+     세로가 화면보다 길어지면 페이지가 조금 스크롤된다. */
+  .bezel { width: 100%; aspect-ratio: 393 / 852; height: auto; display: flex; flex-direction: column; border-radius: 30px; padding: 6px 10px 8px; }
   .screen { height: auto; flex: 1; min-height: 0; }
   .statusbar { padding: 6px 14px; }
   .homebar { margin: 6px auto 0; }
