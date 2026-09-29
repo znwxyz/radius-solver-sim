@@ -184,6 +184,9 @@ window.MODE = {
      여기가 개념을 설명하는 자리다. 체인·토큰·가스가 처음 나오면 그 자리의 예로 풀어 준다. */
   coach: {
     wallet: [
+      /* 먼저 한 줄 읽는 법, 그다음 체인 탭. 마지막 장면이 "Robinhood Chain을 눌러 봐"로 끝나야 바로 행동으로 이어진다. */
+      { at: '[data-coach="asset"]', title: '이 한 줄을 읽는 법',
+        text: 'Base는 체인이고, ETH는 토큰이야. 그러니까 이 줄은 "Base 체인 위에 있는 ETH"야. 0.0110은 그 ETH의 수량(0.0110 ETH)이고, 그 아래 $40.53은 그 수량을 지금 시세로 달러로 환산한 값이야.' },
       { at: '[data-coach="chains"]', title: '같은 토큰이라도 체인이 다르면 다르게 취급돼',
         text: '같은 USDC라는 이름이어도 체인마다 따로 발행되고 따로 기록돼. 그래서 Arbitrum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 토큰처럼 따로 취급돼. 이 탭에서 Robinhood Chain을 눌러서, 그 체인에 뭐가 있는지 확인해 봐.' }
     ],

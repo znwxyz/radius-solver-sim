@@ -121,7 +121,9 @@ window.SCREENS = (function () {
   }
   function assetRow(chain, t, n, fresh) {
     var tok = S.tokens[t];
-    return '<div class="asset' + (fresh ? ' new' : '') + '">' + tokIcon(t, chain) +
+    // Base 위의 ETH 줄 하나에 코치 표식 — "체인·토큰·수량·달러"를 읽는 법을 여기서 짚는다
+    var coach = chain === 'base' && t === 'eth' ? ' data-coach="asset"' : '';
+    return '<div class="asset' + (fresh ? ' new' : '') + '"' + coach + '>' + tokIcon(t, chain) +
       '<div class="a-name"><b>' + esc(tok.name) + '</b><small>' + esc(S.chains[chain].name) + '</small></div>' +
       '<div class="a-amt"><b>' + amountOf(t, n) + '</b><small>' + money(n * tok.price) + '</small></div></div>';
   }
