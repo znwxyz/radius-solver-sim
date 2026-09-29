@@ -23,21 +23,21 @@ window.MODE = {
      Robinhood Chain 은 2026-07 메인넷이 열린 Arbitrum 계열 L2 이고 가스는 ETH 다.
      여기서 무엇을 살 수 있는지는 예시이며, 실제 상품·캠페인을 설명하는 것이 아니다. */
   mission: {
-    eyebrow: 'QUEST 01',
+    eyebrow: 'QUEST',   /* 퀘스트는 하나뿐이라 번호를 안 붙인다 */
     word: 'Quest',
     pill: 'Robinhood Chain에서 500 USDC 마련하기!',   /* 지갑·거래 화면 위에 계속 떠 있는 한 줄 */
     clear: '퀘스트 클리어',
-    title: 'Robinhood Chain에서\n내 첫 스톡 토큰을 사 보자!',
+    title: '이 거래, 솔버가 있으면\n뭐가 달라질까?',   /* 임시. 후보는 HANDOFF 참고 */
     /* 첫 화면의 이야기. 왜 지금 Robinhood Chain 인지 → 뭘 하려는지 → 지갑을 보니 뭐가 없는지. 수치는 2026-09 리서치 기준 예시. */
     story: [
       '요즘 크립토 하는 친구들이 다 Robinhood Chain 얘기야. 미국 주식을 토큰으로 만든 "스톡 토큰"을 24시간, 주말에도 사고팔 수 있는 체인이거든. 2026년 7월에 열렸는데 두 달 만에 거래량이 수백억 달러가 됐어.',
-      '너도 궁금해서 들어가 봤어. Robinhood Chain 위의 거래소(DEX)에서 스톡 토큰을 사려면 그 체인 위의 USDC로 값을 치러야 해. 첫 토큰으로 500 USDC어치를 사 보기로 했어.',
-      '그런데 네 지갑을 보니 Robinhood Chain 위에는 아무것도 없어. 가진 건 Ethereum 위의 0.84 ETH. USDC도 조금 있긴 한데 Arbitrum과 Base에 흩어져 있고 양도 모자라.'
+      '나도 궁금해서 들어가 봤어. Robinhood Chain 위의 거래소(DEX)에서 스톡 토큰을 사려면 그 체인 위의 USDC로 값을 치러야 해. 첫 토큰으로 500 USDC어치를 사 보기로 했어.',
+      '그런데 내 지갑을 보니 Robinhood Chain 위에는 아무것도 없어. 가진 건 Ethereum 위의 0.84 ETH. USDC도 조금 있긴 한데 Arbitrum과 Base에 흩어져 있고 양도 모자라.'
     ],
     need: { chain: 'robinhood', token: 'usdc', amount: 500 },
     needLabel: '필요한 것',
     haveLabel: '지금 가진 것',
-    gap: '그러니 이번 Quest는 이거야. Ethereum에 있는 네 ETH로 500 USDC를 만들어서 Robinhood Chain으로 옮기기. 먼저 일반 모드로 직접 해 보고, 그다음 솔버 모드를 켜서 뭐가 달라지는지 겪어 보자.',
+    gap: '그러니 이번 Quest는 이거야. Ethereum에 있는 내 ETH로 500 USDC를 만들어서 Robinhood Chain으로 옮기기. 먼저 일반 모드로 직접 해 보고, 그다음 솔버 모드를 켜서 뭐가 달라지는지 겪어 보자.',
     cta: '먼저 내 지갑을 확인해 볼까?'
   },
 
