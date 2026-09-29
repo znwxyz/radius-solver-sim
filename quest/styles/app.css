@@ -68,7 +68,7 @@
 .j-row .val { font-size: 14px; font-weight: 600; margin-top: 2px; }
 .j-row .val small { font: 500 11px var(--mono); color: var(--muted); margin-left: 6px; }
 .j-row.need { box-shadow: inset 0 0 0 1.5px var(--tint-line); background: var(--tint); }
-.j-link { position: relative; width: 40px; height: 44px; margin-left: 12px; display: grid; place-items: center; }
+.j-link { position: relative; width: 40px; height: 76px; margin-left: 12px; display: grid; place-items: center; }   /* 위아래 넉넉히 — 물음표가 숨 쉴 자리 */
 .j-link::before { content: ""; position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px; transform: translateX(-50%); background: repeating-linear-gradient(180deg, var(--faint) 0 5px, transparent 5px 10px); }
 .j-q { position: relative; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--black); color: var(--on-black); font: 600 13px var(--mono); }
 

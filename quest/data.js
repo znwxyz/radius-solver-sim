@@ -37,7 +37,7 @@ window.MODE = {
     need: { chain: 'robinhood', token: 'usdc', amount: 500 },
     needLabel: '필요한 것',
     haveLabel: '지금 가진 것',
-    gap: '그러니 이번 Quest는 이거야. Ethereum에 있는 내 ETH로 500 USDC를 만들어서 Robinhood Chain으로 옮기기. 먼저 일반 모드로 직접 해 보고, 그다음 솔버 모드를 켜서 뭐가 달라지는지 겪어 보자.',
+    gap: '그러니 이번 Quest는 이거야. Ethereum 위에 있는 내 ETH를 Robinhood Chain 위의 USDC로 만들기. 어떤 방법과 경로로 할지 직접 고민해서 해 보고, 그다음 솔버 모드를 이용하면 뭐가 달라지는지 확인해 보자.',
     cta: '먼저 내 지갑을 확인해 볼까?'
   },
 
