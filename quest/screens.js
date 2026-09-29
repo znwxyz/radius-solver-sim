@@ -76,10 +76,13 @@ window.SCREENS = (function () {
       '<div><div class="lab">' + esc(label) + '</div><div class="val">' + spot.amount + ' ' + esc(S.tokens[spot.token].name) +
       '<small>' + esc(S.chains[spot.chain].name) + '</small></div></div></div>';
   }
+  /* 박스 하나가 Quest 전부다: 머리(QUEST) · 가진 것 → ? → 필요한 것 · 바닥글(그래서 할 일). 밖에 떠 있는 요소를 줄인다. */
   function journey(m, have, need) {
-    return '<div class="m-journey">' + journeyRow(m.haveLabel, have, 'have') +
+    return '<section class="m-journey" aria-label="' + esc(m.eyebrow) + '"><div class="j-head">' + esc(m.eyebrow) + '</div>' +
+      journeyRow(m.haveLabel, have, 'have') +
       '<div class="j-link" aria-hidden="true"><span class="j-q">?</span></div>' +
-      journeyRow(m.needLabel, need, 'need') + '</div>';
+      journeyRow(m.needLabel, need, 'need') +
+      '<p class="j-foot">' + esc(m.gap) + '</p></section>';
   }
   /* 폰에서는 바깥 토글이 없다. 첫 화면에서 고르고 넘어가게 한다. 데스크톱에선 CSS 가 숨긴다. */
   function setupRow() {
@@ -93,10 +96,9 @@ window.SCREENS = (function () {
   function mission() {
     var m = S.mission, need = m.need, have = { chain: 'ethereum', token: 'eth', amount: S.holdings.ethereum.eth };
     return '<div class="canvas">' + setupRow() + '<div class="mission">' +
-      '<p class="m-eyebrow">' + esc(m.eyebrow) + '</p>' +
       '<h2 class="m-title">' + esc(m.title) + '</h2>' +
       '<div class="m-story">' + m.story.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' +
-      journey(m, have, need) + '<p class="m-gap">' + esc(m.gap) + '</p></div></div>' +
+      journey(m, have, need) + '</div></div>' +
       cta(m.cta, 'now', 'next');
   }
 
