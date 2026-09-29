@@ -253,6 +253,6 @@ window.MODE = {
     { type: 'mission', label: 'Quest' },
     { type: 'wallet',  label: '지갑' },
     { type: 'swap',    label: '거래' },
-    { type: 'compare', label: '비교' }
+    { type: 'compare', label: '결과' }
   ]
 };

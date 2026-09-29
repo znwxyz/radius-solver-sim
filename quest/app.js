@@ -10,7 +10,7 @@
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
-  var last = { at: -1, mode: null, step: -1, solverPhase: null, normalDone: false };   // 직전에 그린 상태. 무엇이 바뀌었는지 보고 전환 모션을 건다
+  var last = { at: -1, mode: null, step: -1, phase: null, solverPhase: null, normalDone: false };   // 직전에 그린 상태. 무엇이 바뀌었는지 보고 전환 모션을 건다
   var noteEl = document.getElementById('side-note');
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -117,6 +117,42 @@
     })(t0);
   }
   function calmMotion() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  /* ── 폰 안 스크롤 ── 브라우저의 smooth 는 엔진마다 속도가 달라 뚝뚝 끊겼고, nearest 는 카드가 화면보다 크면
+     위만 맞추고 아래를 잘랐다. 직접 느긋하게(ease-out) 굴린다. 다시 그려서 canvas 가 바뀌면 멈춘다. */
+  var GLIDE_MS = 750, GLIDE_PAD = 10;
+  function glide(el, to) {
+    var from = el.scrollTop;
+    to = Math.max(0, Math.min(el.scrollHeight - el.clientHeight, to));
+    if (Math.abs(to - from) < 1) return;
+    if (calmMotion()) { el.scrollTop = to; return; }
+    var t0 = performance.now();
+    (function tick(now) {
+      if (screen.querySelector('.canvas') !== el) return;
+      var k = Math.min(1, (now - t0) / GLIDE_MS), e = 1 - Math.pow(1 - k, 3);
+      el.scrollTop = from + (to - from) * e;
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  function layoutTop(el, canvas) {   // canvas 안에서의 세로 위치(스크롤·변형과 무관한 레이아웃 값)
+    var y = 0;
+    while (el && el !== canvas) { y += el.offsetTop; el = el.offsetParent; }
+    return y;
+  }
+  /* align — 'start': 대상 위를 화면 위에 · 'end': 대상 아래를 화면 아래에 · 'nearest': 안 보일 때만 가까운 쪽으로 */
+  function glideTo(target, align) {
+    var canvas = screen.querySelector('.canvas');
+    if (!canvas || !target) return;
+    var c = canvas.getBoundingClientRect(), r = target.getBoundingClientRect();
+    // 자리·높이는 레이아웃 값으로 잰다. 등장 애니메이션(scale)이 도는 중에 rect 로 재면 몇 px 어긋난다. canvas 는 position: relative
+    var top = layoutTop(target, canvas), height = target.offsetHeight, view = c.height;
+    var atStart = top - GLIDE_PAD, atEnd = top + height - view + GLIDE_PAD;
+    // 'start' 인데 여유 때문에 아래가 몇 px 잘리는 크기(작은 폰의 단계 카드)면 아래를 맞춘다. 화면보다 큰 카드만 위부터.
+    if (align === 'start') return glide(canvas, height <= view && height + GLIDE_PAD > view ? atEnd - GLIDE_PAD : atStart);
+    if (align === 'end') return glide(canvas, atEnd);
+    if (r.top < c.top + GLIDE_PAD) return glide(canvas, atStart);
+    if (r.bottom > c.bottom - GLIDE_PAD) return glide(canvas, height > view ? atStart : atEnd);
+  }
   /* 견적이 하나 올 때마다 그 줄이 보이게 따라 내려간다. 다 모여 규칙이 고르면 고른 줄까지. */
   function followQuotes() {
     var ph = st.solver.phase, n = (st.solver.arrived || []).length;
@@ -124,7 +160,7 @@
     var target = ph === 'quoted' ? screen.querySelector('.q.pick') : screen.querySelectorAll('.q.in')[n - 1];
     if (!target || (ph === 'quoting' && n === seenArrived)) return;
     seenArrived = n;
-    target.scrollIntoView({ block: 'nearest', behavior: calmMotion() ? 'auto' : 'smooth' });
+    glideTo(target, 'nearest');
   }
   function nudgeMin(dir) {
     var m = Math.max(0, Math.min(bestQuote().amount - 1, st.solver.min + dir * S.solver.minStep));
@@ -176,7 +212,7 @@
   function restart() {
     clearTimeout(timer); clearTimeout(toastTimer);
     timers.forEach(clearTimeout); timers = []; litKey = null;
-    last = { at: -1, mode: null, step: -1, solverPhase: null, normalDone: false };
+    last = { at: -1, mode: null, step: -1, phase: null, solverPhase: null, normalDone: false };
     st = fresh(); render();
   }
   function theme(next) {
@@ -222,24 +258,24 @@
   }
 
   /* ── 전환 모션 ── 다시 그린 뒤, 직전 상태와 비교해 무엇이 바뀌었는지에 따라 건다 */
-  function smooth() { return calmMotion() ? 'auto' : 'smooth'; }
   function transitions(type) {
     var canvas = screen.querySelector('.canvas');
     var stepChanged = last.at !== st.at, modeChanged = !stepChanged && last.mode !== st.mode;
     if (canvas && (stepChanged || modeChanged)) canvas.classList.add('screen-in');
     if (modeChanged) screen.classList.add('flip-' + st.mode);
-    if (type === 'swap' && st.mode === 'normal') {
+    if (type === 'swap' && st.mode === 'normal' && !stepChanged) {
       var now = screen.querySelector('.pstep.now');
-      if (now && !stepChanged && st.normal.step !== last.step && st.normal.step > 0) {
+      if (now && st.normal.step !== last.step && st.normal.step > 0) {
         now.classList.add('just');
-        now.scrollIntoView({ block: 'nearest', behavior: smooth() });   // 보이면 그대로, 안 보일 때만 살짝
+        glideTo(now, 'start');   // 다음 단계 카드의 제목이 화면 위에 오게. 카드가 화면보다 커도 위부터 읽힌다
       }
+      var opts = screen.querySelector('.pstep.now .opts');
+      if (opts && st.normal.phase === 'options' && last.phase !== 'options') glideTo(opts, 'end');   // 선택지가 아래까지 다 보이게
     }
     if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'done' && last.solverPhase !== 'done') {
-      var banner = screen.querySelector('.done-banner');
-      if (banner) banner.scrollIntoView({ block: 'nearest', behavior: smooth() });
+      glideTo(screen.querySelector('.done-banner'), 'nearest');
     }
-    last = { at: st.at, mode: st.mode, step: st.normal.step, solverPhase: st.solver.phase, normalDone: st.tally.normal.done };
+    last = { at: st.at, mode: st.mode, step: st.normal.step, phase: st.normal.phase, solverPhase: st.solver.phase, normalDone: st.tally.normal.done };
   }
 
   /* ── 그리기 ── */

@@ -3,7 +3,7 @@
    수수료·시간·경로 줄, 하단 버튼. 색은 base.css 의 토큰만 쓴다.
    일반 모드는 무채색, 솔버 모드가 켜지면 Flowline 이 들어온다 — 모드가 색으로 읽힌다. */
 
-.canvas { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.canvas { position: relative; flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 2px 16px 14px; min-height: 0; overflow-y: auto; scrollbar-width: none; }   /* relative: 자동 스크롤이 offsetTop 으로 자리를 잰다 */
 /* 내용이 폰 화면보다 길면 canvas 가 스크롤한다. 자식이 줄어들면 안 된다 —
    WebKit(아이폰 사파리)은 가로 스크롤 줄인 체인 탭을 높이 0 까지 눌러서 탭이 ETH 줄 위에 겹쳤다. */
 .canvas > * { flex-shrink: 0; }
@@ -227,7 +227,7 @@
 .solver-on .done-banner b { background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* ── 비교 화면 ── */
-.cmp-title { font-size: 20px; line-height: 1.3; font-weight: 700; letter-spacing: -.02em; padding-top: 6px; }
+.cmp-title { font-size: 20px; line-height: 1.3; font-weight: 700; letter-spacing: -.02em; padding-top: 18px; }
 .cmp-sub { font-size: 13px; line-height: 1.65; color: var(--muted); }
 .cmp .board-card { padding: 14px 14px 10px; }
 .cmp-title { white-space: pre-line; }
