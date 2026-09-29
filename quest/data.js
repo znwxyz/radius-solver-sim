@@ -101,7 +101,7 @@ window.MODE = {
       {
         id: 'gas', kind: '브릿지',
         title: 'Robinhood Chain에서 쓸 가스(ETH) 챙기기',
-        why: 'Robinhood Chain에서 거래를 하려면 그 체인에서 쓰는 가스, 즉 ETH가 조금 필요해. USDC만 있으면 거래를 보낼 수가 없거든. 그래서 Ethereum에 있는 ETH도 조금 옮겨 두자.',
+        why: 'Robinhood Chain에서 거래를 하려면, 거래를 보낼 때마다 가스비가 조금씩 들어. Robinhood Chain의 가스 토큰은 ETH인데, 2단계까지 마치면 네 지갑에는 Robinhood Chain 위의 USDC만 있는 상황이야. 그러니 거래를 하려면 ETH도 필요하겠지? Ethereum에 있는 ETH를 조금 Robinhood Chain으로 옮겨 두자.',
         from: { chain: 'ethereum',  token: 'eth', amount: 0.004 },
         to:   { chain: 'robinhood', token: 'eth', amount: 0.0039 },
         lines: [['네트워크 수수료(가스)', '$3.40'], ['예상 시간', '~8분']],
