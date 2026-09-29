@@ -82,7 +82,7 @@ window.MODE = {
       {
         id: 'bridge', kind: '브릿지',
         title: 'USDC를 Ethereum에서 Robinhood Chain으로 옮기기',
-        why: 'Ethereum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 장부에 기록돼. 그래서 방금 만든 USDC를 브릿지로 Robinhood Chain에 옮겨야 해. 어느 브릿지를 쓸지는 네가 골라야 하고, 브릿지마다 수수료와 걸리는 시간이 달라.',
+        why: 'Ethereum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 장부에 기록돼. 우리한테 필요한 건 Ethereum 위의 USDC가 아니라 Robinhood Chain 위의 USDC니까, 방금 만든 USDC를 브릿지로 Ethereum에서 Robinhood Chain으로 옮겨야 해. 브릿지마다 수수료와 걸리는 시간이 다르니, 네 상황에 맞는 브릿지를 골라 봐.',
         from: { chain: 'ethereum',  token: 'usdc', amount: 541.87 },
         to:   { chain: 'robinhood', token: 'usdc' },
         /* 어느 브릿지로 갈지 유저가 고른다. 고른 것에 따라 수수료·가스·시간·도착 수량이 바뀌고,
