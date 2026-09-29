@@ -69,13 +69,17 @@ window.SCREENS = (function () {
   }
 
   /* ── Quest ── */
-  function missionTile(spot, cls) {
-    var c = S.chains[spot.chain];
-    return '<div class="m-tile ' + cls + '" style="--c:' + c.color + '"><img src="' + c.icon + '" alt=""><b>' + esc(c.name) + '</b>' +
-      '<small>' + spot.amount + ' ' + esc(S.tokens[spot.token].name) + '</small></div>';
+  /* 지금 가진 것 → ? → 필요한 것. 티켓 두 장과 경로 그림이 같은 말을 하고 있어서 세로 한 장으로 합쳤다.
+     점선과 물음표는 아이콘 줄을 따라 내려간다. */
+  function journeyRow(label, spot, cls) {
+    return '<div class="j-row ' + cls + '">' + tokIcon(spot.token, spot.chain) +
+      '<div><div class="lab">' + esc(label) + '</div><div class="val">' + spot.amount + ' ' + esc(S.tokens[spot.token].name) +
+      '<small>' + esc(S.chains[spot.chain].name) + '</small></div></div></div>';
   }
-  function missionRoute(have, need) {
-    return '<div class="m-route" aria-hidden="true">' + missionTile(have, 'from') + '<span class="m-dash"></span>' + missionTile(need, 'to') + '</div>';
+  function journey(m, have, need) {
+    return '<div class="m-journey">' + journeyRow(m.haveLabel, have, 'have') +
+      '<div class="j-link" aria-hidden="true"><span class="j-q">?</span></div>' +
+      journeyRow(m.needLabel, need, 'need') + '</div>';
   }
   /* 폰에서는 바깥 토글이 없다. 첫 화면에서 고르고 넘어가게 한다. 데스크톱에선 CSS 가 숨긴다. */
   function setupRow() {
@@ -92,12 +96,7 @@ window.SCREENS = (function () {
       '<p class="m-eyebrow">' + esc(m.eyebrow) + '</p>' +
       '<h2 class="m-title">' + esc(m.title) + '</h2>' +
       '<div class="m-story">' + m.story.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' +
-      '<div class="tickets">' +
-      '<div class="ticket need">' + tokIcon(need.token, need.chain) + '<div><div class="lab">' + esc(m.needLabel) + '</div><div class="val">' +
-      need.amount + ' ' + esc(S.tokens[need.token].name) + '<small>' + esc(S.chains[need.chain].name) + '</small></div></div></div>' +
-      '<div class="ticket have">' + tokIcon(have.token, have.chain) + '<div><div class="lab">' + esc(m.haveLabel) + '</div><div class="val">' +
-      have.amount + ' ' + esc(S.tokens[have.token].name) + '<small>' + esc(S.chains[have.chain].name) + '</small></div></div></div>' +
-      '</div>' + missionRoute(have, need) + '<p class="m-gap">' + esc(m.gap) + '</p></div></div>' +
+      journey(m, have, need) + '<p class="m-gap">' + esc(m.gap) + '</p></div></div>' +
       cta(m.cta, 'now', 'next');
   }
 
