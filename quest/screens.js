@@ -91,6 +91,7 @@ window.SCREENS = (function () {
     return '<div class="canvas">' + setupRow() + '<div class="mission">' +
       '<p class="m-eyebrow">' + esc(m.eyebrow) + '</p>' +
       '<h2 class="m-title">' + esc(m.title) + '</h2>' +
+      '<div class="m-story">' + m.story.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' +
       '<div class="tickets">' +
       '<div class="ticket need">' + tokIcon(need.token, need.chain) + '<div><div class="lab">' + esc(m.needLabel) + '</div><div class="val">' +
       need.amount + ' ' + esc(S.tokens[need.token].name) + '<small>' + esc(S.chains[need.chain].name) + '</small></div></div></div>' +

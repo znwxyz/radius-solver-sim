@@ -27,11 +27,17 @@ window.MODE = {
     word: 'Quest',
     pill: 'Robinhood Chain에서 500 USDC 마련하기!',   /* 지갑·거래 화면 위에 계속 떠 있는 한 줄 */
     clear: '퀘스트 클리어',
-    title: 'Robinhood Chain에서\n스톡 토큰을 사 보자!',
+    title: 'Robinhood Chain에서\n내 첫 스톡 토큰을 사 보자!',
+    /* 첫 화면의 이야기. 왜 지금 Robinhood Chain 인지 → 뭘 하려는지 → 지갑을 보니 뭐가 없는지. 수치는 2026-09 리서치 기준 예시. */
+    story: [
+      '요즘 크립토 하는 친구들이 다 Robinhood Chain 얘기야. 미국 주식을 토큰으로 만든 "스톡 토큰"을 24시간, 주말에도 사고팔 수 있는 체인이거든. 2026년 7월에 열렸는데 두 달 만에 거래량이 수백억 달러가 됐어.',
+      '너도 궁금해서 들어가 봤어. Robinhood Chain 위의 거래소(DEX)에서 스톡 토큰을 사려면 그 체인 위의 USDC로 값을 치러야 해. 첫 토큰으로 500 USDC어치를 사 보기로 했어.',
+      '그런데 네 지갑을 보니 Robinhood Chain 위에는 아무것도 없어. 가진 건 Ethereum 위의 0.84 ETH. USDC도 조금 있긴 한데 Arbitrum과 Base에 흩어져 있고 양도 모자라.'
+    ],
     need: { chain: 'robinhood', token: 'usdc', amount: 500 },
     needLabel: '필요한 것',
     haveLabel: '지금 가진 것',
-    gap: '스톡 토큰을 사려면 Robinhood Chain 위에 500 USDC가 있어야 해. 지금 네 지갑에 있는 USDC는 다른 체인(Arbitrum, Base)에 있고 양도 모자라. 그러니 Ethereum에 있는 네 ETH로 500 USDC를 만들어서, Robinhood Chain으로 옮겨야 해.',
+    gap: '그러니 이번 Quest는 이거야. Ethereum에 있는 네 ETH로 500 USDC를 만들어서 Robinhood Chain으로 옮기기. 먼저 일반 모드로 직접 해 보고, 그다음 솔버 모드를 켜서 뭐가 달라지는지 겪어 보자.',
     cta: '먼저 내 지갑을 확인해 볼까?'
   },
 

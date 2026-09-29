@@ -55,6 +55,9 @@
 .mission { display: flex; flex-direction: column; gap: 14px; padding-top: 22px; }
 .m-eyebrow { font: 500 11.5px var(--mono); letter-spacing: .06em; color: var(--muted); }
 .m-title { font-size: 26px; line-height: 1.24; letter-spacing: -.02em; font-weight: 700; white-space: pre-line; }
+/* 첫 화면의 이야기 — 제목 아래 세 문단. 왜 지금 이 체인인지부터 지갑에 뭐가 없는지까지 */
+.m-story { display: grid; gap: 10px; margin-top: 2px; font-size: 13.5px; line-height: 1.65; color: var(--muted); }
+.m-story p:first-child { color: var(--ink); }
 .tickets { display: grid; gap: 8px; margin-top: 8px; }
 .ticket { display: flex; align-items: center; gap: 12px; border-radius: 16px; padding: 12px 14px; background: var(--paper-2); }
 .ticket .tok-ic { width: 40px; height: 40px; }
