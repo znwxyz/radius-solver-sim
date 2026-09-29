@@ -13,7 +13,7 @@ window.COACH = (function () {
   /* 대상이 폰 화면 밖(스크롤 아래)에 있으면 먼저 보이게 끌어온다 */
   function reveal(target, screen) {
     var canvas = screen.querySelector('.canvas');
-    if (!canvas) return;
+    if (!canvas || !canvas.contains(target)) return;   // 서명 시트처럼 canvas 밖에 있는 대상은 스크롤로 못 끌어온다
     var r = rectOf(target), c = canvas.getBoundingClientRect();
     if (r.top < c.top + 8 || r.bottom > c.bottom - 8) {
       canvas.scrollTop += (r.top - c.top) - 56;
@@ -40,10 +40,11 @@ window.COACH = (function () {
      사파리는 첫 프레임을 바로 적용해서 화면 전환 직후 첫 코치마크가 10px 밀렸다.
      canvas 의 '보이는 자리'와 '레이아웃 자리'의 차이를 빼서 애니메이션과 무관하게 잰다. */
   function drift(target, screen, s) {
-    var canvas = screen.querySelector('.canvas');
-    if (!canvas || !canvas.contains(target)) return { x: 0, y: 0 };
-    var c = canvas.getBoundingClientRect();
-    return { x: c.left - s.left - canvas.offsetLeft, y: c.top - s.top - canvas.offsetTop };
+    var el = target;   // 대상을 품은 .screen 바로 아래 자식 — canvas, 서명 시트, 처리 중 카드. 등장 애니메이션은 이 층에 걸린다
+    while (el && el.parentElement && el.parentElement !== screen) el = el.parentElement;
+    if (!el || el.parentElement !== screen) return { x: 0, y: 0 };
+    var c = el.getBoundingClientRect();
+    return { x: c.left - s.left - el.offsetLeft, y: c.top - s.top - el.offsetTop };
   }
   /* 링의 여유는 네 변이 같아야 한다. 한쪽이 화면 가장자리에 걸려 잘리면 반대쪽도 같은 만큼만 띄운다 —
      하단 버튼처럼 화면 끝에 붙은 대상에서 위는 6px, 아래는 2px 로 어긋나 보였다. */

@@ -186,7 +186,7 @@ window.SCREENS = (function () {
       '<span class="arr" aria-hidden="true">↓</span>' +
       '<span class="p-spot">' + chainTag(step.to.chain) + tokenPill(step.to.token) + '</span></div>';
     if (state === 'now' && p.phase === 'options') return '<div class="pstep now">' + body + stepOptions(step, i) + '</div>';
-    body += '<div class="p-lines"' + (i === 0 ? ' data-coach="gas"' : '') + '>' + step.lines.map(function (r) {
+    body += '<div class="p-lines">' + step.lines.map(function (r) {
       return '<div class="line' + (/도착 체인/.test(r[0]) ? ' warn' : '') + '"><span>' + esc(r[0]) + '</span><b>' + esc(r[1]) + '</b></div>';
     }).join('') + '</div>';
     if (state === 'done') {
@@ -322,7 +322,7 @@ window.SCREENS = (function () {
     return '<div class="scrim" data-act="reject"></div><div class="sheet" role="dialog" aria-label="' + esc(w.title) + '"><div class="sheet-grab" aria-hidden="true"></div>' +
       '<div class="sheet-head"><b>' + esc(w.title) + ' · ' + esc(sheet.name) + '</b><span class="n">' + esc(sheet.count) + '</span></div>' +
       '<div class="sheet-lab">' + esc(w.changes) + '</div><div class="changes">' + changes + '</div>' +
-      '<div class="sheet-fee' + (sheet.gas ? '' : ' free') + '"><span>' + esc(w.fee) + '</span><b>' + (sheet.gas ? money(sheet.gas) + ' · ' + fmt(sheet.gas / S.tokens.eth.price, 5) + ' ETH' : esc(S.sign.free)) + '</b></div>' +
+      '<div class="sheet-fee' + (sheet.gas ? '' : ' free') + '" data-coach="gas"><span>' + esc(w.fee) + '</span><b>' + (sheet.gas ? money(sheet.gas) + ' · ' + fmt(sheet.gas / S.tokens.eth.price, 5) + ' ETH' : esc(S.sign.free)) + '</b></div>' +
       '<div class="sheet-btns"><button class="reject" type="button" data-act="reject">' + esc(w.reject) + '</button><button class="confirm" type="button" data-act="confirm">' + esc(w.confirm) + '</button></div></div>';
   }
   function pendingCard(p) {

@@ -202,6 +202,7 @@
     var t = S.steps[st.at].type;
     if (t === 'wallet') return st.tab === 'robinhood' ? 'wallet-empty' : 'wallet';
     if (t === 'swap' && st.mode === 'normal' && st.normal.step === 0 && st.normal.phase === 'idle') return 'normal';
+    if (t === 'swap' && st.mode === 'normal' && st.normal.step === 0 && st.normal.phase === 'sign') return 'gas';   // 1단계 서명 요청이 떴을 때
     if (t === 'swap' && st.mode === 'solver' && st.solver.phase === 'idle') return 'solver';
     return null;
   }
