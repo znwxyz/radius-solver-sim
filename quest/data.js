@@ -14,7 +14,7 @@
    - 솔버가 하는 일은 공통 역할(조건 판단·자산 마련·실행)까지만 적는다.
    - 시나리오의 체인·토큰·캠페인은 설명을 위한 예시다. 실제 앱·캠페인이 아니다. */
 
-var ICON_V = '?v=4';
+var ICON_V = '?v=5';
 
 window.MODE = {
 
@@ -39,7 +39,7 @@ window.MODE = {
     ethereum:  { name: 'Ethereum',       short: 'ETH',  icon: '../brand/chains/ethereum.svg' + ICON_V, color: '#8e97ef', gas: 'eth' },
     arbitrum:  { name: 'Arbitrum',       short: 'ARB',  icon: '../brand/chains/arbitrum.svg' + ICON_V, color: '#12aaff', gas: 'eth' },
     base:      { name: 'Base',           short: 'BASE', icon: '../brand/chains/base.svg' + ICON_V,     color: '#3b6bff', gas: 'eth' },
-    robinhood: { name: 'Robinhood Chain', short: 'RH',  icon: './rh-chain.svg' + ICON_V,               color: '#4cd37a', gas: 'eth' }
+    robinhood: { name: 'Robinhood Chain', short: 'RH',  icon: '../brand/chains/robinhood.png' + ICON_V, color: '#ccff00', gas: 'eth' }   // 공식 깃털 심볼 · Robin Neon
   },
   chainOrder: ['ethereum', 'arbitrum', 'base', 'robinhood'],
 
