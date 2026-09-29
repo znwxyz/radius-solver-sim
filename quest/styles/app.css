@@ -151,9 +151,14 @@
 .pstep.done .p-num { background: var(--ok); color: #fff; }
 .p-title { font-size: 14px; font-weight: 600; line-height: 1.45; }
 .p-why { margin-top: 3px; font-size: 12px; line-height: 1.55; color: var(--muted); }
-.p-flow { display: grid; gap: 4px; margin-top: 10px; justify-items: start; }
-.p-spot { display: inline-flex; align-items: center; gap: 8px; }
-.p-flow .arr { margin-left: 10px; color: var(--faint); font-size: 13px; line-height: 1; }
+/* 출발 → 도착을 두 줄로 쌓는다. 체인 칸은 오른쪽 정렬, 토큰 칸은 왼쪽 정렬이라 두 줄의 경계가 한 세로선에 맞고,
+   두 묶음 전체는 카드 가운데. 화살표는 그 세로선 위에 놓인다. 가로로 늘어놓으면 폰 폭에서 쪼개진다. */
+.p-flow { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 8px; row-gap: 4px; margin-top: 10px; }
+.p-spot { display: contents; }
+.p-spot .chain-tag { grid-column: 1; justify-self: end; }   /* 열을 못 박아야 화살표가 1열을 차지해도 칩이 밀리지 않는다 */
+.p-spot .token-pill { grid-column: 2; justify-self: start; }
+/* 화살표는 카드 중앙이 아니라 두 칸의 경계선 위. 체인 칸 오른쪽 끝에서 칸 사이(8px)의 절반만큼 더 밀어 경계선에 맞춘다 */
+.p-flow .arr { grid-column: 1; justify-self: end; transform: translateX(calc(50% + 4px)); color: var(--faint); font-size: 13px; line-height: 1; }
 .p-lines { margin-top: 9px; display: grid; gap: 4px; }
 .p-lines .line { font-size: 11.5px; }
 .p-act { margin-top: 10px; width: 100%; border: 0; border-radius: 11px; padding: 10px; background: var(--black); color: var(--on-black); font-size: 13px; font-weight: 600; cursor: pointer; transition: transform var(--fast) var(--ease); }
