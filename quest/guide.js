@@ -36,10 +36,24 @@ window.COACH = (function () {
     if (!u) return target.getBoundingClientRect();
     return { top: u.top, left: u.left, bottom: u.bottom, right: u.right, width: u.right - u.left, height: u.bottom - u.top };
   }
+  /* 화면 등장 애니메이션(.canvas 가 10px 아래서 떠오른다) 도중에 재면 대상이 실제보다 아래에 있다.
+     사파리는 첫 프레임을 바로 적용해서 화면 전환 직후 첫 코치마크가 10px 밀렸다.
+     canvas 의 '보이는 자리'와 '레이아웃 자리'의 차이를 빼서 애니메이션과 무관하게 잰다. */
+  function drift(target, screen, s) {
+    var canvas = screen.querySelector('.canvas');
+    if (!canvas || !canvas.contains(target)) return { x: 0, y: 0 };
+    var c = canvas.getBoundingClientRect();
+    return { x: c.left - s.left - canvas.offsetLeft, y: c.top - s.top - canvas.offsetTop };
+  }
+  /* 링의 여유는 네 변이 같아야 한다. 한쪽이 화면 가장자리에 걸려 잘리면 반대쪽도 같은 만큼만 띄운다 —
+     하단 버튼처럼 화면 끝에 붙은 대상에서 위는 6px, 아래는 2px 로 어긋나 보였다. */
   function box(target, screen) {
-    var r = rectOf(target), s = screen.getBoundingClientRect();
-    var left = Math.max(INSET, r.left - s.left - PAD), right = Math.min(s.width - INSET, r.right - s.left + PAD);
-    var top = Math.max(INSET, r.top - s.top - PAD), bottom = Math.min(s.height - INSET, r.bottom - s.top + PAD);
+    var r = rectOf(target), s = screen.getBoundingClientRect(), d = drift(target, screen, s);
+    var x0 = r.left - s.left - d.x, x1 = r.right - s.left - d.x, y0 = r.top - s.top - d.y, y1 = r.bottom - s.top - d.y;
+    var padX = Math.max(0, Math.min(PAD, x0 - INSET, s.width - INSET - x1));
+    var padY = Math.max(0, Math.min(PAD, y0 - INSET, s.height - INSET - y1));
+    var left = Math.max(INSET, x0 - padX), right = Math.min(s.width - INSET, x1 + padX);
+    var top = Math.max(INSET, y0 - padY), bottom = Math.min(s.height - INSET, y1 + padY);
     return { top: top, left: left, width: right - left, height: bottom - top, sh: s.height };
   }
 
