@@ -16,13 +16,13 @@ window.SCREENS = (function () {
   function money(n) { return '$' + fmt(n, 2); }
   /* 큰 단위 둘만 적는다. 7일 2시간 8분 15초 는 읽히지 않는다 — 7일 2시간 이면 된다. */
   function dur(sec) {
-    var units = [['일', 86400], ['시간', 3600], ['분', 60], ['초', 1]], out = [], rest = Math.round(sec);
+    var U = S.ui.units, units = [[U.d, 86400], [U.h, 3600], [U.m, 60], [U.s, 1]], out = [], rest = Math.round(sec);
     units.forEach(function (u) {
       var n = Math.floor(rest / u[1]);
       if (n && out.length < 2) { out.push(n + u[0]); rest -= n * u[1]; }
       else if (out.length) rest -= n * u[1];
     });
-    return out.length ? out.join(' ') : '0초';
+    return out.length ? out.join(' ') : '0' + U.s;
   }
   /* 선택지가 있는 단계는 고른 선택지(없으면 기본값)의 수치로 채워서 돌려준다. */
   function resolve(step, picked) {
@@ -71,13 +71,14 @@ window.SCREENS = (function () {
   /* ── Quest(첫 화면) ── 온보딩 3장은 onboard.js */
   /* 폰에서는 바깥 토글이 없다. 첫 화면에서 고르고 넘어가게 한다. 데스크톱에선 CSS 가 숨긴다. */
   function setupRow() {
-    var L = S.ui.lang;
+    var L = S.ui.lang, A = S.ui.a11y, isEn = S.lang === 'en';
     return '<div class="m-setup">' +
-      '<button class="theme-btn" type="button" data-act="theme" aria-label="밝은 화면과 어두운 화면 바꾸기"><span class="sun" aria-hidden="true"></span><span class="moon" aria-hidden="true"></span></button>' +
-      '<div class="lang" role="group" aria-label="언어"><span class="lang-thumb" aria-hidden="true"></span>' +
-      '<button class="lang-btn on" type="button" data-act="lang:ko" aria-pressed="true">' + esc(L.ko) + '</button>' +
-      '<button class="lang-btn" type="button" data-act="lang:en" aria-pressed="false">' + esc(L.en) + '</button></div></div>';
+      '<button class="theme-btn" type="button" data-act="theme" aria-label="' + esc(A.theme) + '"><span class="sun" aria-hidden="true"></span><span class="moon" aria-hidden="true"></span></button>' +
+      '<div class="lang' + (isEn ? ' is-en' : '') + '" role="group" aria-label="' + esc(A.lang) + '"><span class="lang-thumb" aria-hidden="true"></span>' +
+      '<button class="lang-btn' + (isEn ? '' : ' on') + '" type="button" data-act="lang:ko" aria-pressed="' + !isEn + '">' + esc(L.ko) + '</button>' +
+      '<button class="lang-btn' + (isEn ? ' on' : '') + '" type="button" data-act="lang:en" aria-pressed="' + isEn + '">' + esc(L.en) + '</button></div></div>';
   }
+
   function mission(st) {
     return window.ONBOARD.html(st, { setup: setupRow() });
   }
@@ -156,7 +157,8 @@ window.SCREENS = (function () {
   /* ── 스왑: 일반 모드 ── */
   function stepOptions(step, i) {
     return '<div class="opts">' + step.options.map(function (o, j) {
-      return '<button class="opt" type="button" data-act="pick:' + j + '"><b>' + esc(o.name) + '</b><small>' + esc(S.ui.swap.optTime) + ' ' + dur(o.wait) +
+      /* --i·--n: 테두리가 차례로 반짝이는 순서(골라야 한다는 게 보이게) */
+      return '<button class="opt" type="button" style="--i:' + j + ';--n:' + step.options.length + '" data-act="pick:' + j + '"><b>' + esc(o.name) + '</b><small>' + esc(S.ui.swap.optTime) + ' ' + dur(o.wait) +
         '</small><span class="fee">' + money(o.fee) + '</span></button>';
     }).join('') + '</div>';
   }
@@ -171,7 +173,7 @@ window.SCREENS = (function () {
       '<span class="p-spot">' + chainTag(step.to.chain) + tokenPill(step.to.token) + '</span></div>';
     if (state === 'now' && p.phase === 'options') return '<div class="pstep now">' + body + stepOptions(step, i) + '</div>';
     body += '<div class="p-lines">' + step.lines.map(function (r) {
-      return '<div class="line' + (/도착 체인/.test(r[0]) ? ' warn' : '') + '"><span>' + esc(r[0]) + '</span><b>' + esc(r[1]) + '</b></div>';
+      return '<div class="line' + (r[2] === 'warn' ? ' warn' : '') + '"><span>' + esc(r[0]) + '</span><b>' + esc(r[1]) + '</b></div>';
     }).join('') + '</div>';
     if (state === 'done') {
       body += '<div class="p-tx"><span>' + esc(S.pending.done) + ' · <span class="hash">' + esc(p.tx[i]) + '</span></span><a href="#" data-act="noop">' + esc(S.pending.explorer) + '</a></div>';
@@ -199,7 +201,7 @@ window.SCREENS = (function () {
   /* ── 스왑: 솔버 모드 ── */
   function minRow(st) {
     return '<div class="min-row" data-coach="min"><span class="lab">' + esc(S.ui.swap.min) + '<b>' + fmt(st.solver.min, 2) + ' USDC</b></span>' +
-      '<span class="stp"><button type="button" data-act="min:-1" aria-label="줄이기">−</button><button type="button" data-act="min:1" aria-label="늘리기">+</button></span></div>';
+      '<span class="stp"><button type="button" data-act="min:-1" aria-label="' + esc(S.ui.a11y.less) + '">−</button><button type="button" data-act="min:1" aria-label="' + esc(S.ui.a11y.more) + '">+</button></span></div>';
   }
   function quoteRow(x, i, cls) {
     return '<div class="q ' + cls + '" style="--i:' + i + '"><span class="dot' + (x.radius ? ' radius' : '') + '"></span>' +
@@ -217,7 +219,7 @@ window.SCREENS = (function () {
       return '<div class="quotes"><div class="q-head"><b>' + esc(head) + '</b><span>' + arrived.length + ' / ' + q.length + '</span></div>' + rows.join('') + '</div>';
     }
     var order = arrived.length === q.length ? arrived : q.map(function (_, i) { return i; });
-    return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>견적 ' + q.length + '</b></div>' +
+    return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>' + esc(S.ui.quotesHead.replace('{N}', q.length)) + '</b></div>' +
       order.map(function (i, k) { return quoteRow(q[i], k, q[i] === best ? 'best pick' : ''); }).join('') +
       '<p class="q-pick">' + esc(S.ui.swap.picked) + ': ' + esc(S.ui.swap.pickNote.replace('{WHO}', best.name)) + '</p></div>';
   }
@@ -235,7 +237,7 @@ window.SCREENS = (function () {
     var m = S.solver, ph = st.solver.phase, best = m.quotes.reduce(function (a, b) { return b.amount > a.amount ? b : a; });
     var got = ph === 'done', quoted = ph !== 'idle' && ph !== 'quoting';
     var rows = m.lines.map(function (r) {
-      return [r[0], r[1].replace('{MIN}', fmt(st.solver.min, 2)), /가스/.test(r[0]) ? 'free' : ''];
+      return [r[0], r[1].replace('{MIN}', fmt(st.solver.min, 2)), r[2] || ''];
     });
     var extra = '';
     if (got) extra = doneBanner(m) + behind();
@@ -312,7 +314,7 @@ window.SCREENS = (function () {
   function pendingCard(p) {
     var mark = p.done ? '<span class="tick-s" aria-hidden="true">✓</span>' : '<span class="spin" aria-hidden="true"></span>';
     return '<div class="pend' + (p.done ? ' done' : '') + '"><div class="pend-top">' + mark + '<span><b>' + esc(p.done ? S.pending.done : S.pending.title) + ' · ' + esc(p.name) + '</b>' +
-      '<small>예상 ' + dur(p.wait) + '</small></span></div>' +
+      '<small>' + esc(S.ui.swap.optTime) + ' ' + dur(p.wait) + '</small></span></div>' +
       '<div class="prog" style="--ff:' + p.ms + 'ms"><i></i></div><div class="ff"><span>' + esc(p.hash) + '</span><span>' + esc(p.where) + '</span></div></div>';
   }
 

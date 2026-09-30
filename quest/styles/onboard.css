@@ -135,7 +135,7 @@
 .ob-prev span, .ob-next span { display: block; width: 13px; height: 13px; border: solid currentColor; border-width: 2.5px 2.5px 0 0; border-radius: 1px; }
 .ob-next span { transform: translateX(-3px) rotate(45deg); }
 .ob-prev span { transform: translateX(3px) rotate(-135deg); }
-.ob-prev { left: 8px; color: var(--muted); }
+.ob-prev { left: 8px; color: var(--faint); }   /* 뒤로는 한 단 더 옅게(사용자) */
 .ob-next { right: 8px; }
 .ob-next span { animation: ob-nudge 1.4s ease-in-out infinite; }
 .ob-prev:active, .ob-next:active { transform: scale(.9); }

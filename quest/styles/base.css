@@ -152,6 +152,7 @@ button { font-family: var(--body); color: inherit; }
 .lang-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 99px; background: var(--black); transition: transform var(--normal) var(--ease); }
 .lang-btn { position: relative; z-index: 1; border: 0; background: transparent; padding: 0 12px; border-radius: 99px; font: 600 11px var(--mono); color: var(--muted); cursor: pointer; }
 .lang-btn.on { color: var(--on-black); }
+.lang.is-en .lang-thumb { transform: translateX(100%); }   /* 영어면 알약이 EN 쪽 */
 /* EN 을 눌렀을 때 뜨는 말. 기록판 위에 겹치므로 말풍선처럼 바탕을 준다 */
 .side-note { position: absolute; z-index: 5; top: 38px; right: 0; margin: 0; max-width: 100%; border-radius: 12px; background: var(--pop-bg); color: var(--pop-ink); box-shadow: 0 10px 26px rgba(0,0,0,.22), inset 0 0 0 1px var(--hair); padding: 9px 12px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 26px rgba(0,0,0,.22); opacity: 0; transform: translateY(-4px); transition: opacity var(--fast) ease, transform var(--fast) ease; pointer-events: none; }
 .side-note.show { opacity: 1; transform: none; }
@@ -165,7 +166,12 @@ button { font-family: var(--body); color: inherit; }
 .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
 .sbar { width: 48px; height: 10px; border-radius: 99px; background: var(--hair); }
 .homebar { width: 124px; height: 5px; border-radius: 99px; background: var(--hair); margin: 10px auto 2px; }
-.screen { position: relative; display: flex; flex-direction: column; height: 701px; overflow: hidden; border-radius: 22px; }
+.screen { position: relative; z-index: 2; display: flex; flex-direction: column; height: 701px; overflow: hidden; border-radius: 22px; }
+/* 코치마크·서명 시트가 뜨면 목업 전체가 어두워진다(사용자: 시계 줄·홈 바만 밝아서 애매하다).
+   앱 화면(.screen) 안은 제 그늘이 짚는 자리를 뚫어 두므로, 이 층은 앱 화면 아래에 깔려 시계 줄·홈 바·테두리만 덮는다 */
+.bezel::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
+.bezel:has(.coach)::after { opacity: 1; background: rgba(0, 0, 0, .58); }   /* guide.js 그늘과 같은 짙기 */
+.bezel:has(.scrim)::after { opacity: 1; background: rgba(0, 0, 0, .42); }   /* 서명 시트 뒤 .scrim 과 같은 짙기 */
 
 /* 기록판 — 두 모드가 같은 줄에 쌓인다. 폰 안에서도 같은 판이 비교 화면으로 나온다. */
 .board { width: 100%; }

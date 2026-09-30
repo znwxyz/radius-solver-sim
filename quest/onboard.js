@@ -78,7 +78,7 @@ window.ONBOARD = (function () {
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
   function pages() {
     var list = S.mission.onboard;
-    return '<div class="ob-pages" tabindex="0" aria-label="온보딩 ' + list.length + '장 — 옆으로 밀거나 오른쪽 아래 화살표로 넘긴다">' + list.map(function (p, i) {
+    return '<div class="ob-pages" tabindex="0" aria-label="' + esc(S.ui.a11y.onboard.replace('{N}', list.length)) + '">' + list.map(function (p, i) {
       return '<section class="ob-page' + (p.key === 'cover' ? ' is-cover' : '') + (p.key === 'cover' || p.key === 'quest' ? ' is-big' : '') + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
         (p.note ? '<p class="ob-note">' + esc(p.note) + '</p>' : '') + '</section>';
     }).join('') + '</div>';
@@ -100,8 +100,8 @@ window.ONBOARD = (function () {
     return '<div class="canvas onboard' + (at === 0 ? ' at-cover' : '') + '">' + parts.setup + dots(at) + stage(at) + pages() + '</div>' +
       '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + '">' +
         /* 아래 양옆 꺾쇠 ‹ › — 웹에선 끌기가 불편하다(사용자). 배경 없이 꺾쇠만. 마지막 장에선 시작 버튼이 대신한다 */
-        '<button class="ob-prev" type="button" aria-label="이전 장"' + (isLast(at) || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
-        '<button class="ob-next" type="button" aria-label="다음 장"' + (isLast(at) ? ' tabindex="-1"' : '') + '><span aria-hidden="true">›</span></button>' +
+        '<button class="ob-prev" type="button" aria-label="' + esc(S.ui.a11y.prev) + '"' + (isLast(at) || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
+        '<button class="ob-next" type="button" aria-label="' + esc(S.ui.a11y.next) + '"' + (isLast(at) ? ' tabindex="-1"' : '') + '><span aria-hidden="true">›</span></button>' +
         '<button class="cta now" type="button" data-act="next"' + (isLast(at) ? '' : ' tabindex="-1"') + '>' + esc(m.cta) + '</button>' +
       '</div>';
   }

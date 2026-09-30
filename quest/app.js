@@ -6,7 +6,7 @@
   var screen = document.getElementById('screen');
   var beadLists = document.querySelectorAll('.beads');   // 데스크톱은 폰 위, 폰에서는 폰 안 머리에 하나씩
   var boardEl = document.getElementById('board');
-  var FF_MS = 3200, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다
+  var FF_MS = 3200, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme', LANG_KEY = 'solver-b-lang';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
@@ -221,12 +221,32 @@
   }
   function toggleTheme() { theme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); }
   /* 영어 버전은 아직 없다. 눌리기만 하고 아무 말이 없으면 고장으로 읽히니, 준비 중이라고 말한다. */
+  /* 언어는 data.js(한글) 위에 data-en.js 가 영어를 덮어써서 정해진다 — 페이지를 열 때 한 번.
+     그래서 바꿀 때는 고른 언어를 기억해 두고 그 언어로 다시 연다. 저장이 막힌 창도 있어서 주소(?lang=)에도 싣는다 */
   function lang(code) {
-    if (code === 'ko') return note('');
-    note(S.ui.lang.soon);
-    if (isPhone()) toast(S.ui.lang.soon);   // 폰에서는 기록판 위 안내가 숨겨져 있다. 폰 안에 띄운다
+    if (code === S.lang) return;
+    try { localStorage.setItem(LANG_KEY, code); } catch (e) { /* 저장이 막혀도 아래 주소로 그 언어가 열린다 */ }
+    location.search = '?lang=' + code;
   }
-  function isPhone() { return window.matchMedia('(max-width: 820px)').matches; }
+  /* index.html 에 박힌 글(페이지 제목, 버튼 이름, 주의사항)을 지금 언어로. 한국어는 index.html 그대로다 */
+  function pick(path) {
+    return path.split('.').reduce(function (v, k) { return v == null ? v : v[k]; }, S);
+  }
+  function localizePage() {
+    var P = S.page, isEn = S.lang === 'en';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-t]'), function (el) { var v = pick(el.dataset.t); if (v) el.textContent = v; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-t-aria]'), function (el) { var v = pick(el.dataset.tAria); if (v) el.setAttribute('aria-label', v); });
+    if (P && P.title) document.title = P.title;
+    var notes = document.querySelector('.foot ul');
+    if (P && P.notes && notes) notes.innerHTML = P.notes.map(function (n) { return '<li>' + V.esc(n) + '</li>'; }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('.lang'), function (g) {
+      g.classList.toggle('is-en', isEn);
+      Array.prototype.forEach.call(g.querySelectorAll('.lang-btn'), function (btn) {
+        var on = btn.dataset.act === 'lang:' + S.lang;
+        btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', String(on));
+      });
+    });
+  }
   function note(msg) {
     clearTimeout(noteTimer);
     noteEl.textContent = msg; noteEl.classList.toggle('show', !!msg);
@@ -341,6 +361,7 @@
   });
 
   // 주의사항은 푸터 한 곳에만 적는다. 폰에서는 푸터가 숨으니 비교 화면이 같은 내용을 접어 보여 준다.
+  localizePage();
   var footNotes = document.querySelector('.foot details');
   V.notice = footNotes ? footNotes.innerHTML : '';
 
