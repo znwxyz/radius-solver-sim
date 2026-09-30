@@ -1,4 +1,5 @@
 /* 첫 화면 — 온보딩. 한 장에 한 문장(data.js 의 mission.onboard).
+   0장은 표지: 일반 앱처럼 Radius 로고만. 1장으로 넘기면 토큰이 먼저 나타나고, 체인 층이 날아와 그 아래에 앉는다.
    위에는 같은 무대가 계속 있다: 체인 층 두 장(Ethereum 위, Robinhood Chain 아래)이 건물 층처럼 쌓인 페이크 3D.
    아래 글 칸을 옆으로 넘기면(스와이프) 무대의 움직임이 바뀐다 — 버튼으로 넘기지 않는다.
      토큰: 여러 토큰 카드가 Ethereum 층 위에 오른쪽 위로 포개져, 건반처럼 차례로 들썩인다(도레미파미레)
@@ -16,7 +17,6 @@ window.ONBOARD = (function () {
   var DRAG_PX = 6;   /* 마우스로 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
   var STACK = ['eth', 'usdc', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
   var EXTRA = [['eth', 'eth2'], ['usdc', 'usdc2']];
-  var hasIntroPlayed = false;   /* 1장 첫 등장(층이 날아오고 동전이 떨어져 앉음)은 앱을 열 때 한 번만 */
   var RIMS = 4;   /* 동전 두께 = 앞면 뒤로 겹친 반투명 원 수(뒤 → 앞). tools/onboard_keyframes.py 의 RIMS 와 같게 */   /* 4장: 아래층에도 ETH·USDC 한 장씩 [토큰, 카드 이름] */
 
   function esc(v) {
@@ -57,8 +57,9 @@ window.ONBOARD = (function () {
   }
   function stage(at) {
     var tags = S.mission.tags;
-    var intro = !hasIntroPlayed && at === 0 ? ' is-intro' : '';
-    return '<div class="ob-stage at-' + at + intro + '" aria-hidden="true">' +
+    return '<div class="ob-stage at-' + at + '" aria-hidden="true">' +
+      /* 표지: 일반 앱처럼 로고만(사용자). 넘기면 사라지고 무대가 시작된다 */
+      '<div class="ob-logo"><img src="../brand/Radius_icon_primaryColor.svg" alt=""></div>' +
       '<div class="ob-world">' + layer('robinhood', 'rh') + layer('base', 'base') + layer('arbitrum', 'arb') + layer('ethereum', 'eth') +
         STACK.map(function (k) { return card(k); }).join('') +
         EXTRA.map(function (e) { return card(e[0], e[1]); }).join('') +
@@ -78,7 +79,7 @@ window.ONBOARD = (function () {
   function pages() {
     var list = S.mission.onboard;
     return '<div class="ob-pages" tabindex="0" aria-label="온보딩 ' + list.length + '장, 옆으로 넘겨 봐">' + list.map(function (p, i) {
-      return '<section class="ob-page" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
+      return '<section class="ob-page' + (p.key === 'cover' ? ' is-cover' : '') + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
         (p.note ? '<p class="ob-note">' + esc(p.note) + '</p>' : '') + '</section>';
     }).join('') + '</div>';
   }
@@ -104,7 +105,6 @@ window.ONBOARD = (function () {
   function mount(screen, st, remember) {
     var pager = screen.querySelector('.ob-pages');
     if (!pager) return;
-    hasIntroPlayed = true;   /* 다시 그려도(테마 바꾸기 등), 1장으로 돌아와도 다시 날아오지 않는다 */
     var stageEl = screen.querySelector('.ob-stage');
     var bar = screen.querySelector('.ob-bar');
     var at = st.ob || 0;
@@ -112,8 +112,9 @@ window.ONBOARD = (function () {
     pager.scrollLeft = at * pager.clientWidth;
 
     function show(i) {
+      /* from-N: 어느 장에서 왔는지 — 표지에서 1장으로 올 때만 층이 천천히 날아오고 토큰이 그 뒤에 내려앉는다 */
+      stageEl.className = 'ob-stage at-' + i + ' from-' + at;
       at = i;
-      stageEl.className = 'ob-stage at-' + i;
       Array.prototype.forEach.call(screen.querySelectorAll('[data-ob-go]'), function (b, j) {
         if (j === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       });

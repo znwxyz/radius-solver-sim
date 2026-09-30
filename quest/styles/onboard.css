@@ -26,9 +26,9 @@
 .ob-layer.base { transform: translate(-196px, 30px); z-index: 2; opacity: 0; }
 .ob-layer.arb  { transform: translate(196px, 30px); z-index: 2; opacity: 0; }
 /* 들어올 때: 바깥 조금 아래에서 미끄러져 들어오며 나타난다(Base 먼저). 동전은 그 뒤에 차례로 떨어져 앉는다(onboard-motion.css).
-   나갈 때(5장으로 돌아갈 때)는 기다리지 않는다 — 지연은 .at-6 쪽에만 */
-.at-6 .ob-layer.base { transform: translate(-138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .05s; }
-.at-6 .ob-layer.arb { transform: translate(138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .18s; }
+   나갈 때(5장으로 돌아갈 때)는 기다리지 않는다 — 지연은 .at-7 쪽에만 */
+.at-7 .ob-layer.base { transform: translate(-138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .05s; }
+.at-7 .ob-layer.arb { transform: translate(138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .18s; }
 .ob-top, .ob-slab { position: absolute; inset: 0; border-radius: 26px; transform: rotateX(58deg) rotateZ(-42deg); }
 .ob-top { background: color-mix(in srgb, var(--c) 18%, var(--paper)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent); }
 .ob-slab {   /* 판의 두께 — 같은 판을 조금 아래에 진하게 */
@@ -66,6 +66,21 @@
 .ob-rim { border-radius: 50%; background: color-mix(in srgb, var(--paper) 22%, transparent); }
 .ob-rim.r4 { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent); background: color-mix(in srgb, var(--paper) 30%, transparent); }
 
+/* 표지 로고 — 가운데에 똑바로(돌리지 않는다 — 네모 아이콘이 기울어 보였다), 뒤에 은은하게 숨 쉬는 빛. 표지에서만 보이고 넘기면 작아지며 사라진다 */
+.ob-logo {
+  position: absolute; left: 50%; top: 46%; width: 104px; height: 104px; margin: -52px 0 0 -52px; z-index: 500;
+  display: grid; place-items: center; opacity: 0; transform: scale(.7); pointer-events: none;
+  transition: opacity .45s var(--ease), transform .6s var(--ease);
+}
+.ob-logo::before {
+  content: ""; position: absolute; inset: -46px; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--flow-cyan) 34%, transparent), transparent);
+  animation: ob-breathe 3.6s ease-in-out infinite;
+}
+.ob-logo img { position: relative; display: block; width: 104px; height: 104px; object-fit: contain; border-radius: 26px; box-shadow: 0 18px 40px -12px rgba(0, 150, 200, .45); }   /* 앱 아이콘처럼 둥근 모서리 */
+.at-0 .ob-logo { opacity: 1; transform: none; }
+@keyframes ob-breathe { 50% { transform: scale(1.12); opacity: .6; } }
+
 /* 일어나는 자리에서 톡 튀어나왔다 사라지는 글씨 — 배경·테두리 없이 작은 글씨만(사용자).
    가운데 정렬을 위해 폭을 넓게 잡고 왼쪽을 반만큼 당긴다. 자리와 때는 onboard-motion.css */
 .ob-pop {
@@ -87,6 +102,8 @@
 /* 글은 한 덩어리, 한 크기. 보통 굵기로 쓰다가 핵심 단어만 굵게(data.js 의 **…**) */
 .ob-text { font-size: 21px; line-height: 1.45; font-weight: 400; letter-spacing: -.02em; color: var(--ink); white-space: pre-line; }
 .ob-text b { font-weight: 700; }
+/* 표지: 제목만 크게 */
+.ob-page.is-cover .ob-text { font-size: 30px; line-height: 1.25; letter-spacing: -.03em; }
 /* 마지막 장만: 질문 아래 작은 보통 굵기 한 문단 */
 .ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); }
 
@@ -107,5 +124,5 @@
 @media (prefers-reduced-motion: reduce) {
   .ob-stage, .ob-stage *, .ob-hint span { animation: none !important; }
   .ob-tok, .ob-bar .cta, .ob-dots button { transition: none; }
-  .at-6 .ob-tok, .at-6 .ob-layer { transition: none !important; }   /* 마지막 장 등장 연출도 끈다 */
+  .at-7 .ob-tok, .at-7 .ob-layer { transition: none !important; }   /* 마지막 장 등장 연출도 끈다 */
 }
