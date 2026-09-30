@@ -14,7 +14,7 @@
 window.ONBOARD = (function () {
   'use strict';
   var S = window.MODE;
-  var DRAG_PX = 6;   /* 마우스로 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
+  var DRAG_PX = 8;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
   var STACK = ['eth', 'usdc', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
   var EXTRA = [['eth', 'eth2'], ['usdc', 'usdc2']];
   var RIMS = 4;   /* 동전 두께 = 앞면 뒤로 겹친 반투명 원 수(뒤 → 앞). tools/onboard_keyframes.py 의 RIMS 와 같게 */   /* 4장: 아래층에도 ETH·USDC 한 장씩 [토큰, 카드 이름] */
@@ -145,33 +145,42 @@ window.ONBOARD = (function () {
       if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.min(S.mission.onboard.length - 1, at + 1)); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); go(Math.max(0, at - 1)); }
     });
-    mouseDrag(pager, go);
+    swipeArea(screen.querySelector('.canvas.onboard'), pager, go);
   }
 
-  /* 데스크톱 마우스로도 끌어서 넘긴다(터치·트랙패드는 브라우저가 알아서 한다).
-     포인터를 붙잡아서 이 칸에만 듣는다 — 다시 그릴 때마다 window 에 리스너가 쌓이지 않게 */
-  function mouseDrag(pager, go) {
-    var x0 = 0, left0 = 0, isDown = false;
-    pager.addEventListener('pointerdown', function (e) {
-      if (e.pointerType !== 'mouse') return;
-      isDown = true; x0 = e.clientX; left0 = pager.scrollLeft;
-      pager.setPointerCapture(e.pointerId);
-      pager.classList.add('dragging');
+  /* 화면 어디를 밀어도 넘어간다(사용자: 글자 칸만 밀려서 넘어갔다). 손가락이 글자 칸 위면 브라우저 스크롤에 맡기고,
+     그 밖(무대·진행 점 둘레)과 마우스는 여기서 글자 칸을 대신 민다. 가로로 움직일 때만 붙잡고, 버튼 누름은 그대로 둔다.
+     포인터를 붙잡아 이 칸에만 듣는다 — 다시 그릴 때마다 window 에 리스너가 쌓이지 않게 */
+  function swipeArea(area, pager, go) {
+    var x0 = 0, y0 = 0, left0 = 0, isDown = false, isDragging = false;
+    area.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('button, a')) return;
+      if (e.pointerType !== 'mouse' && pager.contains(e.target)) return;   /* 글자 칸 위의 손가락은 브라우저가 민다 */
+      isDown = true; isDragging = false; x0 = e.clientX; y0 = e.clientY; left0 = pager.scrollLeft;
     });
-    pager.addEventListener('pointermove', function (e) {
-      if (isDown) pager.scrollLeft = left0 - (e.clientX - x0);
+    area.addEventListener('pointermove', function (e) {
+      if (!isDown) return;
+      var dx = e.clientX - x0;
+      if (!isDragging) {
+        if (Math.abs(dx) < DRAG_PX || Math.abs(dx) < Math.abs(e.clientY - y0)) return;
+        isDragging = true;
+        area.setPointerCapture(e.pointerId);
+        pager.classList.add('dragging');
+      }
+      pager.scrollLeft = left0 - dx;
     });
     function end(e) {
       if (!isDown) return;
       isDown = false;
+      if (!isDragging) return;
+      isDragging = false;
       pager.classList.remove('dragging');
       var dx = e.clientX - x0, n = S.mission.onboard.length;
       var start = Math.round(left0 / Math.max(1, pager.clientWidth));
-      var step = Math.abs(dx) < DRAG_PX ? 0 : (dx < 0 ? 1 : -1);
-      go(Math.max(0, Math.min(n - 1, start + step)));
+      go(Math.max(0, Math.min(n - 1, start + (dx < 0 ? 1 : -1))));
     }
-    pager.addEventListener('pointerup', end);
-    pager.addEventListener('pointercancel', end);
+    area.addEventListener('pointerup', end);
+    area.addEventListener('pointercancel', end);
   }
 
   return { html: html, mount: mount };

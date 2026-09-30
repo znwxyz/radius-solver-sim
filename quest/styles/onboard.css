@@ -8,7 +8,7 @@
    좌표는 무대 가운데(0,0) 기준 화면 px. 위층 가운데 (0, −60), 아래층 가운데 (0, 60). 카드 기준점은 발밑.
    움직임은 transform·opacity 만 쓴다. */
 
-.canvas.onboard { gap: 0; padding-bottom: 0; overflow: hidden; }
+.canvas.onboard { gap: 0; padding-bottom: 0; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; }   /* 가로 밀기는 onboard.js 가 받는다 */
 
 /* ── 무대와 층 ── 층 판은 각자 rotateX·rotateZ 한 번으로 눕힌다(원근 없이 — 아이소메트릭) */
 .ob-stage { --F: 72px; --plate: 156px; position: relative; flex: 1 1 auto; min-height: 250px; }
@@ -115,7 +115,7 @@
 .ob-bar { position: relative; }
 .ob-bar .cta { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity var(--normal) var(--ease), transform var(--normal) var(--ease); }
 .ob-bar.is-ready .cta { opacity: 1; transform: none; pointer-events: auto; }
-.ob-hint { position: absolute; inset: 8px 16px 6px; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; color: var(--muted); opacity: 0; transition: opacity var(--fast) var(--ease); }
+.ob-hint { position: absolute; inset: 8px 16px 6px; pointer-events: none; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; color: var(--muted); opacity: 0; transition: opacity var(--fast) var(--ease); }
 .ob-bar.is-first .ob-hint { opacity: 1; }
 .ob-hint span { display: inline-block; animation: ob-nudge 1.4s ease-in-out infinite; }
 @keyframes ob-nudge { 50% { transform: translateX(5px); } }
