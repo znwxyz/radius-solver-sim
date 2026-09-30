@@ -128,12 +128,16 @@ button { font-family: var(--body); color: inherit; }
 .beads button.at::before { background: var(--flowline); }
 
 /* 테마·언어 토글 — 기록판 위. 폰 밖에 있어야 폰 안의 일반/솔버 토글과 헷갈리지 않는다. */
-.theme-btn { position: relative; flex: none; width: 52px; height: 30px; border: 0; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); cursor: pointer; }
-.theme-btn .sun, .theme-btn .moon { position: absolute; top: 5px; width: 20px; height: 20px; border-radius: 50%; transition: transform var(--normal) var(--ease), opacity var(--normal) ease; }
-.theme-btn .sun { left: 5px; background: radial-gradient(circle at 50% 50%, #ffd36a 0 42%, transparent 44%), repeating-conic-gradient(#ffb02e 0 8deg, transparent 8deg 45deg); }
-.theme-btn .moon { left: 5px; background: var(--ink); -webkit-mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); opacity: 0; transform: translateX(22px) rotate(-40deg); }
-:root[data-theme="dark"] .theme-btn .sun { opacity: 0; transform: translateX(22px) rotate(90deg); }
-:root[data-theme="dark"] .theme-btn .moon { opacity: 1; transform: translateX(22px) rotate(0); }
+/* 밤낮 토글 — KOR/EN 과 같은 두 칸 + 까만 알약(사용자). 왼쪽 해, 오른쪽 달, 알약이 켜진 쪽으로 미끄러진다 */
+.theme-btn { position: relative; flex: none; width: 96px; height: 30px; padding: 0; border: 0; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); cursor: pointer; }
+.theme-btn::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 99px; background: var(--black); transition: transform var(--normal) var(--ease); }
+:root[data-theme="dark"] .theme-btn::before { transform: translateX(100%); }
+/* 해·달 모두 흑백(사용자): 켜진 쪽은 까만 알약 위라 흰색, 꺼진 쪽은 회색. 각 칸 가운데에 */
+.theme-btn .sun, .theme-btn .moon { position: absolute; top: 7px; width: 16px; height: 16px; border-radius: 50%; transition: background-color var(--normal) ease; }
+.theme-btn .sun { left: 17.5px; border-radius: 0; background: var(--on-black); -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='3.2'/><g stroke='black' stroke-width='1.6' stroke-linecap='round'><path d='M8 1.2v1.9M8 12.9v1.9M1.2 8h1.9M12.9 8h1.9M3.2 3.2l1.35 1.35M11.45 11.45l1.35 1.35M3.2 12.8l1.35-1.35M11.45 4.55l1.35-1.35'/></g></svg>") center / contain no-repeat; mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='3.2'/><g stroke='black' stroke-width='1.6' stroke-linecap='round'><path d='M8 1.2v1.9M8 12.9v1.9M1.2 8h1.9M12.9 8h1.9M3.2 3.2l1.35 1.35M11.45 11.45l1.35 1.35M3.2 12.8l1.35-1.35M11.45 4.55l1.35-1.35'/></g></svg>") center / contain no-repeat; }
+.theme-btn .moon { right: 17.5px; background: var(--muted); -webkit-mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); mask: radial-gradient(circle at 68% 35%, transparent 0 46%, #000 48%); }
+:root[data-theme="dark"] .theme-btn .sun { background: var(--muted); }
+:root[data-theme="dark"] .theme-btn .moon { background: var(--on-black); }
 
 /* ── 무대: (빈 칸) · 폰 · 기록판 ────────────────────
    왼쪽은 비워 둔다. 설명은 폰 안에 있고, 밖에서 두 번 읽게 하지 않는다.
@@ -144,7 +148,7 @@ button { font-family: var(--body); color: inherit; }
 
 /* 토글 줄 — 진행 표시와 같은 높이에 놓여 폰 위 줄과 기록판 위 줄이 맞는다 */
 .switches { position: relative; display: flex; align-items: center; gap: 8px; height: 30px; margin-bottom: 12px; }
-.lang { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 30px; padding: 3px; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+.lang { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 96px; height: 30px; padding: 3px; border-radius: 99px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
 .lang-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 99px; background: var(--black); transition: transform var(--normal) var(--ease); }
 .lang-btn { position: relative; z-index: 1; border: 0; background: transparent; padding: 0 12px; border-radius: 99px; font: 600 11px var(--mono); color: var(--muted); cursor: pointer; }
 .lang-btn.on { color: var(--on-black); }
@@ -155,12 +159,13 @@ button { font-family: var(--body); color: inherit; }
 /* 폰 안 머리(로고 + 진행) — 폰에서만 보인다 */
 .m-head { display: none; }
 
-/* 폰 목업 — 아이폰 393:852 비율. 348 x 754 */
+/* 폰 목업 — 안쪽(시계 줄 + 앱 + 홈 바)이 아이폰 화면 393:852 = 348 x 754.
+   실제 아이폰은 시계 줄·홈 바가 화면 안에 있다. 앱만 754 로 두면 그 둘(≈53px)만큼 길쭉해진다(사용자 지적) → 앱은 701 */
 .bezel { position: relative; width: 372px; border-radius: 44px; background: var(--app-bg); padding: 12px 12px 14px; box-shadow: var(--shadow); transition: background var(--normal) ease; }
 .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
 .sbar { width: 48px; height: 10px; border-radius: 99px; background: var(--hair); }
 .homebar { width: 124px; height: 5px; border-radius: 99px; background: var(--hair); margin: 10px auto 2px; }
-.screen { position: relative; display: flex; flex-direction: column; height: 754px; overflow: hidden; border-radius: 22px; }
+.screen { position: relative; display: flex; flex-direction: column; height: 701px; overflow: hidden; border-radius: 22px; }
 
 /* 기록판 — 두 모드가 같은 줄에 쌓인다. 폰 안에서도 같은 판이 비교 화면으로 나온다. */
 .board { width: 100%; }
@@ -207,8 +212,7 @@ button { font-family: var(--body); color: inherit; }
   .screen { height: auto; flex: 1; min-height: 0; border-radius: 0; }
   .m-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 12px 14px 4px; }
   .m-head .wordmark img { height: 15px; }
-  .m-head .track { margin: 0; gap: 4px; }
-  .m-head .arrow { width: 26px; height: 26px; font-size: 14px; }
+  .m-head .track { display: none; }   /* 모바일에선 앱 전체 진행 표시를 뺀다 — 온보딩 순서 막대와 겹친다(사용자, 2026-09-30) */
   .beads { gap: 0; }
   .beads button { padding: 0 6px; font-size: 10.5px; white-space: nowrap; gap: 4px; }
 }

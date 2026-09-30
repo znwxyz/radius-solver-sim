@@ -35,8 +35,8 @@
 .at-4 .k-eth2 { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
 .at-4 .k-usdc2 { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
 .at-5 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
-.at-5 .k-usdc { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
-.at-5 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 0; z-index: 83; }
+.at-5 .k-usdc { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
+.at-5 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
 .at-7 .k-q-ethereum-0 { --x: -27.8px; --y: -48.8px; --o: 1; z-index: 121; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.15s; }
 .k-q-ethereum-0 { --x: -27.8px; --y: -86.8px; --o: 0; z-index: 83; }
 .at-7 .k-q-ethereum-1 { --x: 0.0px; --y: -72.0px; --o: 1; z-index: 98; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.22s; }
@@ -67,13 +67,14 @@
   .at-3 .k-usdc { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
   .at-5 .k-eth { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
   .at-5 .k-usdc { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
+  .at-5 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 0; z-index: 83; }
 }
 /* 0장 표지 → 1장 */
 .at-0 .ob-layer.eth { transform: translate(-222.9px, calc(var(--F) * -1 + 64.0px)); opacity: 0; }
 .at-0 .ob-layer.rh { transform: translate(222.9px, calc(var(--F) * 1 + -148.8px)); opacity: 0; }
 .at-1.from-0 .ob-layer { transition-duration: 1.6s, 1s; transition-timing-function: cubic-bezier(.2, .8, .2, 1), ease; transition-delay: 0.7s; }
 .at-1.from-0 .ob-layer.rh { transition-delay: 1.0s; }
-@keyframes ob-arrive { 0% { opacity: 0; scale: .6; translate: 0 -44px; } 12% { opacity: 1; scale: 1; translate: 0 -44px; } 75% { translate: 0 -44px; animation-timing-function: cubic-bezier(.5, 0, .9, .5); } 87% { translate: 0 3px; } 100% { translate: 0 0; } }
+@keyframes ob-arrive { 0% { opacity: 0; translate: 0 -44px; } 12% { opacity: 1; translate: 0 -44px; } 75% { translate: 0 -44px; animation-timing-function: cubic-bezier(.5, 0, .9, .5); } 87% { translate: 0 3px; } 100% { translate: 0 0; } }
 .at-0 .k-eth { --x: -32.3px; --y: -45.9px; --o: 0; z-index: 124; }
 .at-1.from-0 .k-eth { animation: ob-arrive 3.3s ease-out 0.00s both; }
 .at-0 .k-usdc { --x: -10.8px; --y: -63.3px; --o: 0; z-index: 107; }
@@ -267,7 +268,9 @@
   100% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
 }
 .at-2 .k-eth { animation: ob-enter .4s ease-out, ob-swap-eth 4.4s linear infinite; }
+.at-2 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-2 .k-usdc { animation: ob-enter .4s ease-out, ob-swap-usdc 4.4s linear infinite; }
+.at-2 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-2 .p-swap { animation: ob-pop-swap 4.4s linear infinite; }
 /* 3장 브릿지 */
 @keyframes ob-bridge {
@@ -310,6 +313,7 @@
   100% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
 }
 .at-3 .k-usdc { animation: ob-enter .4s ease-out, ob-bridge 4.4s linear infinite; }
+.at-3 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-3 .p-bridge { animation: ob-pop-bridge 4.4s linear infinite; }
 /* 4장 스왑·브릿지를 끝없이 */
 @keyframes ob-mix-eth {
@@ -550,9 +554,13 @@
 }
 /* 4장 걸기: 8동작 한 바퀴 = 12.0s */
 .at-4 .k-eth { animation: ob-enter .4s ease-out, ob-mix-eth 12.0s linear infinite; }
+.at-4 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .k-usdc { animation: ob-enter .4s ease-out, ob-mix-usdc 12.0s linear infinite; }
+.at-4 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .k-usdc2 { animation: ob-enter .4s ease-out, ob-mix-usdc2 12.0s linear infinite; }
+.at-4 .k-usdc2 .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .k-eth2 { animation: ob-enter .4s ease-out, ob-mix-eth2 12.0s linear infinite; }
+.at-4 .k-eth2 .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .p-swap { animation: ob-mix-pop-swap 12.0s linear infinite; }
 .at-4 .p-bridge { animation: ob-mix-pop-bridge 12.0s linear infinite; }
 /* 5장 크로스체인 스왑 */
@@ -689,6 +697,7 @@
 .at-5 .k-eth { animation: ob-cross-eth 8s linear infinite; }
 .at-5 .k-usdc { animation: ob-cross-usdc 8s linear infinite; }
 .at-5 .k-eth2 { animation: ob-cross-eth2 8s linear infinite; }
+.at-5 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-5 .p-bridge { animation: ob-cross-pop-bridge 8s linear infinite; }
 .at-5 .p-swap { animation: ob-cross-pop-swap 8s linear infinite; }
 .at-5 .p-cross { animation: ob-cross-pop-cross 8s linear infinite; }

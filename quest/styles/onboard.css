@@ -51,7 +51,11 @@
   transform: translate(var(--x), var(--y)); opacity: var(--o);
   transition: transform .7s var(--ease), opacity .45s var(--ease);
 }
-.ob-lift { position: absolute; left: 0; top: 0; }
+.ob-lift {   /* 크기는 여기서만 — 기준점은 동전 한가운데(발밑에서 28px 위). 보임(--o)을 따라 커지며 나타나고 작아지며 사라진다 */
+  position: absolute; left: 0; top: 0; transform-origin: 0 -28px;
+  scale: calc(.3 + .7 * var(--o, 1)); transition: scale .5s var(--ease);
+}
+@keyframes ob-grow { from { scale: .3; } }   /* 장에 들어올 때 도는 동전도 한가운데에서 커지며 나타난다 */
 .ob-shadow { border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .2), rgba(0, 0, 0, .06) 65%, transparent); }
 /* 동전 앞면 — 테두리 선 없이 은은한 빛만 */
 .ob-coin {
@@ -102,27 +106,47 @@
 /* 글은 한 덩어리, 한 크기. 보통 굵기로 쓰다가 핵심 단어만 굵게(data.js 의 **…**) */
 .ob-text { font-size: 21px; line-height: 1.45; font-weight: 400; letter-spacing: -.02em; color: var(--ink); white-space: pre-line; }
 .ob-text b { font-weight: 700; }
-/* 표지: 제목만 크게 */
-.ob-page.is-cover .ob-text { font-size: 30px; line-height: 1.25; letter-spacing: -.03em; }
+/* 표지와 마지막 장: 큰 제목 + 작은 한 줄 — 처음과 끝이 짝을 이룬다(사용자). 줄 간격은 145% 이상(답답하지 않게) */
+.ob-page.is-big .ob-text { font-size: 30px; line-height: 1.45; letter-spacing: -.03em; }
 /* 마지막 장만: 질문 아래 작은 보통 굵기 한 문단 */
 .ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); }
 
-.ob-dots { display: flex; justify-content: center; gap: 0; padding: 14px 0 2px; }
-.ob-dots button { width: 22px; height: 7px; margin: 0 -3px; padding: 0; border: 0; border-radius: 99px; background: var(--faint); cursor: pointer; transform: scaleX(.32); opacity: .6; transition: transform var(--normal) var(--ease), opacity var(--normal) var(--ease), background-color var(--normal) var(--ease); }
-.ob-dots button[aria-current] { transform: scaleX(1); opacity: 1; background: var(--ink); margin: 0 4px; }
+/* 순서: 맨 위의 스토리식 막대(사용자) — 지금 장까지 채워진다. 칸을 누르면 그 장으로 */
+.ob-dots { display: flex; gap: 4px; padding: 10px 2px 2px; }
+.ob-dots button { flex: 1; height: 3px; padding: 0; border: 0; border-radius: 3px; background: var(--hair); cursor: pointer; position: relative; transition: background-color var(--normal) var(--ease); }
+.ob-dots button::before { content: ""; position: absolute; inset: -10px 0; }   /* 누르기 쉬운 넓이 */
+.ob-dots button.is-past, .ob-dots button[aria-current] { background: var(--ink); }
+/* 표지에선 순서 막대를 숨기고 밤낮·한영 토글만, 1장부터는 반대. 자리는 비워 둬서 넘길 때 위아래로 튀지 않게 */
+.ob-dots, .canvas.onboard .m-setup { transition: opacity var(--normal) var(--ease), visibility var(--normal); }
+.canvas.onboard.at-cover .ob-dots { opacity: 0; visibility: hidden; }
+.canvas.onboard:not(.at-cover) .m-setup { opacity: 0; visibility: hidden; }
 
-/* 아래 칸: 마지막 장 전에는 "옆으로 넘겨 봐", 마지막 장에서 시작 버튼 */
+/* 아래 칸: 마지막 장 전에는 오른쪽 아래 다음 화살표(까딱거림), 마지막 장에서 시작 버튼 */
 .ob-bar { position: relative; }
 .ob-bar .cta { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity var(--normal) var(--ease), transform var(--normal) var(--ease); }
 .ob-bar.is-ready .cta { opacity: 1; transform: none; pointer-events: auto; }
-.ob-hint { position: absolute; inset: 8px 16px 6px; pointer-events: none; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; color: var(--muted); opacity: 0; transition: opacity var(--fast) var(--ease); }
-.ob-bar.is-first .ob-hint { opacity: 1; }
-.ob-hint span { display: inline-block; animation: ob-nudge 1.4s ease-in-out infinite; }
-@keyframes ob-nudge { 50% { transform: translateX(5px); } }
+.ob-prev, .ob-next {
+  position: absolute; top: 50%; width: 44px; height: 44px; margin-top: -19px; z-index: 2;
+  display: grid; place-items: center; border: 0; border-radius: 12px; cursor: pointer; background: none;
+  color: var(--ink); font-size: 0;
+  transition: opacity var(--fast) var(--ease), transform var(--fast) var(--ease), visibility var(--fast);
+}
+/* 꺾쇠는 글자 대신 선 두 개로 그린다 — 글꼴 꺾쇠는 작고 흐렸다 */
+.ob-prev span, .ob-next span { display: block; width: 13px; height: 13px; border: solid currentColor; border-width: 2.5px 2.5px 0 0; border-radius: 1px; }
+.ob-next span { transform: translateX(-3px) rotate(45deg); }
+.ob-prev span { transform: translateX(3px) rotate(-135deg); }
+.ob-prev { left: 8px; color: var(--muted); }
+.ob-next { right: 8px; }
+.ob-next span { animation: ob-nudge 1.4s ease-in-out infinite; }
+.ob-prev:active, .ob-next:active { transform: scale(.9); }
+.ob-prev:focus-visible, .ob-next:focus-visible { outline: 2px solid var(--tint-line); outline-offset: 2px; }
+.canvas.onboard.at-cover ~ .ob-bar .ob-prev { opacity: 0; visibility: hidden; }   /* 표지엔 이전 장이 없다 */
+.ob-bar.is-ready .ob-next, .ob-bar.is-ready .ob-prev { opacity: 0; pointer-events: none; transform: scale(.8); }
+@keyframes ob-nudge { 50% { translate: 5px 0; } }   /* transform 은 꺾쇠 모양(회전)이 쓰고 있다 */
 
 /* 동작 줄이기: 돌지 않고 각 장의 끝 모습만 */
 @media (prefers-reduced-motion: reduce) {
-  .ob-stage, .ob-stage *, .ob-hint span { animation: none !important; }
+  .ob-stage, .ob-stage *, .ob-next span { animation: none !important; }
   .ob-tok, .ob-bar .cta, .ob-dots button { transition: none; }
   .at-7 .ob-tok, .at-7 .ob-layer { transition: none !important; }   /* 마지막 장 등장 연출도 끈다 */
 }

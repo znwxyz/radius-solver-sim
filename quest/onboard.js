@@ -78,15 +78,18 @@ window.ONBOARD = (function () {
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
   function pages() {
     var list = S.mission.onboard;
-    return '<div class="ob-pages" tabindex="0" aria-label="온보딩 ' + list.length + '장, 옆으로 넘겨 봐">' + list.map(function (p, i) {
-      return '<section class="ob-page' + (p.key === 'cover' ? ' is-cover' : '') + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
+    return '<div class="ob-pages" tabindex="0" aria-label="온보딩 ' + list.length + '장 — 옆으로 밀거나 오른쪽 아래 화살표로 넘긴다">' + list.map(function (p, i) {
+      return '<section class="ob-page' + (p.key === 'cover' ? ' is-cover' : '') + (p.key === 'cover' || p.key === 'quest' ? ' is-big' : '') + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
         (p.note ? '<p class="ob-note">' + esc(p.note) + '</p>' : '') + '</section>';
     }).join('') + '</div>';
   }
+  /* 순서 막대는 1장부터 센다(표지는 칸이 없고, 표지에선 막대를 숨긴다 — 사용자) */
   function dots(at) {
-    var n = S.mission.onboard.length;
-    return '<div class="ob-dots">' + S.mission.onboard.map(function (p, i) {
-      return '<button type="button" data-ob-go="' + i + '" aria-label="' + (i + 1) + ' / ' + n + '"' + (i === at ? ' aria-current="step"' : '') + '></button>';
+    var list = S.mission.onboard.slice(1), n = list.length;
+    return '<div class="ob-dots">' + list.map(function (p, k) {
+      var i = k + 1;
+      return '<button type="button" data-ob-go="' + i + '" aria-label="' + i + ' / ' + n + '"' +
+        (i < at ? ' class="is-past"' : '') + (i === at ? ' aria-current="step"' : '') + '></button>';
     }).join('') + '</div>';
   }
   function isLast(at) { return at === S.mission.onboard.length - 1; }
@@ -94,9 +97,11 @@ window.ONBOARD = (function () {
   /* parts: 화면 공통 조각(테마·언어 줄)은 screens.js 가 넘긴다 */
   function html(st, parts) {
     var at = st.ob || 0, m = S.mission;
-    return '<div class="canvas onboard">' + parts.setup + stage(at) + pages() + dots(at) + '</div>' +
-      '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + (at === 0 ? ' is-first' : '') + '">' +
-        '<p class="ob-hint" aria-hidden="' + (at !== 0) + '">' + esc(m.hint) + '<span aria-hidden="true">→</span></p>' +
+    return '<div class="canvas onboard' + (at === 0 ? ' at-cover' : '') + '">' + parts.setup + dots(at) + stage(at) + pages() + '</div>' +
+      '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + '">' +
+        /* 아래 양옆 꺾쇠 ‹ › — 웹에선 끌기가 불편하다(사용자). 배경 없이 꺾쇠만. 마지막 장에선 시작 버튼이 대신한다 */
+        '<button class="ob-prev" type="button" aria-label="이전 장"' + (isLast(at) || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
+        '<button class="ob-next" type="button" aria-label="다음 장"' + (isLast(at) ? ' tabindex="-1"' : '') + '><span aria-hidden="true">›</span></button>' +
         '<button class="cta now" type="button" data-act="next"' + (isLast(at) ? '' : ' tabindex="-1"') + '>' + esc(m.cta) + '</button>' +
       '</div>';
   }
@@ -115,12 +120,15 @@ window.ONBOARD = (function () {
       /* from-N: 어느 장에서 왔는지 — 표지에서 1장으로 올 때만 층이 천천히 날아오고 토큰이 그 뒤에 내려앉는다 */
       stageEl.className = 'ob-stage at-' + i + ' from-' + at;
       at = i;
-      Array.prototype.forEach.call(screen.querySelectorAll('[data-ob-go]'), function (b, j) {
+      Array.prototype.forEach.call(screen.querySelectorAll('[data-ob-go]'), function (b) {
+        var j = Number(b.dataset.obGo);
         if (j === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+        b.classList.toggle('is-past', j < i);   /* 스토리 막대: 지나온 장도 채운다 */
       });
+      screen.querySelector('.canvas.onboard').classList.toggle('at-cover', i === 0);   /* 표지에서만 토글, 1장부터 순서 막대 */
       bar.classList.toggle('is-ready', isLast(i));
-      bar.classList.toggle('is-first', i === 0);   /* "옆으로 넘겨 봐"는 첫 장에만 */
-      bar.querySelector('.ob-hint').setAttribute('aria-hidden', String(i !== 0));
+      bar.querySelector('.ob-next').tabIndex = isLast(i) ? -1 : 0;
+      bar.querySelector('.ob-prev').tabIndex = isLast(i) || i === 0 ? -1 : 0;
       bar.querySelector('.cta').tabIndex = isLast(i) ? 0 : -1;
       remember(i);
     }
@@ -137,6 +145,12 @@ window.ONBOARD = (function () {
       });
     }, { passive: true });
 
+    screen.querySelector('.ob-next').addEventListener('click', function () {
+      go(Math.min(S.mission.onboard.length - 1, at + 1));
+    });
+    screen.querySelector('.ob-prev').addEventListener('click', function () {
+      go(Math.max(0, at - 1));
+    });
     screen.querySelector('.ob-dots').addEventListener('click', function (e) {
       var b = e.target.closest('[data-ob-go]');
       if (b) go(Number(b.dataset.obGo));
