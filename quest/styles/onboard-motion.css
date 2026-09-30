@@ -1,0 +1,738 @@
+/* 온보딩 카드 모양·자리·움직임 — tools/onboard_keyframes.py 가 만든다. 손으로 고치지 말 것.
+   손은 styles/onboard.css 에서만. 여기 값은 바닥 위 좌표를 바닥과 같은 아이소메트릭 식으로 옮긴 것이다. */
+/* 동전: 앞면 + 뒤로 물러난 반투명 원들(두께). 발밑(.ob-tok 의 0,0)을 기준으로 기울인다 */
+.ob-coin, .ob-rim { position: absolute; left: 0; top: 0; width: 60px; height: 60px; transform-origin: 0 0; }
+.ob-coin { transform: matrix(0.8175, -0.3900, 0.0000, 0.9329, -24.52, -44.27); }
+.ob-rim.r1 { transform: matrix(0.8175, -0.3900, 0.0000, 0.9329, -26.55, -45.46); }
+.ob-rim.r2 { transform: matrix(0.8175, -0.3900, 0.0000, 0.9329, -28.57, -46.65); }
+.ob-rim.r3 { transform: matrix(0.8175, -0.3900, 0.0000, 0.9329, -30.60, -47.84); }
+.ob-rim.r4 { transform: matrix(0.8175, -0.3900, 0.0000, 0.9329, -32.62, -49.03); }
+/* 튀어나오는 글씨도 동전 앞면과 같은 면(보는 사람 쪽을 보고 선 면)에 새긴다 */
+.ob-pop > span { display: block; transform-origin: 50% 50%; transform: matrix(0.7431, -0.3546, 0.0000, 0.8480, 0.00, 0.00); }
+.ob-shadow { position: absolute; left: 0; top: 0; width: 68px; height: 68px; transform-origin: 0 0; transform: matrix(0.7431, -0.3546, 0.6691, 0.3938, -51.70, -3.50); }
+/* 장마다 쉬는 자리 — 움직임의 0% 와 같다. 장이 바뀌면 여기서 여기로 미끄러진다 */
+.at-0 .k-eth { --x: -32.3px; --y: -45.9px; --o: 1; z-index: 124; }
+.at-0 .k-usdc { --x: -10.8px; --y: -63.3px; --o: 1; z-index: 107; }
+.at-0 .k-usdt { --x: 10.8px; --y: -80.7px; --o: 1; z-index: 89; }
+.at-0 .k-wbtc { --x: 32.3px; --y: -98.1px; --o: 1; z-index: 72; }
+.at-0 .k-tsla { --x: -21.7px; --y: 90.9px; --o: 1; z-index: 261; }
+.k-tsla { --x: -21.7px; --y: 90.9px; --o: 0; z-index: 261; }
+.at-0 .k-nvda { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
+.k-nvda { --x: 0.0px; --y: 72.0px; --o: 0; z-index: 242; }
+.at-0 .k-aapl { --x: 21.7px; --y: 53.1px; --o: 1; z-index: 223; }
+.k-aapl { --x: 21.7px; --y: 53.1px; --o: 0; z-index: 223; }
+.at-5 .k-tsla { --x: -21.7px; --y: 90.9px; --o: 1; z-index: 261; }
+.at-5 .k-nvda { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
+.at-5 .k-aapl { --x: 21.7px; --y: 53.1px; --o: 1; z-index: 223; }
+.k-usdt, .k-wbtc { --x: 55.0px; --y: -126.8px; --o: 0; z-index: 43; }
+.k-eth2 { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
+.k-usdc2 { --x: -31.2px; --y: 86.9px; --o: 0; z-index: 257; }
+.at-1 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
+.at-1 .k-usdc { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
+.at-2 .k-usdc { --x: 0.0px; --y: -72.0px; --o: 1; z-index: 98; }
+.at-3 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
+.at-3 .k-usdc { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
+.at-3 .k-eth2 { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
+.at-3 .k-usdc2 { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
+.at-4 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
+.at-4 .k-usdc { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
+.at-4 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 0; z-index: 83; }
+.at-6 .k-q-ethereum-0 { --x: -27.8px; --y: -48.8px; --o: 1; z-index: 121; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.15s; }
+.k-q-ethereum-0 { --x: -27.8px; --y: -86.8px; --o: 0; z-index: 83; }
+.at-6 .k-q-ethereum-1 { --x: 0.0px; --y: -72.0px; --o: 1; z-index: 98; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.22s; }
+.k-q-ethereum-1 { --x: 0.0px; --y: -110.0px; --o: 0; z-index: 60; }
+.at-6 .k-q-ethereum-2 { --x: 27.8px; --y: -95.2px; --o: 1; z-index: 75; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.29s; }
+.k-q-ethereum-2 { --x: 27.8px; --y: -133.2px; --o: 0; z-index: 37; }
+.at-6 .k-q-base-0 { --x: -165.8px; --y: 23.2px; --o: 1; z-index: 193; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.47s; }
+.k-q-base-0 { --x: -165.8px; --y: -14.8px; --o: 0; z-index: 155; }
+.at-6 .k-q-base-1 { --x: -138.0px; --y: 0.0px; --o: 1; z-index: 170; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.54s; }
+.k-q-base-1 { --x: -138.0px; --y: -38.0px; --o: 0; z-index: 132; }
+.at-6 .k-q-base-2 { --x: -110.2px; --y: -23.2px; --o: 1; z-index: 147; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.61s; }
+.k-q-base-2 { --x: -110.2px; --y: -61.2px; --o: 0; z-index: 109; }
+.at-6 .k-q-arbitrum-0 { --x: 110.2px; --y: 23.2px; --o: 1; z-index: 193; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.63s; }
+.k-q-arbitrum-0 { --x: 110.2px; --y: -14.8px; --o: 0; z-index: 155; }
+.at-6 .k-q-arbitrum-1 { --x: 138.0px; --y: 0.0px; --o: 1; z-index: 170; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.70s; }
+.k-q-arbitrum-1 { --x: 138.0px; --y: -38.0px; --o: 0; z-index: 132; }
+.at-6 .k-q-arbitrum-2 { --x: 165.8px; --y: -23.2px; --o: 1; z-index: 147; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.77s; }
+.k-q-arbitrum-2 { --x: 165.8px; --y: -61.2px; --o: 0; z-index: 109; }
+.at-6 .k-q-robinhood-0 { --x: -27.8px; --y: 95.2px; --o: 1; z-index: 265; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.31s; }
+.k-q-robinhood-0 { --x: -27.8px; --y: 57.2px; --o: 0; z-index: 227; }
+.at-6 .k-q-robinhood-1 { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.38s; }
+.k-q-robinhood-1 { --x: 0.0px; --y: 34.0px; --o: 0; z-index: 204; }
+.at-6 .k-q-robinhood-2 { --x: 27.8px; --y: 48.8px; --o: 1; z-index: 219; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.45s; }
+.k-q-robinhood-2 { --x: 27.8px; --y: 10.8px; --o: 0; z-index: 181; }
+@media (prefers-reduced-motion: reduce) {   /* 움직임 없이 각 장의 끝 모습 */
+  .at-1 .k-eth { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
+  .at-1 .k-usdc { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
+  .at-2 .k-usdc { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
+  .at-4 .k-eth { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
+  .at-4 .k-usdc { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
+}
+/* 1장 첫 등장 */
+@keyframes ob-fly-eth { from { transform: translate(-222.9px, calc(var(--F) * -1 + 64.0px)); opacity: 0; } 50% { opacity: 1; } }
+@keyframes ob-fly-rh { from { transform: translate(222.9px, calc(var(--F) * 1 + -148.8px)); opacity: 0; } 50% { opacity: 1; } }
+@keyframes ob-drop { from { translate: 0 -40px; opacity: 0; } }
+.is-intro.at-0 .ob-layer.eth { animation: ob-fly-eth 1.0s cubic-bezier(.2, .8, .2, 1) both, ob-float 3.2s ease-in-out infinite; }
+.is-intro.at-0 .ob-layer.rh { animation: ob-fly-rh 1.0s cubic-bezier(.2, .8, .2, 1) .15s both, ob-float 3.2s ease-in-out -1.3s infinite; }
+.is-intro.at-0 .k-eth { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 0.85s both; }
+.is-intro.at-0 .k-usdc { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 0.92s both; }
+.is-intro.at-0 .k-usdt { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 0.99s both; }
+.is-intro.at-0 .k-wbtc { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 1.06s both; }
+.is-intro.at-0 .k-tsla { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 1.00s both; }
+.is-intro.at-0 .k-nvda { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 1.07s both; }
+.is-intro.at-0 .k-aapl { animation: ob-drop .6s cubic-bezier(.34, 1.5, .64, 1) 1.14s both; }
+/* 1장 건반 */
+@keyframes ob-key-eth {
+  0% { transform: translateY(-0.0px); }
+  2.78% { transform: translateY(-3.0px); }
+  5.56% { transform: translateY(-5.2px); }
+  8.33% { transform: translateY(-6.0px); }
+  11.11% { transform: translateY(-5.2px); }
+  13.89% { transform: translateY(-3.0px); }
+  16.67% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-0 .k-eth .ob-lift { animation: ob-key-eth 2.4s linear infinite .3s; }
+@keyframes ob-key-usdc {
+  0% { transform: none; }
+  16.67% { transform: translateY(-0.0px); }
+  19.44% { transform: translateY(-3.0px); }
+  22.22% { transform: translateY(-5.2px); }
+  25% { transform: translateY(-6.0px); }
+  27.78% { transform: translateY(-5.2px); }
+  30.56% { transform: translateY(-3.0px); }
+  33.33% { transform: translateY(-0.0px); }
+  83.33% { transform: translateY(-0.0px); }
+  86.11% { transform: translateY(-3.0px); }
+  88.89% { transform: translateY(-5.2px); }
+  91.67% { transform: translateY(-6.0px); }
+  94.44% { transform: translateY(-5.2px); }
+  97.22% { transform: translateY(-3.0px); }
+  100% { transform: translateY(-0.0px); }
+}
+.at-0 .k-usdc .ob-lift { animation: ob-key-usdc 2.4s linear infinite .3s; }
+@keyframes ob-key-usdt {
+  0% { transform: none; }
+  33.33% { transform: translateY(-0.0px); }
+  36.11% { transform: translateY(-3.0px); }
+  38.89% { transform: translateY(-5.2px); }
+  41.67% { transform: translateY(-6.0px); }
+  44.44% { transform: translateY(-5.2px); }
+  47.22% { transform: translateY(-3.0px); }
+  50% { transform: translateY(-0.0px); }
+  66.67% { transform: translateY(-0.0px); }
+  69.44% { transform: translateY(-3.0px); }
+  72.22% { transform: translateY(-5.2px); }
+  75% { transform: translateY(-6.0px); }
+  77.78% { transform: translateY(-5.2px); }
+  80.56% { transform: translateY(-3.0px); }
+  83.33% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-0 .k-usdt .ob-lift { animation: ob-key-usdt 2.4s linear infinite .3s; }
+@keyframes ob-key-wbtc {
+  0% { transform: none; }
+  50% { transform: translateY(-0.0px); }
+  52.78% { transform: translateY(-3.0px); }
+  55.56% { transform: translateY(-5.2px); }
+  58.33% { transform: translateY(-6.0px); }
+  61.11% { transform: translateY(-5.2px); }
+  63.89% { transform: translateY(-3.0px); }
+  66.67% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-0 .k-wbtc .ob-lift { animation: ob-key-wbtc 2.4s linear infinite .3s; }
+@keyframes ob-key-tsla {
+  0% { transform: translateY(-0.0px); }
+  2.78% { transform: translateY(-3.0px); }
+  5.56% { transform: translateY(-5.2px); }
+  8.33% { transform: translateY(-6.0px); }
+  11.11% { transform: translateY(-5.2px); }
+  13.89% { transform: translateY(-3.0px); }
+  16.67% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-0 .k-tsla .ob-lift { animation: ob-key-tsla 2.4s linear infinite .3s; }
+.at-5 .k-tsla .ob-lift { animation: ob-key-tsla 2.4s linear infinite .3s; }
+@keyframes ob-key-nvda {
+  0% { transform: none; }
+  16.67% { transform: translateY(-0.0px); }
+  19.44% { transform: translateY(-3.0px); }
+  22.22% { transform: translateY(-5.2px); }
+  25% { transform: translateY(-6.0px); }
+  27.78% { transform: translateY(-5.2px); }
+  30.56% { transform: translateY(-3.0px); }
+  33.33% { transform: translateY(-0.0px); }
+  83.33% { transform: translateY(-0.0px); }
+  86.11% { transform: translateY(-3.0px); }
+  88.89% { transform: translateY(-5.2px); }
+  91.67% { transform: translateY(-6.0px); }
+  94.44% { transform: translateY(-5.2px); }
+  97.22% { transform: translateY(-3.0px); }
+  100% { transform: translateY(-0.0px); }
+}
+.at-0 .k-nvda .ob-lift { animation: ob-key-nvda 2.4s linear infinite .3s; }
+.at-5 .k-nvda .ob-lift { animation: ob-key-nvda 2.4s linear infinite .3s; }
+@keyframes ob-key-aapl {
+  0% { transform: none; }
+  33.33% { transform: translateY(-0.0px); }
+  36.11% { transform: translateY(-3.0px); }
+  38.89% { transform: translateY(-5.2px); }
+  41.67% { transform: translateY(-6.0px); }
+  44.44% { transform: translateY(-5.2px); }
+  47.22% { transform: translateY(-3.0px); }
+  50% { transform: translateY(-0.0px); }
+  66.67% { transform: translateY(-0.0px); }
+  69.44% { transform: translateY(-3.0px); }
+  72.22% { transform: translateY(-5.2px); }
+  75% { transform: translateY(-6.0px); }
+  77.78% { transform: translateY(-5.2px); }
+  80.56% { transform: translateY(-3.0px); }
+  83.33% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-0 .k-aapl .ob-lift { animation: ob-key-aapl 2.4s linear infinite .3s; }
+.at-5 .k-aapl .ob-lift { animation: ob-key-aapl 2.4s linear infinite .3s; }
+/* 2장 스왑 */
+@keyframes ob-swap-eth {
+  0% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  20% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  22.5% { transform: translate(-32.7px, -58.1px); z-index: 112; }
+  25% { transform: translate(-35.8px, -61.3px); z-index: 109; }
+  27.5% { transform: translate(-37.0px, -67.2px); z-index: 103; }
+  30% { transform: translate(-32.3px, -75.5px); z-index: 94; }
+  32.5% { transform: translate(-20.1px, -83.8px); z-index: 86; }
+  35% { transform: translate(-3.2px, -89.4px); z-index: 81; }
+  37.5% { transform: translate(12.8px, -91.0px); z-index: 79; }
+  40% { transform: translate(23.9px, -89.7px); z-index: 80; }
+  42.5% { transform: translate(29.6px, -87.8px); z-index: 82; }
+  45% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  70% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  72.5% { transform: translate(29.6px, -87.8px); z-index: 82; }
+  75% { transform: translate(23.9px, -89.7px); z-index: 80; }
+  77.5% { transform: translate(12.8px, -91.0px); z-index: 79; }
+  80% { transform: translate(-3.2px, -89.4px); z-index: 81; }
+  82.5% { transform: translate(-20.1px, -83.8px); z-index: 86; }
+  85% { transform: translate(-32.3px, -75.5px); z-index: 94; }
+  87.5% { transform: translate(-37.0px, -67.2px); z-index: 103; }
+  90% { transform: translate(-35.8px, -61.3px); z-index: 109; }
+  92.5% { transform: translate(-32.7px, -58.1px); z-index: 112; }
+  95% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  100% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+}
+@keyframes ob-swap-usdc {
+  0% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  20% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  22.5% { transform: translate(32.7px, -85.9px); z-index: 84; }
+  25% { transform: translate(35.8px, -82.7px); z-index: 87; }
+  27.5% { transform: translate(37.0px, -76.8px); z-index: 93; }
+  30% { transform: translate(32.3px, -68.5px); z-index: 102; }
+  32.5% { transform: translate(20.1px, -60.2px); z-index: 110; }
+  35% { transform: translate(3.2px, -54.6px); z-index: 115; }
+  37.5% { transform: translate(-12.8px, -53.0px); z-index: 117; }
+  40% { transform: translate(-23.9px, -54.3px); z-index: 116; }
+  42.5% { transform: translate(-29.6px, -56.2px); z-index: 114; }
+  45% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  70% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  72.5% { transform: translate(-29.6px, -56.2px); z-index: 114; }
+  75% { transform: translate(-23.9px, -54.3px); z-index: 116; }
+  77.5% { transform: translate(-12.8px, -53.0px); z-index: 117; }
+  80% { transform: translate(3.2px, -54.6px); z-index: 115; }
+  82.5% { transform: translate(20.1px, -60.2px); z-index: 110; }
+  85% { transform: translate(32.3px, -68.5px); z-index: 102; }
+  87.5% { transform: translate(37.0px, -76.8px); z-index: 93; }
+  90% { transform: translate(35.8px, -82.7px); z-index: 87; }
+  92.5% { transform: translate(32.7px, -85.9px); z-index: 84; }
+  95% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  100% { transform: translate(31.2px, -86.9px); z-index: 83; }
+}
+@keyframes ob-pop-swap {
+  0% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  32.49% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  35.91% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1.15); }
+  39.32% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  49.55% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  57.5% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+  82.49% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  85.91% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1.15); }
+  89.32% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  99.55% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  100% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+}
+.at-1 .k-eth { animation: ob-enter .4s ease-out, ob-swap-eth 4.4s linear infinite; }
+.at-1 .k-usdc { animation: ob-enter .4s ease-out, ob-swap-usdc 4.4s linear infinite; }
+.at-1 .p-swap { animation: ob-pop-swap 4.4s linear infinite; }
+/* 3장 브릿지 */
+@keyframes ob-bridge {
+  0% { transform: translate(0.0px, -72.0px); z-index: 98; }
+  20% { transform: translate(0.0px, -72.0px); z-index: 98; }
+  22.5% { transform: translate(-1.7px, -69.5px); z-index: 100; }
+  25% { transform: translate(-6.7px, -62.2px); z-index: 108; }
+  27.5% { transform: translate(-13.7px, -50.4px); z-index: 120; }
+  30% { transform: translate(-20.1px, -34.1px); z-index: 136; }
+  32.5% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  35% { transform: translate(-20.1px, 10.4px); z-index: 180; }
+  37.5% { transform: translate(-13.7px, 34.2px); z-index: 204; }
+  40% { transform: translate(-6.7px, 54.3px); z-index: 224; }
+  42.5% { transform: translate(-1.7px, 67.4px); z-index: 237; }
+  45% { transform: translate(-0.0px, 72.0px); z-index: 242; }
+  70% { transform: translate(0.0px, 72.0px); z-index: 242; }
+  72.5% { transform: translate(-1.7px, 67.4px); z-index: 237; }
+  75% { transform: translate(-6.7px, 54.3px); z-index: 224; }
+  77.5% { transform: translate(-13.7px, 34.2px); z-index: 204; }
+  80% { transform: translate(-20.1px, 10.4px); z-index: 180; }
+  82.5% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  85% { transform: translate(-20.1px, -34.1px); z-index: 136; }
+  87.5% { transform: translate(-13.7px, -50.4px); z-index: 120; }
+  90% { transform: translate(-6.7px, -62.2px); z-index: 108; }
+  92.5% { transform: translate(-1.7px, -69.5px); z-index: 100; }
+  95% { transform: translate(-0.0px, -72.0px); z-index: 98; }
+  100% { transform: translate(-0.0px, -72.0px); z-index: 98; }
+}
+@keyframes ob-pop-bridge {
+  0% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  32.49% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  35.91% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  39.32% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  49.55% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  57.5% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+  82.49% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  85.91% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  89.32% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  99.55% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  100% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+}
+.at-2 .k-usdc { animation: ob-enter .4s ease-out, ob-bridge 4.4s linear infinite; }
+.at-2 .p-bridge { animation: ob-pop-bridge 4.4s linear infinite; }
+/* 4장 스왑·브릿지를 끝없이 */
+@keyframes ob-mix-eth {
+  0% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  3.75% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  4.62% { transform: translate(-32.7px, -58.1px); z-index: 112; }
+  5.5% { transform: translate(-35.8px, -61.3px); z-index: 109; }
+  6.38% { transform: translate(-37.0px, -67.2px); z-index: 103; }
+  7.25% { transform: translate(-32.3px, -75.5px); z-index: 94; }
+  8.12% { transform: translate(-20.1px, -83.8px); z-index: 86; }
+  9% { transform: translate(-3.2px, -89.4px); z-index: 81; }
+  9.88% { transform: translate(12.8px, -91.0px); z-index: 79; }
+  10.75% { transform: translate(23.9px, -89.7px); z-index: 80; }
+  11.62% { transform: translate(29.6px, -87.8px); z-index: 82; }
+  12.5% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  28.75% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  29.62% { transform: translate(27.9px, -83.7px); z-index: 86; }
+  30.5% { transform: translate(18.5px, -74.3px); z-index: 96; }
+  31.38% { transform: translate(4.6px, -59.2px); z-index: 111; }
+  32.25% { transform: translate(-10.5px, -38.7px); z-index: 131; }
+  33.12% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  34% { transform: translate(-29.8px, 15.0px); z-index: 185; }
+  34.88% { transform: translate(-32.1px, 43.0px); z-index: 213; }
+  35.75% { transform: translate(-32.0px, 66.3px); z-index: 236; }
+  36.62% { transform: translate(-31.4px, 81.6px); z-index: 252; }
+  37.5% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  66.25% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  67.12% { transform: translate(-32.7px, 85.9px); z-index: 256; }
+  68% { transform: translate(-35.8px, 82.7px); z-index: 253; }
+  68.88% { transform: translate(-37.0px, 76.8px); z-index: 247; }
+  69.75% { transform: translate(-32.3px, 68.5px); z-index: 238; }
+  70.62% { transform: translate(-20.1px, 60.2px); z-index: 230; }
+  71.5% { transform: translate(-3.2px, 54.6px); z-index: 225; }
+  72.38% { transform: translate(12.8px, 53.0px); z-index: 223; }
+  73.25% { transform: translate(23.9px, 54.3px); z-index: 224; }
+  74.12% { transform: translate(29.6px, 56.2px); z-index: 226; }
+  75% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  78.75% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  79.62% { transform: translate(31.4px, 55.3px); z-index: 225; }
+  80.5% { transform: translate(32.0px, 50.2px); z-index: 220; }
+  81.38% { transform: translate(32.1px, 41.6px); z-index: 212; }
+  82.25% { transform: translate(29.8px, 29.5px); z-index: 200; }
+  83.12% { transform: translate(22.8px, 13.4px); z-index: 183; }
+  84% { transform: translate(10.5px, -5.8px); z-index: 164; }
+  84.88% { transform: translate(-4.6px, -25.5px); z-index: 144; }
+  85.75% { transform: translate(-18.5px, -42.2px); z-index: 128; }
+  86.62% { transform: translate(-27.9px, -53.3px); z-index: 117; }
+  87.5% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  100% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+}
+@keyframes ob-mix-usdc {
+  0% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  3.75% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  4.62% { transform: translate(32.7px, -85.9px); z-index: 84; }
+  5.5% { transform: translate(35.8px, -82.7px); z-index: 87; }
+  6.38% { transform: translate(37.0px, -76.8px); z-index: 93; }
+  7.25% { transform: translate(32.3px, -68.5px); z-index: 102; }
+  8.12% { transform: translate(20.1px, -60.2px); z-index: 110; }
+  9% { transform: translate(3.2px, -54.6px); z-index: 115; }
+  9.88% { transform: translate(-12.8px, -53.0px); z-index: 117; }
+  10.75% { transform: translate(-23.9px, -54.3px); z-index: 116; }
+  11.62% { transform: translate(-29.6px, -56.2px); z-index: 114; }
+  12.5% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  41.25% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  42.12% { transform: translate(-31.4px, -55.3px); z-index: 115; }
+  43% { transform: translate(-32.0px, -50.2px); z-index: 120; }
+  43.88% { transform: translate(-32.1px, -41.6px); z-index: 128; }
+  44.75% { transform: translate(-29.8px, -29.5px); z-index: 140; }
+  45.62% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  46.5% { transform: translate(-10.5px, 5.8px); z-index: 176; }
+  47.38% { transform: translate(4.6px, 25.5px); z-index: 196; }
+  48.25% { transform: translate(18.5px, 42.2px); z-index: 212; }
+  49.12% { transform: translate(27.9px, 53.3px); z-index: 223; }
+  50% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  66.25% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  67.12% { transform: translate(32.7px, 58.1px); z-index: 228; }
+  68% { transform: translate(35.8px, 61.3px); z-index: 231; }
+  68.88% { transform: translate(37.0px, 67.2px); z-index: 237; }
+  69.75% { transform: translate(32.3px, 75.5px); z-index: 246; }
+  70.62% { transform: translate(20.1px, 83.8px); z-index: 254; }
+  71.5% { transform: translate(3.2px, 89.4px); z-index: 259; }
+  72.38% { transform: translate(-12.8px, 91.0px); z-index: 261; }
+  73.25% { transform: translate(-23.9px, 89.7px); z-index: 260; }
+  74.12% { transform: translate(-29.6px, 87.8px); z-index: 258; }
+  75% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  91.25% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  92.12% { transform: translate(-27.9px, 83.7px); z-index: 254; }
+  93% { transform: translate(-18.5px, 74.3px); z-index: 244; }
+  93.88% { transform: translate(-4.6px, 59.2px); z-index: 229; }
+  94.75% { transform: translate(10.5px, 38.7px); z-index: 209; }
+  95.62% { transform: translate(22.8px, 13.4px); z-index: 183; }
+  96.5% { transform: translate(29.8px, -15.0px); z-index: 155; }
+  97.38% { transform: translate(32.1px, -43.0px); z-index: 127; }
+  98.25% { transform: translate(32.0px, -66.3px); z-index: 104; }
+  99.12% { transform: translate(31.4px, -81.6px); z-index: 88; }
+  100% { transform: translate(31.2px, -86.9px); z-index: 83; }
+}
+@keyframes ob-mix-usdc2 {
+  0% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  16.25% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  17.12% { transform: translate(-32.7px, 85.9px); z-index: 256; }
+  18% { transform: translate(-35.8px, 82.7px); z-index: 253; }
+  18.88% { transform: translate(-37.0px, 76.8px); z-index: 247; }
+  19.75% { transform: translate(-32.3px, 68.5px); z-index: 238; }
+  20.62% { transform: translate(-20.1px, 60.2px); z-index: 230; }
+  21.5% { transform: translate(-3.2px, 54.6px); z-index: 225; }
+  22.38% { transform: translate(12.8px, 53.0px); z-index: 223; }
+  23.25% { transform: translate(23.9px, 54.3px); z-index: 224; }
+  24.12% { transform: translate(29.6px, 56.2px); z-index: 226; }
+  25% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  41.25% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  42.12% { transform: translate(31.4px, 55.3px); z-index: 225; }
+  43% { transform: translate(32.0px, 50.2px); z-index: 220; }
+  43.88% { transform: translate(32.1px, 41.6px); z-index: 212; }
+  44.75% { transform: translate(29.8px, 29.5px); z-index: 200; }
+  45.62% { transform: translate(22.8px, 13.4px); z-index: 183; }
+  46.5% { transform: translate(10.5px, -5.8px); z-index: 164; }
+  47.38% { transform: translate(-4.6px, -25.5px); z-index: 144; }
+  48.25% { transform: translate(-18.5px, -42.2px); z-index: 128; }
+  49.12% { transform: translate(-27.9px, -53.3px); z-index: 117; }
+  50% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  53.75% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  54.62% { transform: translate(-32.7px, -58.1px); z-index: 112; }
+  55.5% { transform: translate(-35.8px, -61.3px); z-index: 109; }
+  56.38% { transform: translate(-37.0px, -67.2px); z-index: 103; }
+  57.25% { transform: translate(-32.3px, -75.5px); z-index: 94; }
+  58.12% { transform: translate(-20.1px, -83.8px); z-index: 86; }
+  59% { transform: translate(-3.2px, -89.4px); z-index: 81; }
+  59.88% { transform: translate(12.8px, -91.0px); z-index: 79; }
+  60.75% { transform: translate(23.9px, -89.7px); z-index: 80; }
+  61.62% { transform: translate(29.6px, -87.8px); z-index: 82; }
+  62.5% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  91.25% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  92.12% { transform: translate(27.9px, -83.7px); z-index: 86; }
+  93% { transform: translate(18.5px, -74.3px); z-index: 96; }
+  93.88% { transform: translate(4.6px, -59.2px); z-index: 111; }
+  94.75% { transform: translate(-10.5px, -38.7px); z-index: 131; }
+  95.62% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  96.5% { transform: translate(-29.8px, 15.0px); z-index: 185; }
+  97.38% { transform: translate(-32.1px, 43.0px); z-index: 213; }
+  98.25% { transform: translate(-32.0px, 66.3px); z-index: 236; }
+  99.12% { transform: translate(-31.4px, 81.6px); z-index: 252; }
+  100% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+}
+@keyframes ob-mix-eth2 {
+  0% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  16.25% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  17.12% { transform: translate(32.7px, 58.1px); z-index: 228; }
+  18% { transform: translate(35.8px, 61.3px); z-index: 231; }
+  18.88% { transform: translate(37.0px, 67.2px); z-index: 237; }
+  19.75% { transform: translate(32.3px, 75.5px); z-index: 246; }
+  20.62% { transform: translate(20.1px, 83.8px); z-index: 254; }
+  21.5% { transform: translate(3.2px, 89.4px); z-index: 259; }
+  22.38% { transform: translate(-12.8px, 91.0px); z-index: 261; }
+  23.25% { transform: translate(-23.9px, 89.7px); z-index: 260; }
+  24.12% { transform: translate(-29.6px, 87.8px); z-index: 258; }
+  25% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  28.75% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  29.62% { transform: translate(-27.9px, 83.7px); z-index: 254; }
+  30.5% { transform: translate(-18.5px, 74.3px); z-index: 244; }
+  31.38% { transform: translate(-4.6px, 59.2px); z-index: 229; }
+  32.25% { transform: translate(10.5px, 38.7px); z-index: 209; }
+  33.12% { transform: translate(22.8px, 13.4px); z-index: 183; }
+  34% { transform: translate(29.8px, -15.0px); z-index: 155; }
+  34.88% { transform: translate(32.1px, -43.0px); z-index: 127; }
+  35.75% { transform: translate(32.0px, -66.3px); z-index: 104; }
+  36.62% { transform: translate(31.4px, -81.6px); z-index: 88; }
+  37.5% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  53.75% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  54.62% { transform: translate(32.7px, -85.9px); z-index: 84; }
+  55.5% { transform: translate(35.8px, -82.7px); z-index: 87; }
+  56.38% { transform: translate(37.0px, -76.8px); z-index: 93; }
+  57.25% { transform: translate(32.3px, -68.5px); z-index: 102; }
+  58.12% { transform: translate(20.1px, -60.2px); z-index: 110; }
+  59% { transform: translate(3.2px, -54.6px); z-index: 115; }
+  59.88% { transform: translate(-12.8px, -53.0px); z-index: 117; }
+  60.75% { transform: translate(-23.9px, -54.3px); z-index: 116; }
+  61.62% { transform: translate(-29.6px, -56.2px); z-index: 114; }
+  62.5% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  78.75% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  79.62% { transform: translate(-31.4px, -55.3px); z-index: 115; }
+  80.5% { transform: translate(-32.0px, -50.2px); z-index: 120; }
+  81.38% { transform: translate(-32.1px, -41.6px); z-index: 128; }
+  82.25% { transform: translate(-29.8px, -29.5px); z-index: 140; }
+  83.12% { transform: translate(-22.8px, -13.4px); z-index: 157; }
+  84% { transform: translate(-10.5px, 5.8px); z-index: 176; }
+  84.88% { transform: translate(4.6px, 25.5px); z-index: 196; }
+  85.75% { transform: translate(18.5px, 42.2px); z-index: 212; }
+  86.62% { transform: translate(27.9px, 53.3px); z-index: 223; }
+  87.5% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  100% { transform: translate(31.2px, 57.1px); z-index: 227; }
+}
+@keyframes ob-mix-pop-swap {
+  0% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  8.12% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  9.38% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1.15); }
+  10.62% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  14.38% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  17.29% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+  20.61% { opacity: 0; transform: translate(0.0px, -2.0px) scale(0.6); }
+  21.88% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1.15); }
+  23.12% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  26.88% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  29.79% { opacity: 0; transform: translate(0.0px, -12.0px) scale(1); }
+  58.12% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  59.38% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1.15); }
+  60.62% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  64.38% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  67.29% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+  70.61% { opacity: 0; transform: translate(0.0px, -2.0px) scale(0.6); }
+  71.88% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1.15); }
+  73.12% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  76.88% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  79.79% { opacity: 0; transform: translate(0.0px, -12.0px) scale(1); }
+  100% { opacity: 0; transform: translate(0.0px, -12.0px) scale(1); }
+}
+@keyframes ob-mix-pop-bridge {
+  0% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  33.12% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  34.38% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  35.62% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  39.38% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  42.29% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+  45.62% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  46.88% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  48.12% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  51.88% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  54.79% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+  83.11% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  84.38% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  85.62% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  89.38% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  92.29% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+  95.61% { opacity: 0; transform: translate(66.0px, -18.0px) scale(0.6); }
+  96.88% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1.15); }
+  98.12% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
+  100% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
+}
+/* 4장 걸기: 8동작 한 바퀴 = 12.0s */
+.at-3 .k-eth { animation: ob-enter .4s ease-out, ob-mix-eth 12.0s linear infinite; }
+.at-3 .k-usdc { animation: ob-enter .4s ease-out, ob-mix-usdc 12.0s linear infinite; }
+.at-3 .k-usdc2 { animation: ob-enter .4s ease-out, ob-mix-usdc2 12.0s linear infinite; }
+.at-3 .k-eth2 { animation: ob-enter .4s ease-out, ob-mix-eth2 12.0s linear infinite; }
+.at-3 .p-swap { animation: ob-mix-pop-swap 12.0s linear infinite; }
+.at-3 .p-bridge { animation: ob-mix-pop-bridge 12.0s linear infinite; }
+/* 5장 크로스체인 스왑 */
+@keyframes ob-cross-eth {
+  0% { transform: translate(-31.2px, -57.1px); z-index: 113; opacity: 1; }
+  6% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  7.4% { transform: translate(-32.9px, -54.6px); z-index: 115; }
+  8.8% { transform: translate(-37.9px, -47.3px); z-index: 123; }
+  10.2% { transform: translate(-44.9px, -35.5px); z-index: 134; }
+  11.6% { transform: translate(-51.3px, -19.2px); z-index: 151; }
+  13% { transform: translate(-54.0px, 1.5px); z-index: 172; }
+  14.4% { transform: translate(-51.3px, 25.3px); z-index: 195; }
+  15.8% { transform: translate(-44.9px, 49.1px); z-index: 219; }
+  17.2% { transform: translate(-37.9px, 69.2px); z-index: 239; }
+  18.6% { transform: translate(-32.9px, 82.3px); z-index: 252; }
+  20% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  22% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  23.2% { transform: translate(-32.7px, 85.9px); z-index: 256; }
+  24.4% { transform: translate(-35.8px, 82.7px); z-index: 253; }
+  25.6% { transform: translate(-37.0px, 76.8px); z-index: 247; }
+  26.8% { transform: translate(-32.3px, 68.5px); z-index: 238; }
+  28% { transform: translate(-20.1px, 60.2px); z-index: 230; }
+  29.2% { transform: translate(-3.2px, 54.6px); z-index: 225; }
+  30.4% { transform: translate(12.8px, 53.0px); z-index: 223; }
+  31.6% { transform: translate(23.9px, 54.3px); z-index: 224; }
+  32.8% { transform: translate(29.6px, 56.2px); z-index: 226; }
+  34% { transform: translate(31.2px, 57.1px); z-index: 227; opacity: 1; }
+  42% { opacity: 0; }
+  99% { opacity: 0; transform: translate(31.2px, 57.1px); z-index: 227; }
+  100% { transform: translate(-31.2px, -57.1px); z-index: 113; opacity: 0; }
+}
+@keyframes ob-cross-usdc {
+  0% { transform: translate(31.2px, 57.1px); z-index: 227; opacity: 0; }
+  14% { opacity: 0; }
+  20% { opacity: 0.4; }
+  22% { transform: translate(31.2px, 57.1px); z-index: 227; }
+  23.2% { transform: translate(32.7px, 58.1px); z-index: 228; }
+  24.4% { transform: translate(35.8px, 61.3px); z-index: 231; }
+  25.6% { transform: translate(37.0px, 67.2px); z-index: 237; }
+  26.8% { transform: translate(32.3px, 75.5px); z-index: 246; }
+  28% { transform: translate(20.1px, 83.8px); z-index: 254; }
+  29.2% { transform: translate(3.2px, 89.4px); z-index: 259; }
+  30.4% { transform: translate(-12.8px, 91.0px); z-index: 261; }
+  31.6% { transform: translate(-23.9px, 89.7px); z-index: 260; }
+  32.8% { transform: translate(-29.6px, 87.8px); z-index: 258; }
+  34% { transform: translate(-31.2px, 86.9px); z-index: 257; opacity: 0.4; }
+  40% { opacity: 1; }
+  50% { transform: translate(-31.2px, 86.9px); z-index: 257; }
+  51.4% { transform: translate(-32.9px, 82.3px); z-index: 252; }
+  52.8% { transform: translate(-37.9px, 69.2px); z-index: 239; }
+  54.2% { transform: translate(-44.9px, 49.1px); z-index: 219; }
+  55.6% { transform: translate(-51.3px, 25.3px); z-index: 195; }
+  57% { transform: translate(-54.0px, 1.5px); z-index: 172; }
+  58.4% { transform: translate(-51.3px, -19.2px); z-index: 151; }
+  59.8% { transform: translate(-44.9px, -35.5px); z-index: 134; }
+  61.2% { transform: translate(-37.9px, -47.3px); z-index: 123; }
+  62.6% { transform: translate(-32.9px, -54.6px); z-index: 115; }
+  64% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  66% { transform: translate(-31.2px, -57.1px); z-index: 113; }
+  67.2% { transform: translate(-32.7px, -58.1px); z-index: 112; }
+  68.4% { transform: translate(-35.8px, -61.3px); z-index: 109; }
+  69.6% { transform: translate(-37.0px, -67.2px); z-index: 103; }
+  70.8% { transform: translate(-32.3px, -75.5px); z-index: 94; }
+  72% { transform: translate(-20.1px, -83.8px); z-index: 86; }
+  73.2% { transform: translate(-3.2px, -89.4px); z-index: 81; }
+  74.4% { transform: translate(12.8px, -91.0px); z-index: 79; }
+  75.6% { transform: translate(23.9px, -89.7px); z-index: 80; }
+  76.8% { transform: translate(29.6px, -87.8px); z-index: 82; }
+  78% { transform: translate(31.2px, -86.9px); z-index: 83; opacity: 1; }
+  86% { opacity: 0; }
+  99% { opacity: 0; transform: translate(31.2px, -86.9px); z-index: 83; }
+  100% { transform: translate(31.2px, 57.1px); z-index: 227; opacity: 0; }
+}
+@keyframes ob-cross-eth2 {
+  0% { transform: translate(31.2px, -86.9px); z-index: 83; opacity: 0; }
+  58% { opacity: 0; }
+  64% { opacity: 0.4; }
+  66% { transform: translate(31.2px, -86.9px); z-index: 83; }
+  67.2% { transform: translate(32.7px, -85.9px); z-index: 84; }
+  68.4% { transform: translate(35.8px, -82.7px); z-index: 87; }
+  69.6% { transform: translate(37.0px, -76.8px); z-index: 93; }
+  70.8% { transform: translate(32.3px, -68.5px); z-index: 102; }
+  72% { transform: translate(20.1px, -60.2px); z-index: 110; }
+  73.2% { transform: translate(3.2px, -54.6px); z-index: 115; }
+  74.4% { transform: translate(-12.8px, -53.0px); z-index: 117; }
+  75.6% { transform: translate(-23.9px, -54.3px); z-index: 116; }
+  76.8% { transform: translate(-29.6px, -56.2px); z-index: 114; }
+  78% { transform: translate(-31.2px, -57.1px); z-index: 113; opacity: 0.4; }
+  84% { opacity: 1; }
+  100% { transform: translate(-31.2px, -57.1px); z-index: 113; opacity: 1; }
+}
+@keyframes ob-cross-pop-bridge {
+  0% { opacity: 0; transform: translate(34.8px, -3.1px) scale(0.6); }
+  12.99% { opacity: 0; transform: translate(34.8px, -3.1px) scale(0.6); }
+  14.88% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1.15); }
+  16.75% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1); }
+  22.38% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1); }
+  26.75% { opacity: 0; transform: translate(34.8px, -13.1px) scale(1); }
+  56.99% { opacity: 0; transform: translate(34.8px, -3.1px) scale(0.6); }
+  58.88% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1.15); }
+  60.75% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1); }
+  66.38% { opacity: 1; transform: translate(34.8px, -3.1px) scale(1); }
+  70.75% { opacity: 0; transform: translate(34.8px, -13.1px) scale(1); }
+  100% { opacity: 0; transform: translate(34.8px, -13.1px) scale(1); }
+}
+@keyframes ob-cross-pop-swap {
+  0% { opacity: 0; transform: translate(0.0px, -2.0px) scale(0.6); }
+  27.99% { opacity: 0; transform: translate(0.0px, -2.0px) scale(0.6); }
+  29.88% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1.15); }
+  31.75% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  37.38% { opacity: 1; transform: translate(0.0px, -2.0px) scale(1); }
+  41.75% { opacity: 0; transform: translate(0.0px, -12.0px) scale(1); }
+  71.99% { opacity: 0; transform: translate(0.0px, -146.0px) scale(0.6); }
+  73.88% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1.15); }
+  75.75% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  81.38% { opacity: 1; transform: translate(0.0px, -146.0px) scale(1); }
+  85.75% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+  100% { opacity: 0; transform: translate(0.0px, -156.0px) scale(1); }
+}
+@keyframes ob-cross-pop-cross {
+  0% { opacity: 0; transform: translate(-31.2px, 12.9px) scale(0.6); }
+  41.99% { opacity: 0; transform: translate(-31.2px, 12.9px) scale(0.6); }
+  43.88% { opacity: 1; transform: translate(-31.2px, 12.9px) scale(1.15); }
+  45.75% { opacity: 1; transform: translate(-31.2px, 12.9px) scale(1); }
+  51.38% { opacity: 1; transform: translate(-31.2px, 12.9px) scale(1); }
+  55.75% { opacity: 0; transform: translate(-31.2px, 2.9px) scale(1); }
+  85.99% { opacity: 0; transform: translate(-31.2px, -131.1px) scale(0.6); }
+  87.88% { opacity: 1; transform: translate(-31.2px, -131.1px) scale(1.15); }
+  89.75% { opacity: 1; transform: translate(-31.2px, -131.1px) scale(1); }
+  95.38% { opacity: 1; transform: translate(-31.2px, -131.1px) scale(1); }
+  99.75% { opacity: 0; transform: translate(-31.2px, -141.1px) scale(1); }
+  100% { opacity: 0; transform: translate(-31.2px, -141.1px) scale(1); }
+}
+.at-4 .k-eth { animation: ob-cross-eth 8s linear infinite; }
+.at-4 .k-usdc { animation: ob-cross-usdc 8s linear infinite; }
+.at-4 .k-eth2 { animation: ob-cross-eth2 8s linear infinite; }
+.at-4 .p-bridge { animation: ob-cross-pop-bridge 8s linear infinite; }
+.at-4 .p-swap { animation: ob-cross-pop-swap 8s linear infinite; }
+.at-4 .p-cross { animation: ob-cross-pop-cross 8s linear infinite; }
+/* 6장 건반 물결 */
+@keyframes ob-qkey-0 {
+  0% { transform: translateY(-0.0px); }
+  4.17% { transform: translateY(-3.0px); }
+  8.33% { transform: translateY(-5.2px); }
+  12.5% { transform: translateY(-6.0px); }
+  16.67% { transform: translateY(-5.2px); }
+  20.83% { transform: translateY(-3.0px); }
+  25% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+@keyframes ob-qkey-1 {
+  0% { transform: none; }
+  25% { transform: translateY(-0.0px); }
+  29.17% { transform: translateY(-3.0px); }
+  33.33% { transform: translateY(-5.2px); }
+  37.5% { transform: translateY(-6.0px); }
+  41.67% { transform: translateY(-5.2px); }
+  45.83% { transform: translateY(-3.0px); }
+  50% { transform: translateY(-0.0px); }
+  75% { transform: translateY(-0.0px); }
+  79.17% { transform: translateY(-3.0px); }
+  83.33% { transform: translateY(-5.2px); }
+  87.5% { transform: translateY(-6.0px); }
+  91.67% { transform: translateY(-5.2px); }
+  95.83% { transform: translateY(-3.0px); }
+  100% { transform: translateY(-0.0px); }
+}
+@keyframes ob-qkey-2 {
+  0% { transform: none; }
+  50% { transform: translateY(-0.0px); }
+  54.17% { transform: translateY(-3.0px); }
+  58.33% { transform: translateY(-5.2px); }
+  62.5% { transform: translateY(-6.0px); }
+  66.67% { transform: translateY(-5.2px); }
+  70.83% { transform: translateY(-3.0px); }
+  75% { transform: translateY(-0.0px); }
+  100% { transform: none; }
+}
+.at-6 .k-q-ethereum-0 .ob-lift { animation: ob-qkey-0 1.8s linear infinite 0s; }
+.at-6 .k-q-ethereum-1 .ob-lift { animation: ob-qkey-1 1.8s linear infinite 0s; }
+.at-6 .k-q-ethereum-2 .ob-lift { animation: ob-qkey-2 1.8s linear infinite 0s; }
+.at-6 .k-q-base-0 .ob-lift { animation: ob-qkey-0 1.8s linear infinite 0.45s; }
+.at-6 .k-q-base-1 .ob-lift { animation: ob-qkey-1 1.8s linear infinite 0.45s; }
+.at-6 .k-q-base-2 .ob-lift { animation: ob-qkey-2 1.8s linear infinite 0.45s; }
+.at-6 .k-q-arbitrum-0 .ob-lift { animation: ob-qkey-0 1.8s linear infinite 0.9s; }
+.at-6 .k-q-arbitrum-1 .ob-lift { animation: ob-qkey-1 1.8s linear infinite 0.9s; }
+.at-6 .k-q-arbitrum-2 .ob-lift { animation: ob-qkey-2 1.8s linear infinite 0.9s; }
+.at-6 .k-q-robinhood-0 .ob-lift { animation: ob-qkey-0 1.8s linear infinite 1.35s; }
+.at-6 .k-q-robinhood-1 .ob-lift { animation: ob-qkey-1 1.8s linear infinite 1.35s; }
+.at-6 .k-q-robinhood-2 .ob-lift { animation: ob-qkey-2 1.8s linear infinite 1.35s; }

@@ -17,7 +17,7 @@
   function tally() { return { sigs: 0, gas: 0, wait: 0, decide: 0, done: false }; }
   function fresh() {
     return {
-      at: 0, mode: 'normal', tab: 'all', toast: '', coach: null, seen: {},
+      at: 0, ob: 0, mode: 'normal', tab: 'all', toast: '', coach: null, seen: {},   // ob: 첫 화면 온보딩에서 넘긴 장
       wallet: { normal: clone(S.holdings), solver: clone(S.holdings) },
       fresh: { normal: {}, solver: {} },
       normal: { step: 0, phase: 'idle', sig: 0, picked: {}, tx: [] },   // picked 는 단계 번호 → 고른 선택지
@@ -304,10 +304,14 @@
     lastKey = key;
     drawBeads();
     boardEl.innerHTML = V.board(st);
+    if (type === 'mission') window.ONBOARD.mount(screen, st, rememberPage);
     transitions(type);
     coachAfterRender();
     if (type === 'swap' && st.mode === 'solver') { followQuotes(); if (st.solver.phase === 'quoted') countUp(); }
   }
+
+  /* 온보딩 장을 넘겨도 다시 그리지 않는다(스와이프 도중에 화면이 바뀌면 끊긴다). 적어만 둔다 */
+  function rememberPage(i) { st = Object.assign({}, st, { ob: i }); }
 
   /* ── 눌렀을 때 ── */
   var ACTIONS = {

@@ -1,0 +1,111 @@
+/* 첫 화면 — 온보딩. 마크업은 onboard.js, 글은 data.js 의 mission.onboard(한 장에 한 문장).
+   무대: 체인 층 두 장이 건물 층처럼 위아래로 쌓여 있다(페이크 3D). Ethereum 층이 위, Robinhood Chain 층이 아래.
+   토큰은 카드 한 장에 하나. 토큰이 바뀌는 건 늘 "두 카드가 자리를 맞바꾸는 것"으로 보여 준다(뒤집기 없음 — 사용자 요청).
+   층 색은 data.js 의 체인 색을 인라인 --c 로 받는다(여기에 hex 를 쓰지 않는다).
+
+   카드 자리: 장마다 --x·--y·--o 로 쉬는 자리를 정하고, 장이 바뀌면 transition 으로 미끄러져 간다.
+   그 장에서 반복되는 움직임은 keyframes 가 맡고, keyframes 의 0% 는 쉬는 자리와 같게 둔다(튀지 않게).
+   좌표는 무대 가운데(0,0) 기준 화면 px. 위층 가운데 (0, −60), 아래층 가운데 (0, 60). 카드 기준점은 발밑.
+   움직임은 transform·opacity 만 쓴다. */
+
+.canvas.onboard { gap: 0; padding-bottom: 0; overflow: hidden; }
+
+/* ── 무대와 층 ── 층 판은 각자 rotateX·rotateZ 한 번으로 눕힌다(원근 없이 — 아이소메트릭) */
+.ob-stage { --F: 72px; --plate: 156px; position: relative; flex: 1 1 auto; min-height: 250px; }
+.ob-world { position: absolute; left: 50%; top: 60%; width: 0; height: 0; }
+.ob-layer { position: absolute; left: calc(var(--plate) / -2); top: calc(var(--plate) / -2); width: var(--plate); height: var(--plate); animation: ob-float 3.2s ease-in-out infinite; }
+.ob-layer.rh { animation-delay: -1.3s; }   /* 두 층이 조금 엇갈려 따로 떠 있게 */
+/* 바닥만 쉬지 않고 아주 미세하게 둥실(사용자). transform 은 층 자리라서 translate 속성으로 따로 */
+@keyframes ob-float { 50% { translate: 0 -3px; } }
+.ob-layer { transition: transform .7s var(--ease), opacity .45s var(--ease); }
+.ob-layer.eth  { transform: translateY(calc(var(--F) * -1)); z-index: 1; }   /* 먼 층일수록 아래: Ethereum < Base·Arbitrum < Robinhood Chain */
+.ob-layer.rh   { transform: translateY(var(--F)); z-index: 3; }
+/* 마지막 장에만: Ethereum(위)·Robinhood Chain(아래)은 그대로, 그 사이 양옆 빈자리에 Base(왼쪽)·Arbitrum(오른쪽) —
+   네 층이 2×2 로 비스듬히 맞물린다(키보드 A·S·Z·X 처럼, 사용자). 다른 장과 같은 크기라 화면 끝에서 조금 잘린다.
+   자리는 onboard_keyframes.py 의 QUEST 와 같게 */
+.ob-layer.base { transform: translate(-196px, 30px); z-index: 2; opacity: 0; }
+.ob-layer.arb  { transform: translate(196px, 30px); z-index: 2; opacity: 0; }
+/* 들어올 때: 바깥 조금 아래에서 미끄러져 들어오며 나타난다(Base 먼저). 동전은 그 뒤에 차례로 떨어져 앉는다(onboard-motion.css).
+   나갈 때(5장으로 돌아갈 때)는 기다리지 않는다 — 지연은 .at-6 쪽에만 */
+.at-6 .ob-layer.base { transform: translate(-138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .05s; }
+.at-6 .ob-layer.arb { transform: translate(138px, 0); opacity: 1; transition-duration: .8s, .6s; transition-delay: .18s; }
+.ob-top, .ob-slab { position: absolute; inset: 0; border-radius: 26px; transform: rotateX(58deg) rotateZ(-42deg); }
+.ob-top { background: color-mix(in srgb, var(--c) 18%, var(--paper)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent); }
+.ob-slab {   /* 판의 두께 — 같은 판을 조금 아래에 진하게 */
+  transform: translateY(10px) rotateX(58deg) rotateZ(-42deg);
+  background: color-mix(in srgb, var(--c) 48%, var(--paper-2));
+  box-shadow: 0 26px 40px -12px rgba(0, 0, 0, .22);
+}
+.ob-name {   /* 판 앞 가장자리를 따라 가운데 — 가장자리와 나란히, 같은 여백 */
+  position: absolute; left: 0; right: 0; bottom: 13px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  font: 600 12px var(--body); color: var(--ink); white-space: nowrap;
+}
+.ob-name img { width: 15px; height: 15px; border-radius: 50%; }
+
+/* ── 토큰 카드 ──
+   바닥과 같은 아이소메트릭 공간의 두께 있는 카드. 면마다의 기울기(matrix)와 장마다 쉬는 자리는
+   onboard-motion.css(tools/onboard_keyframes.py 가 만든다)에 있다 — 자리는 바닥 위 좌표에서 계산한다. */
+.ob-tok {
+  --x: 0; --y: -72px; --o: 0;
+  position: absolute; left: 0; top: 0; z-index: 5;
+  transform: translate(var(--x), var(--y)); opacity: var(--o);
+  transition: transform .7s var(--ease), opacity .45s var(--ease);
+}
+.ob-lift { position: absolute; left: 0; top: 0; }
+.ob-shadow { border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .2), rgba(0, 0, 0, .06) 65%, transparent); }
+/* 동전 앞면 — 테두리 선 없이 은은한 빛만 */
+.ob-coin {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, var(--paper) 0 46%, color-mix(in srgb, var(--paper) 88%, var(--ink)) 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset;
+}
+.ob-coin img { width: 28px; height: 28px; }
+.ob-mono { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--mono); color: white; font: 700 14px var(--body);   /* 색 원 위 글자라 테마와 상관없이 흰색 */ }
+.ob-coin b { font: 600 10px var(--mono); color: var(--ink); }
+/* 두께 — 거의 투명한 유리 겹. 맨 뒤 원만 가는 테두리로 모양을 잡는다 */
+.ob-rim { border-radius: 50%; background: color-mix(in srgb, var(--paper) 22%, transparent); }
+.ob-rim.r4 { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent); background: color-mix(in srgb, var(--paper) 30%, transparent); }
+
+/* 일어나는 자리에서 톡 튀어나왔다 사라지는 글씨 — 배경·테두리 없이 작은 글씨만(사용자).
+   가운데 정렬을 위해 폭을 넓게 잡고 왼쪽을 반만큼 당긴다. 자리와 때는 onboard-motion.css */
+.ob-pop {
+  position: absolute; left: -80px; top: -8px; width: 160px; z-index: 400; text-align: center; opacity: 0;
+  font: 700 12px var(--body); letter-spacing: -.01em; color: var(--ink); white-space: nowrap; pointer-events: none;
+}
+
+/* ── 장마다 움직임 걸기는 onboard-motion.css(tools/onboard_keyframes.py) — 한 바퀴 길이와 때를 생성기가 같이 맞춘다 ──
+   ob-enter 는 장에 들어올 때 한 번 나타나기 */
+@keyframes ob-enter { from { opacity: 0; } }
+@keyframes ob-bob { 50% { transform: translateY(-6px); } }
+
+/* ── 글 칸 — 옆으로 넘긴다 ── */
+.ob-pages { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; outline: none; }
+.ob-pages::-webkit-scrollbar { display: none; }
+.ob-pages.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.ob-pages:focus-visible { box-shadow: inset 0 0 0 2px var(--tint-line); border-radius: 12px; }
+.ob-page { flex: 0 0 100%; scroll-snap-align: start; padding: 4px 20px 0; min-height: 126px; }
+/* 글은 한 덩어리, 한 크기. 보통 굵기로 쓰다가 핵심 단어만 굵게(data.js 의 **…**) */
+.ob-text { font-size: 21px; line-height: 1.45; font-weight: 400; letter-spacing: -.02em; color: var(--ink); white-space: pre-line; }
+.ob-text b { font-weight: 700; }
+/* 마지막 장만: 질문 아래 작은 보통 굵기 한 문단 */
+.ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); }
+
+.ob-dots { display: flex; justify-content: center; gap: 0; padding: 14px 0 2px; }
+.ob-dots button { width: 22px; height: 7px; margin: 0 -3px; padding: 0; border: 0; border-radius: 99px; background: var(--faint); cursor: pointer; transform: scaleX(.32); opacity: .6; transition: transform var(--normal) var(--ease), opacity var(--normal) var(--ease), background-color var(--normal) var(--ease); }
+.ob-dots button[aria-current] { transform: scaleX(1); opacity: 1; background: var(--ink); margin: 0 4px; }
+
+/* 아래 칸: 마지막 장 전에는 "옆으로 넘겨 봐", 마지막 장에서 시작 버튼 */
+.ob-bar { position: relative; }
+.ob-bar .cta { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity var(--normal) var(--ease), transform var(--normal) var(--ease); }
+.ob-bar.is-ready .cta { opacity: 1; transform: none; pointer-events: auto; }
+.ob-hint { position: absolute; inset: 8px 16px 6px; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; color: var(--muted); opacity: 0; transition: opacity var(--fast) var(--ease); }
+.ob-bar.is-first .ob-hint { opacity: 1; }
+.ob-hint span { display: inline-block; animation: ob-nudge 1.4s ease-in-out infinite; }
+@keyframes ob-nudge { 50% { transform: translateX(5px); } }
+
+/* 동작 줄이기: 돌지 않고 각 장의 끝 모습만 */
+@media (prefers-reduced-motion: reduce) {
+  .ob-stage, .ob-stage *, .ob-hint span { animation: none !important; }
+  .ob-tok, .ob-bar .cta, .ob-dots button { transition: none; }
+  .at-6 .ob-tok, .at-6 .ob-layer { transition: none !important; }   /* 마지막 장 등장 연출도 끈다 */
+}

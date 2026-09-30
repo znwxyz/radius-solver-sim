@@ -23,21 +23,52 @@ window.MODE = {
      Robinhood Chain 은 2026-07 메인넷이 열린 Arbitrum 계열 L2 이고 가스는 ETH 다.
      여기서 무엇을 살 수 있는지는 예시이며, 실제 상품·캠페인을 설명하는 것이 아니다. */
   mission: {
-    eyebrow: 'QUEST',   /* 퀘스트는 하나뿐이라 번호를 안 붙인다 */
     word: 'Quest',
     pill: 'Robinhood Chain에서 500 USDC 마련하기!',   /* 지갑·거래 화면 위에 계속 떠 있는 한 줄 */
     clear: '퀘스트 클리어',
-    title: '체인을 건너는 거래,\n솔버가 있으면 뭐가 달라질까?',   /* 사용자 확정(2026-09-29) */
-    /* 첫 화면의 이야기. 왜 지금 Robinhood Chain 인지 → 뭘 하려는지 → 지갑을 보니 뭐가 없는지. 수치는 2026-09 리서치 기준 예시. */
-    story: [
-      '요즘 크립토 하는 친구들이 다 Robinhood Chain 얘기야. 미국 주식을 토큰으로 만든 "스톡 토큰"을 24시간, 주말에도 사고팔 수 있는 체인이거든. 2026년 7월에 열렸는데 두 달 만에 거래량이 수백억 달러가 됐어.',
-      '나도 궁금해서 들어가 봤어. Robinhood Chain 위의 거래소(DEX)에서 스톡 토큰을 사려면 그 체인 위의 USDC로 값을 치러야 해. 첫 토큰으로 500 USDC어치를 사 보기로 했어.',
-      '그런데 내 지갑을 보니 Robinhood Chain 위에는 아무것도 없어. 가진 건 Ethereum 위의 0.84 ETH. USDC도 조금 있긴 한데 Arbitrum과 Base에 흩어져 있고 양도 모자라.'
+    /* 첫 화면 = 온보딩(2026-09-30, 사용자 요청: 글이 너무 많고 온보딩스럽지 않다).
+       위의 무대(체인 층 두 장)는 그대로 있고, 장을 넘기면 움직임이 바뀐다. 한 장에 한 문장 —
+       사용자가 준 문장을 쪼갠 그대로다. 장은 더 늘어나도 된다(사용자).
+       예전 이야기 세 문단과 Quest 박스는 solver-b-mode-backup-0930/ 에 있다. */
+    /* 장마다 글 한 덩어리. 라벨·제목/본문 위계 없이 같은 크기(사용자 요청). **단어** 는 굵게, \n 은 줄바꿈 */
+    onboard: [
+      { key: 'tokens', text: '우리가 아는 **토큰**들은\n**체인** 위에 존재해' },
+      { key: 'swap',   text: '체인 안에서\n토큰들끼리 교환하는 것을\n**스왑**이라고 하고,' },
+      { key: 'bridge', text: '토큰이 속해있는 체인을 바꾸는 건,\n체인을 건너가야 하니까\n**브릿지**라고 해.' },
+      { key: 'ask',    text: '스왑과 브릿지를\n한 번에 할 수는 없냐고?\n가능하지.' },
+      { key: 'cross',  text: '그건 **크로스체인 스왑**이야.\n토큰 이름도 속한 체인도\n바꿔버리는 것.' },
+      /* 예전 첫 화면 이야기에서 살린 한 가지 — Quest 의 이유. 1장의 스톡 토큰이 다시 나온다 */
+      { key: 'why',    text: 'Robinhood Chain에서는\n기존 주식을 토큰화한\n**스톡 토큰**을 살 수 있어.\n이 과정을 직접 한 번 해볼래?' },   /* 사용자 문장. USDC 얘기는 하지 않는다 */
+      { key: 'quest',  text: '**온체인 거래,\n솔버가 있으면 뭐가 달라질까?**',   /* 사용자가 고침(2026-09-30) */
+        note: '직접 토큰과 체인을 골라서 Robinhood Chain 위의 500 USDC를 만들어 보자.' }   /* 마지막 장만: 아래 작은 보통 굵기 한 문단 */
     ],
+    hint: '옆으로 넘겨 봐',   /* 첫 장에만 */
+    /* 1장 아래층(Robinhood Chain) 위의 스톡 토큰 예시. 미국 주식 1주 = 토큰 1개. 체인 위 실제 티커 표기는 확인 못 해서
+       누구나 아는 종목을 예시로 쓴다. 회사 로고는 쓰지 않고 티커 첫 글자 동전(상표). 색은 로고색이 아닌 구분용.
+       Robinhood 브랜드 규칙상 "스톡 토큰"이라 부른다. key 는 tools/onboard_keyframes.py 의 STOCKS 와 같게 */
+    /* 마지막 장: 체인 층 넷(위 Ethereum, 아래 왼쪽 Base, 아래 오른쪽 Arbitrum, 맨 아래 Robinhood Chain), 층마다 동전 3개.
+       같은 이름 토큰이 체인마다 따로 있다는 것 + 이번 Quest 가 만들 Robinhood Chain 의 USDC. 자리는 tools/onboard_keyframes.py 의 QUEST */
+    questFloors: [
+      { chain: 'ethereum',  tokens: ['eth', 'usdc', 'usdt'] },
+      { chain: 'base',      tokens: ['dai', 'eurc', 'aero'] },   /* 층마다 다른 토큰으로 다채롭게(사용자) */
+      { chain: 'arbitrum',  tokens: ['arb', 'gmx', 'wbtc'] },
+      { chain: 'robinhood', tokens: ['usdc', 'tsla', 'nvda'] }
+    ],
+    /* 마지막 장에만 나오는 토큰. 로고 파일이 있으면 로고 동전, 없으면(상표) 색 원 + 첫 글자 동전. 색은 구분용 */
+    moreTokens: [
+      { key: 'dai',  name: 'DAI',  icon: '../brand/tokens/dai.svg' + ICON_V },
+      { key: 'eurc', name: 'EURC', icon: '../brand/tokens/eurc.svg' + ICON_V },
+      { key: 'aero', name: 'AERO', color: '#3f6fd8' },
+      { key: 'arb',  name: 'ARB',  color: '#2d8fd5' },
+      { key: 'gmx',  name: 'GMX',  color: '#6a5bd6' }
+    ],
+    stocks: [
+      { key: 'tsla', name: 'TSLA', color: '#d9534f' },
+      { key: 'nvda', name: 'NVDA', color: '#4c9a5f' },
+      { key: 'aapl', name: 'AAPL', color: '#6b7280' }
+    ],
+    tags: { swap: 'swap!', bridge: 'bridge!', cross: 'cross-chain swap!' },   /* 일어나는 자리에서 톡 튀어나왔다 사라지는 글씨(배경 없음) */
     need: { chain: 'robinhood', token: 'usdc', amount: 500 },
-    needLabel: '필요한 것',
-    haveLabel: '지금 가진 것',
-    gap: '그러니 이번 Quest는 이거야. Ethereum 위에 있는 내 ETH를 Robinhood Chain 위의 USDC로 만들기. 어떤 방법과 경로로 할지 직접 고민해서 해 보고, 그다음 솔버 모드를 이용하면 뭐가 달라지는지 확인해 보자.',
     cta: '먼저 내 지갑을 확인해 볼까?'
   },
 

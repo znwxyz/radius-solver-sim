@@ -68,22 +68,7 @@ window.SCREENS = (function () {
     return '<div class="appbar"><span class="app-title">' + esc(title) + '</span>' + (right || '') + '</div>';
   }
 
-  /* ── Quest ── */
-  /* 지금 가진 것 → ? → 필요한 것. 티켓 두 장과 경로 그림이 같은 말을 하고 있어서 세로 한 장으로 합쳤다.
-     점선과 물음표는 아이콘 줄을 따라 내려간다. */
-  function journeyRow(label, spot, cls) {
-    return '<div class="j-row ' + cls + '">' + tokIcon(spot.token, spot.chain) +
-      '<div><div class="lab">' + esc(label) + '</div><div class="val">' + spot.amount + ' ' + esc(S.tokens[spot.token].name) +
-      '<small>' + esc(S.chains[spot.chain].name) + '</small></div></div></div>';
-  }
-  /* 박스 하나가 Quest 전부다: 머리(QUEST) · 가진 것 → ? → 필요한 것 · 바닥글(그래서 할 일). 밖에 떠 있는 요소를 줄인다. */
-  function journey(m, have, need) {
-    return '<section class="m-journey" aria-label="' + esc(m.eyebrow) + '"><div class="j-head">' + esc(m.eyebrow) + '</div>' +
-      journeyRow(m.haveLabel, have, 'have') +
-      '<div class="j-link" aria-hidden="true"><span class="j-q">?</span></div>' +
-      journeyRow(m.needLabel, need, 'need') +
-      '<p class="j-foot">' + esc(m.gap) + '</p></section>';
-  }
+  /* ── Quest(첫 화면) ── 온보딩 3장은 onboard.js */
   /* 폰에서는 바깥 토글이 없다. 첫 화면에서 고르고 넘어가게 한다. 데스크톱에선 CSS 가 숨긴다. */
   function setupRow() {
     var L = S.ui.lang;
@@ -93,13 +78,8 @@ window.SCREENS = (function () {
       '<button class="lang-btn on" type="button" data-act="lang:ko" aria-pressed="true">' + esc(L.ko) + '</button>' +
       '<button class="lang-btn" type="button" data-act="lang:en" aria-pressed="false">' + esc(L.en) + '</button></div></div>';
   }
-  function mission() {
-    var m = S.mission, need = m.need, have = { chain: 'ethereum', token: 'eth', amount: S.holdings.ethereum.eth };
-    return '<div class="canvas">' + setupRow() + '<div class="mission">' +
-      '<h2 class="m-title">' + esc(m.title) + '</h2>' +
-      '<div class="m-story">' + m.story.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' +
-      journey(m, have, need) + '</div></div>' +
-      cta(m.cta, 'now', 'next');
+  function mission(st) {
+    return window.ONBOARD.html(st, { setup: setupRow() });
   }
 
   /* ── 지갑 ── */
