@@ -214,11 +214,13 @@
 .done-banner { border-radius: 16px; padding: 14px 15px; background: var(--paper-2); box-shadow: inset 0 0 0 1.5px var(--ok); }
 .done-banner b { display: block; font-size: 14px; color: var(--ok); }
 .done-banner p { margin-top: 4px; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
-/* 일반 모드를 다 깨면: 배너 바깥부터 아래 버튼 칸까지 검정 — 솔버 모드 버튼이 눈에 띄게(사용자).
-   캔버스 좌우·아래 여백까지 덮고, 남는 높이도 채운다 */
-.done-zone { flex-grow: 1; margin: -12px -16px -14px; padding: 16px 16px 14px; background: var(--black); }
+/* 일반 모드를 다 깨면: '해야 할 일' 칸부터 배너, 아래 버튼 칸까지 한 덩어리 검정 — 솔버 모드 버튼이 눈에 띄게(사용자).
+   배너 둘레만 검정이면 뚝 잘려 보였다. 캔버스 좌우·아래 여백까지 덮고, 남는 높이도 채운다 */
+.plan-panel.is-done { background: var(--done-bg); }
+.plan-panel.is-done .plan-head b { color: var(--on-done); }
+.done-zone { flex-grow: 1; margin: -12px -16px -14px; padding: 2px 16px 14px; background: var(--done-bg); }
 .done-zone .done-banner { background: var(--paper); box-shadow: none; }
-.bar.on-black { background: var(--black); }
+.bar.on-black { background: var(--done-bg); }
 .solver-on .done-banner { box-shadow: inset 0 0 0 1.5px var(--tint-line); background: var(--tint); }
 .solver-on .done-banner b { background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
 

@@ -19,6 +19,8 @@
   --hair-2: rgba(17, 17, 16, .05);
   --black: #000;
   --on-black: #fff;
+  --done-bg: #000;           /* 일반 모드를 다 깬 뒤의 검정 칸 — 어두운 테마에서도 검정(--black 은 밝아진다) */
+  --on-done: #fff;
   --shadow: 0 22px 56px rgba(0, 0, 0, .13);
   --sheet-shadow: 0 -16px 44px rgba(0, 0, 0, .16);
   --chip-base: #fff;         /* 체인·토큰 칩의 바탕에 섞는 색 */
@@ -80,8 +82,9 @@
   --ok: var(--black);
 }
 
-/* 어두운 테마의 '해야 할 일' 블록은 흰 섬이다. 그 안에서는 글자·카드·칩이 밝은 테마 값을 쓴다. */
-:root[data-theme="dark"] .plan-panel {
+/* 어두운 테마의 '해야 할 일' 블록(과 다 깬 뒤의 완료 칸)은 흰 섬이다. 그 안에서는 글자·카드·칩이 밝은 테마 값을 쓴다. */
+:root[data-theme="dark"] .plan-panel,
+:root[data-theme="dark"] .done-zone {
   --ink: #111110; --muted: #6d6d68; --faint: #a2a29c;
   --paper: #ffffff; --paper-2: #f4f6f6;
   --hair: rgba(17, 17, 16, .09); --hair-2: rgba(17, 17, 16, .05);
