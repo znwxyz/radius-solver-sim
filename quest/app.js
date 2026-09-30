@@ -121,6 +121,7 @@
   /* ── 폰 안 스크롤 ── 브라우저의 smooth 는 엔진마다 속도가 달라 뚝뚝 끊겼고, nearest 는 카드가 화면보다 크면
      위만 맞추고 아래를 잘랐다. 직접 느긋하게(ease-out) 굴린다. 다시 그려서 canvas 가 바뀌면 멈춘다. */
   var GLIDE_MS = 750, GLIDE_PAD = 10;
+  var RISE_START_MS = 450, RISE_PX_PER_MS = 0.5;   // 퀘스트 클리어 파도: 시작 지연, 차오르는 속도
   function glide(el, to) {
     var from = el.scrollTop;
     to = Math.max(0, Math.min(el.scrollHeight - el.clientHeight, to));
@@ -152,6 +153,21 @@
     if (align === 'end') return glide(canvas, atEnd);
     if (r.top < c.top + GLIDE_PAD) return glide(canvas, atStart);
     if (r.bottom > c.bottom - GLIDE_PAD) return glide(canvas, height > view ? atStart : atEnd);
+  }
+  /* 퀘스트 클리어: 검정이 아래(버튼 칸)부터 파도처럼 차오른다(사용자).
+     칸마다 높이로 늦춤·길이를 재서, 칸이 바뀌어도 같은 속도로 이어 올라가게 한다. 다시 그리면 .rise 가 빠져 한 번만 돈다 */
+  function riseDone() {
+    if (calmMotion()) return;
+    var at = RISE_START_MS;
+    ['.bar.on-black', '.done-zone', '.plan-panel.is-done'].forEach(function (sel) {
+      var el = screen.querySelector(sel);
+      if (!el) return;
+      var ms = el.offsetHeight / RISE_PX_PER_MS;
+      el.style.setProperty('--rise-at', Math.round(at) + 'ms');
+      el.style.setProperty('--rise-ms', Math.round(ms) + 'ms');
+      at += ms;
+    });
+    screen.classList.add('rise');
   }
   /* 견적이 하나 올 때마다 그 줄이 보이게 따라 내려간다. 다 모여 규칙이 고르면 고른 줄까지. */
   function followQuotes() {
@@ -292,6 +308,7 @@
       if (opts && st.normal.phase === 'options' && last.phase !== 'options') glideTo(opts.closest('.pstep'), 'end');   // 선택지를 담은 2단계 박스 아래 끝까지(선택지만 맞추면 박스 하단이 잘렸다)
       if (st.normal.phase === 'done' && last.phase !== 'done') {
         glideTo(screen.querySelector('.done-banner'), 'end');   // 3단계 아래 붙은 완료 배너까지 보이게
+        riseDone();
       }
     }
     if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'done' && last.solverPhase !== 'done') {
