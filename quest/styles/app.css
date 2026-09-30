@@ -71,7 +71,7 @@
 .ctab.on { background: var(--black); color: var(--on-black); padding-right: 12px; }
 .assets { display: grid; gap: 4px; }
 .asset { display: flex; align-items: center; gap: 12px; border-radius: 14px; padding: 10px 10px; }
-.asset:hover { background: var(--paper-2); }
+@media (hover: hover) { .asset:hover { background: var(--paper-2); } }
 .a-name b { display: block; font-size: 14px; }
 .a-name small { font: 11px var(--mono); color: var(--muted); }
 .a-amt { margin-left: auto; text-align: right; }
@@ -152,7 +152,7 @@
 .opt b { font-size: 13px; }
 .opt small { font: 11px var(--mono); color: var(--muted); }
 .opt .fee { grid-column: 2; grid-row: 1 / 3; align-self: center; font: 500 12px var(--mono); text-align: right; }
-.opt:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+@media (hover: hover) { .opt:hover { box-shadow: inset 0 0 0 1.5px var(--ink); } }   /* 폰에선 누른 자리에 hover 가 남아 새로 뜬 선택지가 골라진 것처럼 보였다 */
 /* 골라야 하는 선택지: 테두리가 1 → 2 → 3 차례로 반짝인다(Flowline 청록 — "지금 눌러야 할 곳"). 고르면 선택지가 사라지며 함께 끝난다 */
 .opt { position: relative; }
 .opt::after {
@@ -214,6 +214,11 @@
 .done-banner { border-radius: 16px; padding: 14px 15px; background: var(--paper-2); box-shadow: inset 0 0 0 1.5px var(--ok); }
 .done-banner b { display: block; font-size: 14px; color: var(--ok); }
 .done-banner p { margin-top: 4px; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+/* 일반 모드를 다 깨면: 배너 바깥부터 아래 버튼 칸까지 검정 — 솔버 모드 버튼이 눈에 띄게(사용자).
+   캔버스 좌우·아래 여백까지 덮고, 남는 높이도 채운다 */
+.done-zone { flex-grow: 1; margin: -12px -16px -14px; padding: 16px 16px 14px; background: var(--black); }
+.done-zone .done-banner { background: var(--paper); box-shadow: none; }
+.bar.on-black { background: var(--black); }
 .solver-on .done-banner { box-shadow: inset 0 0 0 1.5px var(--tint-line); background: var(--tint); }
 .solver-on .done-banner b { background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
 

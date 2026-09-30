@@ -56,8 +56,8 @@ window.SCREENS = (function () {
       return '<div class="line ' + (r[2] || '') + '"><span>' + esc(r[0]) + '</span><b>' + esc(r[1]) + '</b></div>';
     }).join('') + '</div>';
   }
-  function cta(label, cls, act, coach) {
-    return '<div class="bar"><button class="cta ' + cls + '" type="button" data-act="' + act + '"' +
+  function cta(label, cls, act, coach, barCls) {
+    return '<div class="bar' + (barCls ? ' ' + barCls : '') + '"><button class="cta ' + cls + '" type="button" data-act="' + act + '"' +
       (coach ? ' data-coach="' + coach + '"' : '') + '>' + esc(label) + '</button></div>';
   }
   function missionPill() {
@@ -184,7 +184,7 @@ window.SCREENS = (function () {
   }
   /* 할 일 도중엔 아래 버튼이 없다 — 단계 카드의 실행 버튼으로 충분하고, 회색 안내 버튼은 자리만 차지했다(사용자). 끝나면 솔버 모드로 */
   function normalBar(st) {
-    return st.normal.phase === 'done' ? cta(S.normal.nextCta, 'solver', 'mode:solver') : '';
+    return st.normal.phase === 'done' ? cta(S.normal.nextCta, 'solver', 'mode:solver', '', 'on-black') : '';
   }
   function swapNormal(st) {
     var m = S.normal, got = st.normal.phase === 'done';
@@ -196,8 +196,9 @@ window.SCREENS = (function () {
       /* 앞 단계를 끝내야 다음 단계가 열린다 — 아직 안 연 단계는 그리지 않는다(사용자) */
       m.plan.slice(0, Math.min(m.plan.length, st.normal.step + 1)).map(function (s, i) { return stepCard(s, i, st); }).join('') +
       '</section>' +
-      /* 완료 배너는 해야 할 일 아래 — 위에 끼어들면 3단계가 밀려 화면이 튀어 올라간 것처럼 보였다(사용자) */
-      (got ? doneBanner(m, st.tally.normal) : '') + '</div>' + normalBar(st);
+      /* 완료 배너는 해야 할 일 아래 — 위에 끼어들면 3단계가 밀려 화면이 튀어 올라간 것처럼 보였다(사용자).
+         배너 바깥은 아래 버튼 칸까지 검정으로 — 다음 할 일(솔버 모드)이 눈에 띄게(사용자) */
+      (got ? '<div class="done-zone">' + doneBanner(m, st.tally.normal) + '</div>' : '') + '</div>' + normalBar(st);
   }
 
   /* ── 스왑: 솔버 모드 ── */
