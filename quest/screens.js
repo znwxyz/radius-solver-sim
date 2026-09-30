@@ -182,9 +182,9 @@ window.SCREENS = (function () {
     }
     return '<div class="pstep ' + state + '">' + body + '</div>';
   }
+  /* 할 일 도중엔 아래 버튼이 없다 — 단계 카드의 실행 버튼으로 충분하고, 회색 안내 버튼은 자리만 차지했다(사용자). 끝나면 솔버 모드로 */
   function normalBar(st) {
-    if (st.normal.phase === 'done') return cta(S.normal.nextCta, 'solver', 'mode:solver');
-    return cta(S.ui.swap.stepHint.replace('{N}', st.normal.step + 1), 'waiting', 'hint');
+    return st.normal.phase === 'done' ? cta(S.normal.nextCta, 'solver', 'mode:solver') : '';
   }
   function swapNormal(st) {
     var m = S.normal, got = st.normal.phase === 'done';
@@ -222,8 +222,7 @@ window.SCREENS = (function () {
     }
     var order = arrived.length === q.length ? arrived : q.map(function (_, i) { return i; });
     return '<div class="quotes" data-coach="quotes"><div class="q-head"><b>' + esc(S.ui.quotesHead.replace('{N}', q.length)) + '</b></div>' +
-      order.map(function (i, k) { return quoteRow(q[i], k, q[i] === best ? 'best pick' : ''); }).join('') +
-      '<p class="q-pick">' + esc(S.ui.swap.picked) + ': ' + esc(S.ui.swap.pickNote.replace('{WHO}', best.name)) + '</p></div>';
+      order.map(function (i, k) { return quoteRow(q[i], k, q[i] === best ? 'best pick' : ''); }).join('') + '</div>';
   }
   function behind() {
     return '<ul class="behind">' + S.solver.behind.map(function (t, i) { return '<li style="--i:' + i + '">' + esc(t) + '</li>'; }).join('') + '</ul>';

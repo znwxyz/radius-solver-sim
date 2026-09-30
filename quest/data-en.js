@@ -144,15 +144,12 @@
       swap: {
         pay: 'You pay', get: 'You get', balance: 'Balance',
         plan: 'To do', run: 'Run', ran: 'Done', optTime: 'Est.',
-        quote: 'Get quotes', quoting: 'Solvers are answering', waitingOne: 'Waiting for an answer', picking: 'The rules are choosing', picked: 'Terms chosen by the rules',
-        pickNote: '{WHO}’s quote was chosen.',
+        quote: 'Get quotes', quoting: 'Solvers are answering', waitingOne: 'Waiting for an answer', picking: 'The rules are choosing',
         quoteHint: 'Tap Get quotes and each solver will make an offer',
-        sign: 'Sign', min: 'Minimum to receive',
-        stepHint: 'Start with step {N}'
+        sign: 'Sign', min: 'Minimum to receive'
       },
       toast: {
         pending: 'You can move on once the transaction finishes.',
-        step: 'Tap Run on the step {N} card. A wallet signature sheet will pop up.',
         quoting: 'The solvers are answering. Just a moment.',
         busy: 'The transaction is processing. The button will change when it’s done.',
         mode: 'You can switch modes once the transaction finishes.',

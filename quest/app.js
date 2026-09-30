@@ -201,8 +201,7 @@
     if (st.pending) return toast(S.ui.toast.pending);
     set({ at: n, toast: '' });
   }
-  function hint() {
-    if (st.mode === 'normal') return toast(S.ui.toast.step.replace('{N}', st.normal.step + 1));
+  function hint() {   /* 솔버 모드의 기다리는 버튼을 눌렀을 때 */
     toast(st.solver.phase === 'quoting' ? S.ui.toast.quoting : S.ui.toast.busy);
   }
   function switchMode(mode) {
@@ -290,7 +289,7 @@
         glideTo(now, 'start');   // 다음 단계 카드의 제목이 화면 위에 오게. 카드가 화면보다 커도 위부터 읽힌다
       }
       var opts = screen.querySelector('.pstep.now .opts');
-      if (opts && st.normal.phase === 'options' && last.phase !== 'options') glideTo(opts, 'end');   // 선택지가 아래까지 다 보이게
+      if (opts && st.normal.phase === 'options' && last.phase !== 'options') glideTo(opts.closest('.pstep'), 'end');   // 선택지를 담은 2단계 박스 아래 끝까지(선택지만 맞추면 박스 하단이 잘렸다)
       if (st.normal.phase === 'done' && last.phase !== 'done') {
         glideTo(screen.querySelector('.done-banner'), 'end');   // 3단계 아래 붙은 완료 배너까지 보이게
       }

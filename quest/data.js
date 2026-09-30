@@ -262,16 +262,13 @@ window.MODE = {
     swap: {
       pay: '내는 것', get: '받는 것', balance: '잔액', max: 'MAX',
       plan: '해야 할 일', run: '실행', ran: '완료', optTime: '예상',
-      quote: '견적 받기', quoting: '솔버들이 답하는 중', waitingOne: '답을 기다리는 중', picking: '규칙이 고르는 중', picked: '규칙이 고른 조건',
-      pickNote: '{WHO}의 견적이 골라졌어.',
+      quote: '견적 받기', quoting: '솔버들이 답하는 중', waitingOne: '답을 기다리는 중', picking: '규칙이 고르는 중',
       quoteHint: '견적 받기를 누르면 솔버들이 각자 조건을 제시해',
       sign: '서명하기', min: '최소 받을 수량',
-      stepHint: '{N}단계부터 실행해 보자'
     },
     /* 막혔을 때 뜨는 말. 눌리기만 하고 아무 말이 없으면 고장으로 읽힌다. */
     toast: {
       pending: '거래 처리가 끝나면 다음으로 넘어갈 수 있어.',
-      step: '{N}단계 카드의 실행 버튼을 눌러 봐. 지갑 서명 시트가 뜰 거야.',
       quoting: '솔버들이 답하는 중이야. 잠깐이면 돼.',
       busy: '거래를 처리하는 중이야. 끝나면 버튼이 바뀔 거야.',
       mode: '거래 처리가 끝나면 모드를 바꿀 수 있어.',

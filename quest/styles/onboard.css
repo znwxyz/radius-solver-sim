@@ -12,7 +12,9 @@
 
 /* ── 무대와 층 ── 층 판은 각자 rotateX·rotateZ 한 번으로 눕힌다(원근 없이 — 아이소메트릭) */
 .ob-stage { --F: 72px; --plate: 156px; position: relative; flex: 1 1 auto; min-height: 250px; }
-.ob-world { position: absolute; left: 50%; top: 60%; width: 0; height: 0; }
+.ob-world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+/* 키가 작은 폰(SE 등): 그림 전체를 같은 비율로 줄인다 — 층끼리 크기는 그대로. 막대·글과 겹치지 않게 */
+@media (max-height: 620px) { .ob-world { scale: .78; } }
 .ob-layer { position: absolute; left: calc(var(--plate) / -2); top: calc(var(--plate) / -2); width: var(--plate); height: var(--plate); animation: ob-float 3.2s ease-in-out infinite; }
 .ob-layer.rh { animation-delay: -1.3s; }   /* 두 층이 조금 엇갈려 따로 떠 있게 */
 /* 바닥만 쉬지 않고 아주 미세하게 둥실(사용자). transform 은 층 자리라서 translate 속성으로 따로 */
@@ -116,7 +118,9 @@
 .ob-dots button { flex: 1; height: 3px; padding: 0; border: 0; border-radius: 3px; background: var(--hair); cursor: pointer; position: relative; transition: background-color var(--normal) var(--ease); }
 .ob-dots button::before { content: ""; position: absolute; inset: -10px 0; }   /* 누르기 쉬운 넓이 */
 .ob-dots button.is-past, .ob-dots button[aria-current] { background: var(--ink); }
-/* 표지에선 순서 막대를 숨기고 밤낮·한영 토글만, 1장부터는 반대. 자리는 비워 둬서 넘길 때 위아래로 튀지 않게 */
+/* 표지에선 순서 막대를 숨기고 밤낮·한영 토글만, 1장부터는 반대.
+   토글 줄은 자리를 차지하지 않고 맨 위에 떠 있다 — 1~7장에서 빈 줄이 막대·그림을 아래로 밀지 않게(사용자) */
+.canvas.onboard .m-setup { position: absolute; top: 2px; left: 16px; right: 16px; z-index: 600; }
 .ob-dots, .canvas.onboard .m-setup { transition: opacity var(--normal) var(--ease), visibility var(--normal); }
 .canvas.onboard.at-cover .ob-dots { opacity: 0; visibility: hidden; }
 .canvas.onboard:not(.at-cover) .m-setup { opacity: 0; visibility: hidden; }
