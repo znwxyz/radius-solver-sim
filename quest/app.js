@@ -291,9 +291,12 @@
       }
       var opts = screen.querySelector('.pstep.now .opts');
       if (opts && st.normal.phase === 'options' && last.phase !== 'options') glideTo(opts, 'end');   // 선택지가 아래까지 다 보이게
+      if (st.normal.phase === 'done' && last.phase !== 'done') {
+        glideTo(screen.querySelector('.done-banner'), 'end');   // 3단계 아래 붙은 완료 배너까지 보이게
+      }
     }
     if (type === 'swap' && st.mode === 'solver' && st.solver.phase === 'done' && last.solverPhase !== 'done') {
-      glideTo(screen.querySelector('.done-banner'), 'nearest');
+      glideTo(screen.querySelector('.behind') || screen.querySelector('.done-banner'), 'end');   // 배너 아래 "뒤에서 무슨 일이"까지 — 손으로 내리지 않게(사용자)
     }
     last = { at: st.at, mode: st.mode, step: st.normal.step, phase: st.normal.phase, solverPhase: st.solver.phase, normalDone: st.tally.normal.done };
   }

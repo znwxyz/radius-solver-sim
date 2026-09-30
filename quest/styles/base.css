@@ -166,7 +166,7 @@ button { font-family: var(--body); color: inherit; }
 .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 10px; font: 12px var(--mono); }
 .sbar { width: 48px; height: 10px; border-radius: 99px; background: var(--hair); }
 .homebar { width: 124px; height: 5px; border-radius: 99px; background: var(--hair); margin: 10px auto 2px; }
-.screen { position: relative; z-index: 2; display: flex; flex-direction: column; height: 701px; overflow: hidden; border-radius: 22px; }
+.screen { position: relative; z-index: 2; background: var(--app-bg); display: flex; flex-direction: column; height: 701px; overflow: hidden; border-radius: 22px; }
 /* 코치마크·서명 시트가 뜨면 목업 전체가 어두워진다(사용자: 시계 줄·홈 바만 밝아서 애매하다).
    앱 화면(.screen) 안은 제 그늘이 짚는 자리를 뚫어 두므로, 이 층은 앱 화면 아래에 깔려 시계 줄·홈 바·테두리만 덮는다 */
 .bezel::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .45s ease; }

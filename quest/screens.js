@@ -192,10 +192,12 @@ window.SCREENS = (function () {
     return '<div class="canvas">' + appBar('Swap', '<span class="pill"><i aria-hidden="true"></i>' + esc(S.address) + '</span>') + seg('normal') +
       pane(S.ui.swap.pay, m.pay, m.pay.amount, balanceFoot(st, m.pay), 'pay') + flip() +
       pane(S.ui.swap.get, { chain: S.mission.need.chain, token: S.mission.need.token }, recv, '', 'get', !got) +
-      (got ? doneBanner(m, st.tally.normal) : '') +
       '<section class="plan-panel"><div class="plan-head" data-coach="plan"><b>' + esc(S.ui.swap.plan) + '</b></div>' +
-      m.plan.map(function (s, i) { return stepCard(s, i, st); }).join('') +
-      '</section></div>' + normalBar(st);
+      /* 앞 단계를 끝내야 다음 단계가 열린다 — 아직 안 연 단계는 그리지 않는다(사용자) */
+      m.plan.slice(0, Math.min(m.plan.length, st.normal.step + 1)).map(function (s, i) { return stepCard(s, i, st); }).join('') +
+      '</section>' +
+      /* 완료 배너는 해야 할 일 아래 — 위에 끼어들면 3단계가 밀려 화면이 튀어 올라간 것처럼 보였다(사용자) */
+      (got ? doneBanner(m, st.tally.normal) : '') + '</div>' + normalBar(st);
   }
 
   /* ── 스왑: 솔버 모드 ── */

@@ -109,7 +109,7 @@
 /* 표지와 마지막 장: 큰 제목 + 작은 한 줄 — 처음과 끝이 짝을 이룬다(사용자). 줄 간격은 145% 이상(답답하지 않게) */
 .ob-page.is-big .ob-text { font-size: 30px; line-height: 1.45; letter-spacing: -.03em; }
 /* 마지막 장만: 질문 아래 작은 보통 굵기 한 문단 */
-.ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); }
+.ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); white-space: pre-line; }
 
 /* 순서: 맨 위의 스토리식 막대(사용자) — 지금 장까지 채워진다. 칸을 누르면 그 장으로 */
 .ob-dots { display: flex; gap: 4px; padding: 10px 2px 2px; }

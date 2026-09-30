@@ -10,7 +10,7 @@
       clear: 'Quest clear',
       onboard: [
         { text: '**On-chain trading,\ntry it yourself**',
-          note: 'From tokens, chains, swaps and bridges to what a solver changes — swipe through and see.' },
+          note: 'From tokens, chains, swaps and bridges\nto trading through a solver — swipe to see.' },
         { text: 'The **tokens** we know\nlive on **chains**' },
         { text: 'Trading one token for another\ninside the same chain\nis called a **swap**,' },
         { text: 'and moving a token to another chain\nmeans crossing over,\nso it’s called a **bridge**.' },
@@ -18,7 +18,7 @@
         { text: 'That’s a **cross-chain swap**.\nIt changes both the token\nand the chain it lives on.' },
         { text: 'On Robinhood Chain,\nyou can buy **stock tokens** —\nreal stocks turned into tokens.\nWant to try it yourself?' },
         { text: '**On-chain trading:\nwhat changes\nwith a solver?**',
-          note: 'Pick the tokens and chains yourself and make 500 USDC on Robinhood Chain.' }
+          note: 'Pick the tokens and chains yourself,\nand make 500 USDC on Robinhood Chain.' }
       ],
       cta: 'First, let’s check my wallet'
     },
@@ -53,8 +53,8 @@
           decide: 'How much gas to bring'
         }
       ],
-      doneTitle: 'Quest clear — you did it yourself!',
-      doneLine: 'You signed with your wallet {SIGS} times, spent {GAS} on gas, and waited {WAIT}. And you had to make choices yourself along the way.',
+      doneTitle: 'Quest clear',
+      doneLine: 'Wallet signatures: {SIGS}, gas spent: {GAS}, time waited: {WAIT}.',
       nextCta: 'Now try it again in solver mode?'
     },
 
