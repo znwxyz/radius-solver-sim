@@ -62,11 +62,14 @@ window.COACH = (function () {
      네 조각 직사각형으로 뚫으면 둥근 링 밖으로 흰 모서리 네 개가 삐져나온다.
      거대한 box-shadow 한 장은 캡처·저사양 기기에서 이전 화면이 겹쳐 보였다. */
   var RADIUS = 16;
+  /* 그늘은 화면보다 사방 BLEED px 크게 그린다(넘친 건 화면이 잘라 낸다). 확대 비율이 딱 안 떨어지면
+     화면 가장자리 반 픽셀이 덮이지 않아 밝은 세로줄이 비쳤다(사용자). 구멍은 그만큼 옮긴다. styles/guide.css 의 --bleed 와 같게 */
+  var BLEED = 2;
   function shades(b) {
     var id = 'coach-hole-' + Date.now();
-    return '<svg class="shade" width="100%" height="100%" aria-hidden="true"><defs><mask id="' + id + '">' +
+    return '<svg class="shade" aria-hidden="true"><defs><mask id="' + id + '">' +
       '<rect width="100%" height="100%" fill="#fff"/>' +
-      '<rect x="' + b.left + '" y="' + b.top + '" width="' + b.width + '" height="' + b.height + '" rx="' + RADIUS + '" fill="#000"/>' +
+      '<rect x="' + (b.left + BLEED) + '" y="' + (b.top + BLEED) + '" width="' + b.width + '" height="' + b.height + '" rx="' + RADIUS + '" fill="#000"/>' +
       '</mask></defs><rect width="100%" height="100%" fill="rgba(0,0,0,.58)" mask="url(#' + id + ')"/></svg>';
   }
 

@@ -344,6 +344,7 @@
     drawBeads();
     boardEl.innerHTML = V.board(st);
     if (type === 'mission') window.ONBOARD.mount(screen, st, rememberPage);
+    if (type === 'why') window.WHY.mount(screen, st, rememberWhy);
     transitions(type);
     coachAfterRender();
     if (type === 'swap' && st.mode === 'solver') { followQuotes(); if (st.solver.phase === 'quoted') countUp(); }
@@ -351,6 +352,7 @@
 
   /* 온보딩 장을 넘겨도 다시 그리지 않는다(스와이프 도중에 화면이 바뀌면 끊긴다). 적어만 둔다 */
   function rememberPage(i) { st = Object.assign({}, st, { ob: i }); }
+  function rememberWhy(i) { st = Object.assign({}, st, { why: i }); }   /* 솔버 설명 장도 같은 식으로 */
 
   /* ── 눌렀을 때 ── */
   var ACTIONS = {

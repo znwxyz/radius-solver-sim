@@ -62,7 +62,7 @@
       lines: [['Minimum to receive', '{MIN} USDG'], ['Network fee (gas)', '$0', 'free'], ['Est. time', '~25s']],
       decide: 'Minimum to receive',
       behind: [
-        'Before quoting, the solvers checked whether this trade was possible, how to source the USDG, and which route to take. Only solvers who found it worthwhile for themselves sent a quote',
+        'Before quoting, the solvers checked whether this trade was possible, how to source the USDG, and which route to take. Only solvers who judged it would leave them a profit sent a quote',
         'The protocol’s rules picked the quote with the best terms among the solvers',
         'The chosen solver sent its own USDG to your wallet on Robinhood Chain first. That’s why going through a solver is this easy and fast',
         'The ETH you paid will be settled to that solver under the protocol’s rules',
@@ -91,6 +91,36 @@
       title: 'Here’s how much\nIntent mode changes',
       tagline: 'Fewer signatures,\nless paid,\nfaster arrival.',
       tagSub: 'Hand it to a solver, and trading gets this much easier.',
+      cta: 'Curious about solvers?'
+    },
+
+    why: {
+      pages: [
+        { ask: 'How can a solver\ndo it this fast?',
+          text: 'A solver solves an intent\nin **three main ways**.' },
+        { method: 'Way 1 · The best route',
+          text: 'First, the solver compares\nmany exchanges and bridges\nto find **the best route**,\nsometimes splitting the trade.' },
+        { method: 'Way 2 · Matching orders',
+          text: 'If someone wants the opposite,\nthe solver can **swap the directions**\nof the two orders.' },
+        { method: 'Way 3 · Assets on hand',
+          text: 'Solvers hold **assets in advance**\non many chains, and send them\nto your wallet right when needed.' },
+        { text: 'When an order comes in,\nthe solver **quickly** weighs\nprice, risk and rebalancing cost,\nthen decides whether to quote.' },
+        { text: 'The ETH you paid is settled\nto the solver **later**.\nThe solver carries the time it takes\nto refill its assets.' },
+        { ask: 'What does the solver\nget out of it?',
+          text: 'Solvers need a **profit**\nto move, too.' },
+        { text: 'This gap is where\n**the solver’s profit** comes from.\nSolvers compete to quote on orders\nthey judge profitable after costs.' },
+        { text: '**Radius** is one of these solvers.\nIt focuses on choosing\nwhich orders to take\nand which to turn down.' }
+      ],
+      ui: {
+        wallet: 'Solver’s wallet',
+        ringYou: 'You', ringOther: 'Another user', routeHead: 'Routes compared',
+        routes: [['Exchange A', 'Bridge X'], ['Exchange B', 'Bridge Y'], ['Exchange A + C', 'Split']],
+        solverName: 'Radius solver', checks: ['Price', 'Risk', 'Assets held', 'Rebalancing cost'], send: 'Send quote!',
+        you: 'You', solver: 'Solver', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Refill assets'], later: 'Later',
+        paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Refilling'], profit: 'Solver profit',
+        orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline'
+      },
+      link: 'Read the Radius interview',
       cta: 'Start over from the beginning?'
     },
 
@@ -158,7 +188,7 @@
       back: 'Back', restart: 'Start over'
     },
 
-    steps: [{ label: 'Quest' }, { label: 'Wallet' }, { label: 'Trade' }, { label: 'Result' }],
+    steps: [{ label: 'Quest' }, { label: 'Wallet' }, { label: 'Trade' }, { label: 'Result' }, { label: 'Solvers' }],
 
     /* index.html 에 박힌 글 — 한국어는 index.html 그대로라 영어에만 있다 */
     page: {

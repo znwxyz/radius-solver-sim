@@ -1,0 +1,199 @@
+/* 솔버 설명 — 결과 다음 화면, 옆으로 넘기는 9장. 마크업은 why.js, 글은 data.js 의 why.
+   장마다 위에 거래 화면의 UI 조각(카드·줄·알약·막대)으로 만든 그림, 아래에 글 한 덩어리(.ob-text — 첫 화면과 같은 글).
+   넘기기 막대·꺾쇠·버튼은 첫 화면과 같은 .ob-dots·.ob-bar 를 쓴다.
+   장에 들어오면 .wy-page.is-on — 그림 속 움직임은 그때 한 번 돈다. 움직임은 transform·opacity 위주. 색은 토큰만. */
+
+.canvas.why { gap: 0; padding-bottom: 0; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.canvas.why.at-first ~ .ob-bar .ob-prev { opacity: 0; visibility: hidden; }   /* 첫 장엔 이전 장이 없다 */
+
+.wy-pages { flex: 1 1 auto; min-height: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; scrollbar-width: none; overscroll-behavior-x: contain; outline: none; }
+.wy-pages::-webkit-scrollbar { display: none; }
+.wy-pages.dragging { scroll-snap-type: none; cursor: grabbing; }
+.wy-pages:focus-visible { box-shadow: inset 0 0 0 2px var(--tint-line); border-radius: 12px; }
+.wy-page { flex: 0 0 100%; min-height: 0; scroll-snap-align: start; display: flex; flex-direction: column; padding: 0 20px; }
+.wy-art { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 14px 0 10px; }
+.wy-copy { flex: none; padding: 2px 0 6px; }
+
+/* ── 질문 장 ── 솔버 색 말풍선 하나. 검정은 너무 깜깜했다(사용자). 메신저 말풍선처럼: 몸통은 둥글고, 왼쪽 아래 꼬리가 휘어져 나온다(사용자: 네모라 투박했다).
+   꼬리 = ::before(그 자리 그라데이션 색으로 칠한 조각) + ::after(바탕색으로 바깥을 깎아 휘게) */
+.wy-art.is-ask { justify-content: center; }
+.wy-ask { position: relative; align-self: flex-start; max-width: 88%; margin-left: 6px; padding: 13px 18px 14px; border-radius: 22px 22px 22px 10px; background: var(--flowline); color: var(--on-flow); font-size: 19px; line-height: 1.45; font-weight: 600; letter-spacing: -.02em; white-space: pre-line; transform-origin: 0 100%; box-shadow: 0 12px 26px -18px rgba(0, 170, 200, .65); }
+.wy-ask::before { content: ""; position: absolute; left: -7px; bottom: 0; width: 16px; height: 18px; background: color-mix(in srgb, var(--flow-green) 70%, var(--flow-cyan)); border-bottom-right-radius: 14px 12px; }   /* 몸통 왼쪽 아래 그라데이션 색(115deg 의 약 15% 지점) */
+.wy-ask::after { content: ""; position: absolute; left: -12px; bottom: 0; width: 12px; height: 18px; background: var(--app-bg); border-bottom-right-radius: 10px; }
+
+/* ── 공통 ── 거래 화면 카드와 같은 결: 흰 판, 얇은 선, 아래로 옅은 그림자. 방법 표시는 카드 위 작은 글 */
+.wy-card { border-radius: 20px; background: var(--paper); padding: 14px 14px 12px; box-shadow: inset 0 0 0 1px var(--hair), 0 18px 36px -26px rgba(0, 0, 0, .35); }
+.wy-head { margin: 0 2px 8px; font: 500 11px var(--mono); letter-spacing: .02em; color: var(--faint); }
+.wy-method { margin: 0 2px -4px; font: 500 11.5px var(--mono); letter-spacing: .02em; color: var(--muted); }
+.wy-to { color: var(--faint); }
+.wy-who { font-size: 13px; font-weight: 700; }
+
+/* ── 방법 1: 가장 좋은 경로 ── 경로마다 받는 수량, 가장 많은 길에 ✓ */
+.wy-route { display: grid; grid-template-columns: 1fr auto 18px; align-items: center; gap: 8px; margin-top: 6px; padding: 10px 10px 10px 12px; border-radius: 12px; background: var(--paper-2); font-size: 12.5px; color: var(--muted); }
+.wy-route em { font-style: normal; color: var(--faint); }
+.wy-route b { font: 500 12.5px var(--mono); }
+.wy-route.is-best { background: var(--tint); box-shadow: inset 0 0 0 1.5px var(--tint-line); color: var(--ink); }
+.wy-route.is-best b { font-weight: 700; }
+.wy-route.is-best i { position: relative; width: 18px; height: 18px; border-radius: 50%; background: var(--black); }
+.wy-route.is-best i::after { content: ""; position: absolute; left: 6px; top: 3.5px; width: 4px; height: 8px; border: solid var(--on-black); border-width: 0 1.8px 1.8px 0; transform: rotate(45deg); }
+
+/* ── 방법 2: 맞물리는 주문 ── 두 주문 카드 사이에 반듯한 X 자 화살표 두 개(화살촉 달린 선). 동전이 화살표를 따라 엇갈려 간다 */
+.wy-ring { display: grid; justify-items: stretch; }
+.wy-ord { display: flex; align-items: center; gap: 7px; padding: 11px 12px; border-radius: 16px; background: var(--paper); font-size: 13px; box-shadow: inset 0 0 0 1px var(--hair), 0 14px 30px -24px rgba(0, 0, 0, .4); }
+.wy-ord .wy-who { min-width: 58px; font-size: 12px; }
+.wy-ord b { white-space: nowrap; }
+.wy-ord .tok-ic, .wy-ord .tok-ic .t { width: 24px; height: 24px; }
+.wy-ord.is-you { box-shadow: inset 0 0 0 1.5px var(--tint-line), 0 14px 30px -24px rgba(0, 0, 0, .4); background: var(--tint); }
+.wy-cross { position: relative; justify-self: center; width: 200px; height: 72px; margin: 2px 0; }
+.wy-cross svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.wy-cross line { stroke-width: 2.5; stroke-linecap: round; }
+.wy-cross .l-a { stroke: var(--muted); }
+.wy-cross .l-b { stroke: var(--flow-cyan); }
+.wy-cross .h-a path { fill: var(--muted); }
+.wy-cross .h-b path { fill: var(--flow-cyan); }
+/* 동전: 화살표 시작점에 놓고(가운데 맞춤), 끝점까지 미끄러진다. 거리 = 선의 가로·세로 길이(108, 56) */
+.wy-cross > span { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: var(--paper); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .4); display: grid; place-items: center; opacity: 0; }
+.wy-cross .tok-ic, .wy-cross .tok-ic .t { width: 22px; height: 22px; }
+.wy-cross .tok-ic .c { width: 10px; height: 10px; }
+.wy-cross .c-a { left: 46px; top: 8px; }
+.wy-cross .c-b { left: 46px; top: 64px; }
+
+/* ── 방법 3: 미리 가진 자산 ── 여러 체인 속 여러 돈(3×3). Robinhood Chain 의 USDG 칸에서 동전이 아래 사용자에게 바로 떨어진다 */
+.wy-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.wy-tile { position: relative; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 7px; border-radius: 12px; background: var(--paper-2); }
+.wy-tile .tok-ic, .wy-tile .tok-ic .t { width: 26px; height: 26px; }
+.wy-tile .tok-ic .c { width: 12px; height: 12px; }
+.wy-tile b { margin-top: 3px; font: 600 12px var(--mono); }
+.wy-tile small { font: 400 10px var(--mono); color: var(--muted); }
+.wy-tile.is-hot { background: var(--tint); box-shadow: inset 0 0 0 1.5px var(--tint-line); }
+.wy-drop { position: absolute; left: 50%; top: 9px; margin-left: -13px; opacity: 0; z-index: 2; --drop: 112px; }
+.wy-user { display: grid; justify-items: center; gap: 4px; }   /* 사람은 떨어지는 칸(가운데 아래) 바로 밑 */
+.wy-avatar { position: relative; width: 40px; height: 40px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--hair); overflow: hidden; }
+.wy-avatar::before { content: ""; position: absolute; left: 50%; top: 9px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: var(--faint); }
+.wy-avatar::after { content: ""; position: absolute; left: 50%; top: 25px; width: 24px; height: 20px; margin-left: -12px; border-radius: 50%; background: var(--faint); }
+.wy-user b { font: 700 14px var(--mono); }
+
+/* ── 판단 ── 솔버 머릿속 생각 말풍선(구름 + 작은 동그라미 꼬리). 네 가지가 하나씩 체크되고, 다 되면 견적 보내기가 켜진다 */
+.wy-think { --bubble-line: color-mix(in srgb, var(--ink) 16%, transparent); position: relative; display: grid; justify-items: start; padding: 4px 0; }
+.wy-cloud { position: relative; isolation: isolate; display: grid; gap: 9px; justify-self: stretch; margin-left: 30px; padding: 16px 20px; }
+/* 생각 말풍선 판: 둥근 네모(구름 혹은 넣지 않는다) + 왼쪽 아래 작은 동그라미 꼬리 둘. 흰 판에 또렷한 회색 테두리(사용자: 하늘색 말고 흰색·회색, 흐릿하지 않게) */
+.wy-cloud-bg { position: absolute; inset: 0; z-index: -1; border-radius: 24px; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--bubble-line), 0 18px 36px -24px rgba(0, 0, 0, .35); }
+.wy-cloud-bg i { position: absolute; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--bubble-line); }
+.wy-cloud-bg .p1 { left: -6px; bottom: -16px; width: 15px; height: 15px; }
+.wy-cloud-bg .p2 { left: -17px; bottom: -29px; width: 9px; height: 9px; }
+.wy-solver { display: flex; align-items: center; gap: 8px; margin-top: 30px; }   /* 꼬리 동그라미 둘이 로고에 가리지 않게 */
+.wy-solver b { font-size: 13px; font-weight: 700; }
+.wy-solver-ic { display: block; width: 34px; height: 34px; border-radius: 9px; }   /* Radius 로고(앱 아이콘처럼 둥근 모서리) */
+.wy-check { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--ink); }
+.wy-check i { position: relative; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--black); }
+.wy-check i::after { content: ""; position: absolute; left: 7px; top: 4px; width: 4px; height: 8px; border: solid var(--on-black); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.wy-go { align-self: center; margin-top: 4px; padding: 11px 22px; border-radius: 99px; background: var(--flowline); color: var(--on-flow); font-size: 14px; font-weight: 700; box-shadow: 0 0 0 4px var(--tint); }
+
+/* ── 기다림 ── 두 줄 시간표 — 너는 금방, 솔버는 뒤에서 천천히 */
+.wy-time { display: grid; gap: 16px; padding: 16px 14px; }
+.wy-lane { display: grid; grid-template-columns: 40px 1fr; gap: 4px 10px; align-items: start; }
+.wy-lane .wy-who { padding-top: 1px; }
+.wy-steps { display: grid; gap: 9px; }
+.wy-step { display: grid; gap: 5px; font-size: 12.5px; color: var(--muted); }
+.wy-fill { display: block; height: 6px; border-radius: 6px; background: var(--paper-2); overflow: hidden; }
+.wy-fill i { display: block; height: 100%; border-radius: inherit; background: var(--black); transform-origin: left; }
+.is-solver .wy-fill i { background: var(--flowline); }
+.wy-lane small { grid-column: 2; font: 500 11px var(--mono); color: var(--faint); }
+
+/* ── 이득 ── 낸 것과 받은 것(막대는 실제 비율), 차이는 숫자로 크게, 거기서 비용을 빼면 솔버 수익 */
+.wy-bar-row { display: grid; grid-template-columns: 1fr auto; gap: 5px 8px; margin-bottom: 12px; font-size: 12.5px; color: var(--muted); }
+.wy-bar-row b { font: 500 14px var(--mono); color: var(--ink); }
+.wy-bar { grid-column: 1 / -1; display: block; height: 10px; border-radius: 10px; background: var(--paper-2); overflow: hidden; }
+.wy-bar i { display: block; width: var(--w); height: 100%; border-radius: inherit; background: var(--black); transform-origin: left; }
+.is-got .wy-bar i { background: var(--flowline); }
+.wy-diff { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 2px 2px; border-top: 1px dashed var(--hair); font-size: 13px; font-weight: 600; }
+.wy-diff b { font: 700 24px var(--mono); background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.wy-costs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.wy-costs span { padding: 5px 10px; border-radius: 99px; background: var(--paper-2); font-size: 11.5px; color: var(--muted); }
+.wy-costs .wy-profit { background: var(--black); color: var(--on-black); font-weight: 600; }
+
+/* ── Radius ── 주문마다 받을지 거절할지 */
+.wy-logo { display: block; width: 38px; height: 38px; margin: 2px auto 10px; border-radius: 11px; }
+.wy-pick { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 10px 12px; border-radius: 12px; background: var(--paper-2); font-size: 13px; font-weight: 600; }
+.wy-pick em { padding: 4px 10px; border-radius: 99px; font: 600 11.5px var(--body); font-style: normal; }
+.wy-pick.is-ok em { background: var(--black); color: var(--on-black); }
+.wy-pick.is-no { color: var(--faint); }
+.wy-pick.is-no span { text-decoration: line-through; }
+.wy-pick.is-no em { color: var(--muted); box-shadow: inset 0 0 0 1px var(--hair); }
+.wy-link { align-self: center; padding: 6px 10px; font-size: 13.5px; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.wy-link:focus-visible { outline: 2px solid var(--tint-line); outline-offset: 2px; border-radius: 8px; }
+
+/* ── 장에 들어올 때 한 번 ── */
+@keyframes wy-up { from { opacity: 0; transform: translateY(14px); } }
+@keyframes wy-in-l { from { opacity: 0; transform: translateX(-24px); } }
+@keyframes wy-in-r { from { opacity: 0; transform: translateX(24px); } }
+@keyframes wy-pop { 0% { opacity: 0; transform: scale(.6); } 60% { transform: scale(1.08); } }
+@keyframes wy-fill { from { transform: scaleX(0); } }
+@keyframes wy-glow { 40% { box-shadow: inset 0 0 0 1.5px var(--tint-line), 0 0 0 6px var(--tint); } }
+@keyframes wy-draw { from { stroke-dashoffset: 130; } }
+@keyframes wy-slide-down { 0% { opacity: 0; transform: none; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 1; transform: translate(102px, 52px); } }
+@keyframes wy-slide-up { 0% { opacity: 0; transform: none; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 1; transform: translate(102px, -52px); } }
+/* 동전이 칸에서 튀어 올랐다가 사용자에게 떨어지며 사라진다 */
+@keyframes wy-fall { 0% { opacity: 0; transform: none; } 15% { opacity: 1; transform: translateY(-8px) scale(1.15); } 85% { opacity: 1; transform: translateY(var(--drop)) scale(.9); } 100% { opacity: 0; transform: translateY(var(--drop)) scale(.6); } }
+/* 견적 보내기: 체크가 다 될 때까지 회색으로 꺼져 있다가 켜진다 */
+@keyframes wy-activate { from { background: var(--paper-2); color: var(--faint); box-shadow: none; transform: scale(.96); } }
+@keyframes wy-tick { from { background: var(--paper-2); } }
+@keyframes wy-tick-mark { from { opacity: 0; transform: rotate(45deg) scale(.4); } }
+
+.wy-page.is-on .wy-ask { animation: wy-pop .5s var(--ease) both; }
+.wy-page.is-on .wy-card { animation: wy-up .6s var(--ease) both; }
+.wy-page.is-on .wy-method { animation: wy-up .5s var(--ease) both; }
+.wy-page.is-on .wy-route { animation: wy-up .45s var(--ease) both; animation-delay: calc(200ms + var(--i) * 150ms); }
+.wy-page.is-on .wy-route.is-best { animation: wy-up .45s var(--ease) both, wy-glow 1s var(--ease) 1.1s; animation-delay: calc(200ms + var(--i) * 150ms), 1.1s; }
+.wy-page.is-on .wy-route.is-best i { animation: wy-pop .4s var(--ease) 1.1s both; }
+.wy-page.is-on .wy-ord.is-you { animation: wy-in-l .55s var(--ease) .15s both; }
+.wy-page.is-on .wy-ord.is-other { animation: wy-in-r .55s var(--ease) .3s both; }
+.wy-page.is-on .wy-cross line { stroke-dasharray: 130; animation: wy-draw .6s var(--ease) both; }
+.wy-page.is-on .wy-cross .l-b { animation-delay: .15s; }
+.wy-page.is-on .wy-cross .c-a { animation: wy-slide-down 1.2s cubic-bezier(.65, 0, .35, 1) .9s both; }
+.wy-page.is-on .wy-cross .c-b { animation: wy-slide-up 1.2s cubic-bezier(.65, 0, .35, 1) .9s both; }
+.wy-page.is-on .wy-tile { animation: wy-up .4s var(--ease) both; animation-delay: calc(120ms + var(--i) * 60ms); }
+.wy-page.is-on .wy-tile.is-hot { animation: wy-up .4s var(--ease) both, wy-glow .9s var(--ease) 1s; animation-delay: calc(120ms + var(--i) * 60ms), 1s; }
+.wy-page.is-on .wy-drop { animation: wy-fall 1s cubic-bezier(.5, 0, .3, 1) 1.5s both; }
+.wy-page.is-on .wy-user { animation: wy-up .45s var(--ease) .4s both; }
+.wy-page.is-on .wy-user b { animation: wy-pop .45s var(--ease) 2.4s both; }
+.wy-page.is-on .wy-cloud { animation: wy-pop .55s var(--ease) .35s both; transform-origin: 0 100%; }
+.wy-page.is-on .wy-puff.p2 { animation: wy-pop .3s var(--ease) .05s both; }
+.wy-page.is-on .wy-puff.p1 { animation: wy-pop .3s var(--ease) .2s both; }
+.wy-page.is-on .wy-solver { animation: wy-up .4s var(--ease) both; }
+.wy-page.is-on .wy-check i { animation: wy-tick .25s var(--ease) both; animation-delay: calc(900ms + var(--i) * 420ms); }
+.wy-page.is-on .wy-check i::after { animation: wy-tick-mark .3s var(--ease) both; animation-delay: calc(900ms + var(--i) * 420ms); }
+.wy-page.is-on .wy-go { animation: wy-activate .45s var(--ease) both; animation-delay: calc(900ms + var(--n) * 420ms); }
+.wy-page.is-on .is-you .wy-fill i { animation: wy-fill .5s var(--ease) both; animation-delay: calc(300ms + var(--i) * 400ms); }
+.wy-page.is-on .is-solver .wy-fill i { animation: wy-fill 3s linear both; animation-delay: calc(1.2s + var(--i) * 1.4s); }
+.wy-page.is-on .wy-bar i { animation: wy-fill .8s var(--ease) both .3s; }
+.wy-page.is-on .is-got .wy-bar i { animation-delay: .55s; }
+.wy-page.is-on .wy-diff { animation: wy-up .5s var(--ease) 1.1s both; }
+.wy-page.is-on .wy-costs span { animation: wy-up .4s var(--ease) both; animation-delay: calc(1.4s + var(--i) * 120ms); }
+.wy-page.is-on .wy-pick { animation: wy-up .45s var(--ease) both; animation-delay: calc(200ms + var(--i) * 140ms); }
+.wy-page.is-on .wy-pick em { animation: wy-pop .4s var(--ease) both; animation-delay: calc(700ms + var(--i) * 260ms); }
+.wy-page.is-on .wy-link { animation: wy-up .5s var(--ease) 1.5s both; }
+
+/* 키 작은 폰(SE 등): 그림을 조금 촘촘하게 */
+@media (max-height: 620px) {
+  .wy-art { gap: 8px; padding: 8px 0 6px; }
+  .wy-ask { padding: 11px 15px 12px; font-size: 17px; }
+  .wy-card { padding: 10px 12px 8px; }
+  .wy-art .wy-head { display: none; }   /* 위의 방법 표시가 같은 말을 한다 */
+  .wy-tile { padding: 6px 4px 5px; }
+  .wy-drop { top: 6px; --drop: 92px; }
+  .wy-cloud { padding: 12px 16px; gap: 7px; }
+  .wy-time { gap: 10px; padding: 12px; }
+}
+
+/* 폭 좁은 폰(SE 등): 맞물리는 주문 줄이 쪼개지지 않게 */
+@media (max-width: 380px) {
+  .wy-ord { gap: 5px; padding: 9px 8px; font-size: 12px; }
+  .wy-ord .wy-who { min-width: 42px; font-size: 11.5px; }
+  .wy-ord .tok-ic, .wy-ord .tok-ic .t { width: 20px; height: 20px; }
+  .wy-copy .ob-text { font-size: 18px; }   /* 영어 문장이 길어 접혔다 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wy-page * { animation: none !important; }
+}

@@ -293,8 +293,11 @@ window.SCREENS = (function () {
         ? '<div class="cmp-tag"><p class="cmp-tagline">' + esc(c.tagline) + '</p><p class="cmp-tagsub">' + esc(c.tagSub) + '</p></div>' : '') +
       /* 폰에서는 페이지 푸터가 없다. 같은 주의사항을 비교 화면 맨 아래에 접어 둔다(원문은 index.html 푸터 한 곳, app.js 가 넣어 준다) */
       (api.notice ? '<details class="m-notes">' + api.notice + '</details>' : '') +
-      '</div>' + cta(c.cta, 'now', 'restart');
+      '</div>' + cta(c.cta, 'now', 'next');   /* 솔버가 더 궁금해? → 다음 화면 */
   }
+
+  /* ── 솔버 설명 ── 결과 다음 화면. 옆으로 넘기는 5장 — why.js 가 그린다 */
+  function why(st) { return window.WHY.html(st); }
 
   /* ── 서명 시트 · 처리 중 ── */
   function change(sign, spot, amount, chainKey) {
@@ -322,8 +325,8 @@ window.SCREENS = (function () {
 
   var api = {
     notice: '',   // 푸터의 주의사항 HTML. app.js 가 시작할 때 채운다
-    mission: mission, wallet: wallet, swap: swap, compare: compare, board: board,
-    signSheet: signSheet, pendingCard: pendingCard, esc: esc, fmt: fmt, resolve: resolve, dur: dur
+    mission: mission, wallet: wallet, swap: swap, compare: compare, why: why, board: board,
+    signSheet: signSheet, pendingCard: pendingCard, esc: esc, fmt: fmt, money: money, resolve: resolve, dur: dur, tokIcon: tokIcon
   };
   return api;
 })();
