@@ -46,6 +46,7 @@
 .tok-ic { position: relative; width: 36px; height: 36px; flex: none; }
 .tok-ic .t { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; }
 .tok-ic .c { position: absolute; right: -3px; bottom: -3px; width: 16px; height: 16px; border-radius: 50%; object-fit: contain; background: var(--paper); box-shadow: 0 0 0 2px var(--paper); }
+:root[data-theme="dark"] .tok-ic .c { background: #fff; }   /* 체인 배지(Ethereum 등 어두운 로고)가 어두운 바탕에 묻혔다 */
 
 /* ── 미션 화면 ── 편집 디자인처럼. 앱 화면이 아니라 앱을 열기 전의 브리핑이다. */
 /* 첫 화면의 테마·언어 고르기 — 폰에서만. 데스크톱은 기록판 위 토글을 쓴다. */

@@ -115,8 +115,9 @@
         wallet: 'Solver’s wallet',
         ringYou: 'You', ringOther: 'Another user', routeHead: 'Routes compared',
         routes: [['Exchange A', 'Bridge X'], ['Exchange B', 'Bridge Y'], ['Exchange A + C', 'Split']],
-        solverName: 'Radius solver', checks: ['Price', 'Risk', 'Assets held', 'Rebalancing cost'], send: 'Send quote!',
-        you: 'You', solver: 'Solver', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Refill assets'], later: 'Later',
+        solverName: 'Radius solver', checks: ['Price', 'Risk', 'Assets held', 'Rebalancing cost'],
+        decided: 'OK — send a quote!', quoteTag: 'Quote',
+        you: 'You', solver: 'Solver', now: 'Now', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Refill assets'], later: 'Later',
         paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Refilling'], profit: 'Solver profit',
         orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline'
       },

@@ -27,7 +27,7 @@ window.WHY = (function () {
           '<b>' + short(r[2]) + '</b><small>' + esc(S.tokens[r[1]].name) + '</small>' +
           (hot ? '<span class="wy-drop" aria-hidden="true">' + v.tokIcon(r[1], r[0]) + '</span>' : '') + '</div>';
       }).join('');
-      return '<div class="wy-card"><div class="wy-head">' + esc(u.wallet) + '</div><div class="wy-tiles">' + tiles + '</div></div>' +
+      return '<div class="wy-card" aria-label="' + esc(u.wallet) + '"><div class="wy-tiles">' + tiles + '</div></div>' +
         '<div class="wy-user"><span class="wy-avatar" aria-hidden="true"></span><b>+' + v.fmt(best().amount, 2) + ' ' + esc(wantName()) + '</b></div>';
     },
     /* 방법 2(Ring Trading): 정반대로 바꾸려는 두 주문 — 사이에 반듯한 X 자 화살표 두 개.
@@ -42,9 +42,10 @@ window.WHY = (function () {
       var head = function (id, cls) {
         return '<marker id="' + id + '" class="' + cls + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L9 5 L1 9 Z"/></marker>';
       };
-      var cross = '<div class="wy-cross" aria-hidden="true"><svg viewBox="0 0 200 72"><defs>' + head('wy-h-a', 'h-a') + head('wy-h-b', 'h-b') + '</defs>' +
-        '<line class="l-a" x1="46" y1="8" x2="154" y2="64" marker-end="url(#wy-h-a)"/>' +
-        '<line class="l-b" x1="46" y1="64" x2="154" y2="8" marker-end="url(#wy-h-b)"/></svg>' +
+      /* 화살표 끝은 카드 속 토큰 자리 — 왼쪽(낼 토큰) 약 25%, 오른쪽(받을 토큰) 약 66%. 좌표는 카드 폭 320 기준, why.css 의 cqw 와 같게 */
+      var cross = '<div class="wy-cross" aria-hidden="true"><svg viewBox="0 0 320 72"><defs>' + head('wy-h-a', 'h-a') + head('wy-h-b', 'h-b') + '</defs>' +
+        '<line class="l-a" x1="80" y1="8" x2="211" y2="64" marker-end="url(#wy-h-a)"/>' +
+        '<line class="l-b" x1="80" y1="64" x2="211" y2="8" marker-end="url(#wy-h-b)"/></svg>' +
         '<span class="c-a">' + v.tokIcon(pay.token, pay.chain) + '</span><span class="c-b">' + v.tokIcon(want.token, want.chain) + '</span></div>';
       return '<div class="wy-ring">' + side(u.ringYou, pay, v.fmt(pay.amount, 3), want, 'is-you') + cross +
         side(u.ringOther, want, v.fmt(got, 2), pay, 'is-other') + '</div>';
@@ -52,45 +53,50 @@ window.WHY = (function () {
     /* 방법 1(Optimal On-chain Routing): 여러 거래소·브릿지 경로를 비교해 가장 많이 받는 길 */
     route: function () {
       var u = S.why.ui, v = V(), got = best().amount;
-      return '<div class="wy-card"><div class="wy-head">' + esc(u.routeHead) + '</div>' + u.routes.map(function (r, i) {
+      return '<div class="wy-card" aria-label="' + esc(u.routeHead) + '">' + u.routes.map(function (r, i) {
         var isBest = r[2] === 0;
         return '<div class="wy-route' + (isBest ? ' is-best' : '') + '" style="--i:' + i + '"><span>' + esc(r[0]) + ' <em>→</em> ' + esc(r[1]) + '</span>' +
           '<b>' + v.fmt(got + r[2], 2) + ' ' + esc(wantName()) + '</b><i aria-hidden="true"></i></div>';
       }).join('') + '</div>';
     },
-    /* 판단: 솔버 머릿속 생각 말풍선 — 가격·위험·가진 자산·리밸런싱 비용이 하나씩 체크되고, 다 되면 견적 보내기가 켜진다(사용자) */
+    /* 판단: 솔버 머릿속 생각 말풍선 — 생각(네 가지 체크) → 결심(말풍선 속 결론 한 줄) → 행동(견적 쪽지가 날아간다).
+       버튼으로 두면 사람이 누르는 것처럼 보여 솔버의 결심이 안 읽혔다(사용자) */
     decide: function () {
-      var u = S.why.ui, n = u.checks.length;
+      var u = S.why.ui, v = V(), n = u.checks.length;
       /* 말풍선 판은 뒤에 깐 한 층(.wy-cloud-bg): 둥근 네모 + 왼쪽 아래 작은 동그라미 꼬리 둘 */
-      return '<div class="wy-think"><div class="wy-cloud"><span class="wy-cloud-bg" aria-hidden="true"><i class="wy-puff p1"></i><i class="wy-puff p2"></i></span>' + u.checks.map(function (c, i) {
-          return '<span class="wy-check" style="--i:' + i + '"><i aria-hidden="true"></i>' + esc(c) + '</span>';
-        }).join('') + '</div>' +
-        '<div class="wy-solver"><img class="wy-solver-ic" src="../brand/Radius_icon_primaryColor.svg" alt=""><b>' + esc(u.solverName) + '</b></div></div>' +   /* 생각하는 건 Radius 솔버(사용자) */
-        '<div class="wy-go" style="--n:' + n + '">' + esc(u.send) + '</div>';
+      return '<div class="wy-think"><div class="wy-cloud"><span class="wy-cloud-bg" aria-hidden="true"><i class="wy-puff p1"></i><i class="wy-puff p2"></i></span>' +
+        u.checks.map(function (c, i) { return '<span class="wy-check" style="--i:' + i + '"><i aria-hidden="true"></i>' + esc(c) + '</span>'; }).join('') +
+        '<p class="wy-decide" style="--n:' + n + '">' + esc(u.decided) + '</p></div>' +
+        '<div class="wy-solver" style="--n:' + n + '"><img class="wy-solver-ic" src="../brand/Radius_icon_primaryColor.svg" alt=""><b>' + esc(u.solverName) + '</b>' +   /* 생각하는 건 Radius 솔버(사용자) */
+          '<span class="wy-quote">' + esc(u.quoteTag) + ' <b>' + v.fmt(best().amount, 2) + ' ' + esc(wantName()) + '</b> →</span></div></div>';
     },
-    /* 기다림: 두 줄 시간표 — 너는 금방 끝나고, 솔버의 정산·다시 채우기는 뒤에서 천천히 */
+    /* 기다림: 세로 타임라인(사용자 선택 — 막대는 무슨 뜻인지 안 읽혔다).
+       지금(너, 서명) → ~25초(너, USDG 도착 · 완료 — 너는 여기서 끝) → 나중에(솔버, ETH 정산 받기) → 나중에(솔버, 자산 다시 채우기) */
     later: function () {
       var u = S.why.ui, v = V();
-      var lane = function (who, steps, cls, tail) {
-        return '<div class="wy-lane ' + cls + '"><span class="wy-who">' + esc(who) + '</span><div class="wy-steps">' + steps.map(function (s, i) {
-          return '<div class="wy-step" style="--i:' + i + '"><span class="wy-fill"><i></i></span>' + esc(s) + '</div>';
-        }).join('') + '</div><small>' + esc(tail) + '</small></div>';
-      };
-      return '<div class="wy-card wy-time">' + lane(u.you, u.youSteps, 'is-you', '~' + v.dur(S.solver.wait)) +
-        lane(u.solver, u.solverSteps, 'is-solver', u.later) + '</div>';
+      var rows = [
+        [u.now, u.you, u.youSteps[0], 'is-you'],
+        ['~' + v.dur(S.solver.wait), u.you, u.youSteps[1], 'is-you is-end'],
+        [u.later, u.solver, u.solverSteps[0], 'is-solver'],
+        [u.later, u.solver, u.solverSteps[1], 'is-solver']
+      ];
+      return '<ol class="wy-card wy-tl">' + rows.map(function (r, i) {
+        return '<li class="' + r[3] + '" style="--i:' + i + '"><i aria-hidden="true"></i><time>' + esc(r[0]) + '</time>' +
+          '<span><b>' + esc(r[1]) + '</b>' + esc(r[2]) + '</span>' + (/is-end/.test(r[3]) ? '<em>' + esc(S.pending.done) + '</em>' : '') + '</li>';
+      }).join('') + '</ol>';
     },
-    /* 이득: 낸 것과 받은 것, 그 차이. 막대는 실제 비율 그대로(부풀리지 않는다), 차이는 숫자로 크게 */
+    /* 이득: 낸 것과 받은 것, 그 차이 — 막대(차이가 0.8% 라 안 보였다)·알약(버튼처럼 보였다) 대신 세로 계산식 */
     earn: function () {
       var u = S.why.ui, v = V();
       var usd = S.solver.pay.amount * S.tokens[S.solver.pay.token].price, got = best().amount;
-      var bar = function (label, val, cls) {
-        return '<div class="wy-bar-row ' + cls + '"><span>' + esc(label) + '</span><b>' + v.money(val) + '</b>' +
-          '<span class="wy-bar" style="--w:' + (val / usd * 100).toFixed(2) + '%"><i></i></span></div>';
+      /* 세로 계산식: 낸 것 − 받은 것 = 차이, 그 아래 차이에서 비용을 빼면 솔버 수익(값을 모르는 줄은 이름만) */
+      var row = function (label, val, cls, i) {
+        return '<div class="wy-sum-row ' + cls + '" style="--i:' + i + '"><span>' + esc(label) + '</span><b>' + val + '</b></div>';
       };
-      return '<div class="wy-card">' + bar(u.paid, usd, 'is-paid') + bar(u.got, got, 'is-got') +
-        '<div class="wy-diff"><span>' + esc(u.diff) + '</span><b>' + v.money(usd - got) + '</b></div>' +
-        '<div class="wy-costs">' + u.costs.map(function (c, i) { return '<span style="--i:' + i + '">− ' + esc(c) + '</span>'; }).join('') +
-          '<span class="wy-profit" style="--i:' + u.costs.length + '">= ' + esc(u.profit) + '</span></div></div>';
+      return '<div class="wy-card wy-sum">' + row(u.paid, v.money(usd), 'is-paid', 0) + row(u.got, '− ' + v.money(got), 'is-got', 1) +
+        row(u.diff, v.money(usd - got), 'is-diff', 2) +
+        '<div class="wy-sum-cost">' + u.costs.map(function (c, i) { return '<span style="--i:' + i + '">− ' + esc(c) + '</span>'; }).join('') +
+          '<b style="--i:' + u.costs.length + '">= ' + esc(u.profit) + '</b></div></div>';
     },
     /* 5장: Radius — 주문마다 받을지 거절할지 고른다. 인터뷰 링크 */
     radius: function () {
@@ -104,11 +110,24 @@ window.WHY = (function () {
     }
   };
 
+  /* 방법 표시: "방법 1 · 가장 좋은 경로" → 번호 알약 + 이름 */
+  function method(m) {
+    var parts = m.split(' · ');
+    return '<p class="wy-method"><span class="wy-num">' + esc(parts[0]) + '</span>' + esc(parts[1] || '') + '</p>';
+  }
+  /* 첫 질문 장: "세 가지야" 아래에 세 방법 이름을 미리 보여 준다 — 질문 장이 비어 보였다 */
+  function ways(p) {
+    if (p.key !== 'askFast') return '';
+    return '<div class="wy-ways">' + pages().filter(function (x) { return x.method; }).map(function (x, i) {
+      var parts = x.method.split(' · ');
+      return '<span style="--i:' + i + '"><em>' + (i + 1) + '</em>' + esc(parts[1] || parts[0]) + '</span>';
+    }).join('') + '</div>';
+  }
   function page(p, i) {
     return '<section class="wy-page' + (i === 0 ? ' is-on' : '') + '" data-key="' + esc(p.key) + '" aria-label="' + (i + 1) + ' / ' + pages().length + '">' +
-      /* 질문 장: 큰 검정 말풍선 하나(유저가 묻는 말, 사용자). 나머지 장: 방법 표시 + 그림 카드 */
-      (p.ask ? '<div class="wy-art is-ask"><p class="wy-ask">' + esc(p.ask) + '</p></div>'
-        : '<div class="wy-art">' + (p.method ? '<p class="wy-method">' + esc(p.method) + '</p>' : '') + ART[p.key]() + '</div>') +
+      /* 질문 장: 솔버 색 말풍선(유저가 묻는 말, 사용자). 나머지 장: 방법 표시 + 그림 카드. 둘 다 같은 기준선에서 시작 */
+      (p.ask ? '<div class="wy-art is-ask"><p class="wy-ask">' + esc(p.ask) + '</p>' + ways(p) + '</div>'
+        : '<div class="wy-art">' + (p.method ? method(p.method) : '') + ART[p.key]() + '</div>') +
       '<div class="wy-copy"><p class="ob-text">' + rich(p.text) + '</p></div></section>';
   }
   function dots(at) {

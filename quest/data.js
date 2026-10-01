@@ -240,8 +240,9 @@ window.MODE = {
                   ['base', 'eth', 96.1], ['robinhood', 'usdg', 63500], ['robinhood', 'eth', 54.2]],
       ringYou: '너', ringOther: '다른 사람', routeHead: '경로 비교',
       routes: [['거래소 A', '브릿지 X', -0.8], ['거래소 B', '브릿지 Y', 0], ['거래소 A + C', '나눠 보내기', -0.35]],   /* 셋째 칸: 가장 좋은 경로와의 차이(USDG) — 설명용 예시 */
-      solverName: 'Radius 솔버', checks: ['가격', '위험', '가진 자산', '리밸런싱 비용'], send: '견적 보내기!',   /* 생각 말풍선 속 네 가지 — 다 체크되면 견적 보내기가 켜진다 */
-      you: '너', solver: '솔버', youSteps: ['서명', 'USDG 도착'], solverSteps: ['ETH 정산 받기', '자산 다시 채우기'], later: '나중에',
+      solverName: 'Radius 솔버', checks: ['가격', '위험', '가진 자산', '리밸런싱 비용'],
+      decided: '좋아, 견적 보내자!', quoteTag: '견적',   /* 체크가 다 되면 말풍선 속 결론 → 견적 쪽지가 날아간다(버튼은 사람이 누르는 것처럼 보였다, 사용자) */
+      you: '너', solver: '솔버', now: '지금', youSteps: ['서명', 'USDG 도착'], solverSteps: ['ETH 정산 받기', '자산 다시 채우기'], later: '나중에',   /* 기다림 장 세로 타임라인 */
       paid: '네가 낸 것', got: '네가 받은 것', diff: '차이', costs: ['가스', '정산 비용', '다시 채우는 비용'], profit: '솔버 수익',
       orders: ['주문 A', '주문 B', '주문 C'], accept: '받음', decline: '거절'
     },
