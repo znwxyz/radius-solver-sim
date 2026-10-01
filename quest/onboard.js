@@ -3,11 +3,11 @@
    위에는 같은 무대가 계속 있다: 체인 층 두 장(Ethereum 위, Robinhood Chain 아래)이 건물 층처럼 쌓인 페이크 3D.
    아래 글 칸을 옆으로 넘기면(스와이프) 무대의 움직임이 바뀐다 — 버튼으로 넘기지 않는다.
      토큰: 여러 토큰 카드가 Ethereum 층 위에 오른쪽 위로 포개져, 건반처럼 차례로 들썩인다(도레미파미레)
-     스왑: ETH·USDC 가 같은 층에서 타원을 그리며 서로 자리를 계속 맞바꾼다(뒤집지 않는다 — 사용자 요청)
-     브릿지: USDC 가 위층 가운데 ↔ 아래층 가운데를 오간다
+     스왑: ETH·USDG 가 같은 층에서 타원을 그리며 서로 자리를 계속 맞바꾼다(뒤집지 않는다 — 사용자 요청)
+     브릿지: USDG 가 위층 가운데 ↔ 아래층 가운데를 오간다
      한 번에?: 위아래 두 장씩, 층마다 스왑 → 같은 토큰끼리 층을 맞바꾸는 브릿지를 끝없이
-     크로스체인 스왑: ETH 가 먼저 아래층으로 건너가고, 거기 반투명하게 나타난 USDC 와 스왑
-     Quest(미정): 아래층의 USDC
+     크로스체인 스왑: ETH 가 먼저 아래층으로 건너가고, 거기 반투명하게 나타난 USDG 와 스왑
+     Quest(미정): 아래층의 USDG
    진짜 3D 중첩(preserve-3d 여러 겹)과 뒷면 숨기기는 쓰지 않는다 — 아이폰 사파리에서 카드가 눕고 거울 글자가 비쳤다.
    층은 각자 기울인 판 한 장. 토큰은 같은 아이소메트릭 각도로 선 동전(앞면 + 반투명 두께 겹, 각각 2D matrix)이고,
    자리는 바닥 위 좌표로 계산해 화면에 옮긴다 — 화면 기준으로 좌우를 맞추면 바닥과 따로 논다(사용자 지적). 움직임은 styles/onboard.css — 카드 길은 tools/onboard_keyframes.py 가 만든다. */
@@ -15,9 +15,9 @@ window.ONBOARD = (function () {
   'use strict';
   var S = window.MODE;
   var DRAG_PX = 8;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
-  var STACK = ['eth', 'usdc', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
-  var EXTRA = [['eth', 'eth2'], ['usdc', 'usdc2']];
-  var RIMS = 4;   /* 동전 두께 = 앞면 뒤로 겹친 반투명 원 수(뒤 → 앞). tools/onboard_keyframes.py 의 RIMS 와 같게 */   /* 4장: 아래층에도 ETH·USDC 한 장씩 [토큰, 카드 이름] */
+  var STACK = ['eth', 'usdg', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
+  var EXTRA = [['eth', 'eth2'], ['usdg', 'usdg2']];
+  var RIMS = 4;   /* 동전 두께 = 앞면 뒤로 겹친 반투명 원 수(뒤 → 앞). tools/onboard_keyframes.py 의 RIMS 와 같게 */   /* 4장: 아래층에도 ETH·USDG 한 장씩 [토큰, 카드 이름] */
 
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {

@@ -12,7 +12,7 @@
 .ob-shadow { position: absolute; left: 0; top: 0; width: 68px; height: 68px; transform-origin: 0 0; transform: matrix(0.7431, -0.3546, 0.6691, 0.3938, -51.70, -3.50); }
 /* 장마다 쉬는 자리 — 움직임의 0% 와 같다. 장이 바뀌면 여기서 여기로 미끄러진다 */
 .at-1 .k-eth { --x: -32.3px; --y: -45.9px; --o: 1; z-index: 124; }
-.at-1 .k-usdc { --x: -10.8px; --y: -63.3px; --o: 1; z-index: 107; }
+.at-1 .k-usdg { --x: -10.8px; --y: -63.3px; --o: 1; z-index: 107; }
 .at-1 .k-usdt { --x: 10.8px; --y: -80.7px; --o: 1; z-index: 89; }
 .at-1 .k-wbtc { --x: 32.3px; --y: -98.1px; --o: 1; z-index: 72; }
 .at-1 .k-tsla { --x: -21.7px; --y: 90.9px; --o: 1; z-index: 261; }
@@ -26,16 +26,16 @@
 .at-6 .k-aapl { --x: 21.7px; --y: 53.1px; --o: 1; z-index: 223; }
 .k-usdt, .k-wbtc { --x: 55.0px; --y: -126.8px; --o: 0; z-index: 43; }
 .k-eth2 { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
-.k-usdc2 { --x: -31.2px; --y: 86.9px; --o: 0; z-index: 257; }
+.k-usdg2 { --x: -31.2px; --y: 86.9px; --o: 0; z-index: 257; }
 .at-2 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
-.at-2 .k-usdc { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
-.at-3 .k-usdc { --x: 0.0px; --y: -72.0px; --o: 1; z-index: 98; }
+.at-2 .k-usdg { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
+.at-3 .k-usdg { --x: 0.0px; --y: -72.0px; --o: 1; z-index: 98; }
 .at-4 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
-.at-4 .k-usdc { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
+.at-4 .k-usdg { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
 .at-4 .k-eth2 { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
-.at-4 .k-usdc2 { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
+.at-4 .k-usdg2 { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
 .at-5 .k-eth { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
-.at-5 .k-usdc { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
+.at-5 .k-usdg { --x: 31.2px; --y: 57.1px; --o: 1; z-index: 227; }
 .at-5 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
 .at-7 .k-q-ethereum-0 { --x: -27.8px; --y: -48.8px; --o: 1; z-index: 121; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1), opacity .3s ease; transition-delay: 0.15s; }
 .k-q-ethereum-0 { --x: -27.8px; --y: -86.8px; --o: 0; z-index: 83; }
@@ -63,10 +63,10 @@
 .k-q-robinhood-2 { --x: 27.8px; --y: 10.8px; --o: 0; z-index: 181; }
 @media (prefers-reduced-motion: reduce) {   /* 움직임 없이 각 장의 끝 모습 */
   .at-2 .k-eth { --x: 31.2px; --y: -86.9px; --o: 1; z-index: 83; }
-  .at-2 .k-usdc { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
-  .at-3 .k-usdc { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
+  .at-2 .k-usdg { --x: -31.2px; --y: -57.1px; --o: 1; z-index: 113; }
+  .at-3 .k-usdg { --x: 0.0px; --y: 72.0px; --o: 1; z-index: 242; }
   .at-5 .k-eth { --x: 31.2px; --y: 57.1px; --o: 0; z-index: 227; }
-  .at-5 .k-usdc { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
+  .at-5 .k-usdg { --x: -31.2px; --y: 86.9px; --o: 1; z-index: 257; }
   .at-5 .k-eth2 { --x: 31.2px; --y: -86.9px; --o: 0; z-index: 83; }
 }
 /* 0장 표지 → 1장 */
@@ -77,8 +77,8 @@
 @keyframes ob-arrive { 0% { opacity: 0; translate: 0 -44px; } 12% { opacity: 1; translate: 0 -44px; } 75% { translate: 0 -44px; animation-timing-function: cubic-bezier(.5, 0, .9, .5); } 87% { translate: 0 3px; } 100% { translate: 0 0; } }
 .at-0 .k-eth { --x: -32.3px; --y: -45.9px; --o: 0; z-index: 124; }
 .at-1.from-0 .k-eth { animation: ob-arrive 3.3s ease-out 0.00s both; }
-.at-0 .k-usdc { --x: -10.8px; --y: -63.3px; --o: 0; z-index: 107; }
-.at-1.from-0 .k-usdc { animation: ob-arrive 3.3s ease-out 0.08s both; }
+.at-0 .k-usdg { --x: -10.8px; --y: -63.3px; --o: 0; z-index: 107; }
+.at-1.from-0 .k-usdg { animation: ob-arrive 3.3s ease-out 0.08s both; }
 .at-0 .k-usdt { --x: 10.8px; --y: -80.7px; --o: 0; z-index: 89; }
 .at-1.from-0 .k-usdt { animation: ob-arrive 3.3s ease-out 0.16s both; }
 .at-0 .k-wbtc { --x: 32.3px; --y: -98.1px; --o: 0; z-index: 72; }
@@ -101,7 +101,7 @@
   100% { transform: none; }
 }
 .at-1 .k-eth .ob-lift { animation: ob-key-eth 2.4s linear infinite .3s; }
-@keyframes ob-key-usdc {
+@keyframes ob-key-usdg {
   0% { transform: none; }
   16.67% { transform: translateY(-0.0px); }
   19.44% { transform: translateY(-3.0px); }
@@ -118,7 +118,7 @@
   97.22% { transform: translateY(-3.0px); }
   100% { transform: translateY(-0.0px); }
 }
-.at-1 .k-usdc .ob-lift { animation: ob-key-usdc 2.4s linear infinite .3s; }
+.at-1 .k-usdg .ob-lift { animation: ob-key-usdg 2.4s linear infinite .3s; }
 @keyframes ob-key-usdt {
   0% { transform: none; }
   33.33% { transform: translateY(-0.0px); }
@@ -228,7 +228,7 @@
   95% { transform: translate(-31.2px, -57.1px); z-index: 113; }
   100% { transform: translate(-31.2px, -57.1px); z-index: 113; }
 }
-@keyframes ob-swap-usdc {
+@keyframes ob-swap-usdg {
   0% { transform: translate(31.2px, -86.9px); z-index: 83; }
   20% { transform: translate(31.2px, -86.9px); z-index: 83; }
   22.5% { transform: translate(32.7px, -85.9px); z-index: 84; }
@@ -269,8 +269,8 @@
 }
 .at-2 .k-eth { animation: ob-enter .4s ease-out, ob-swap-eth 4.4s linear infinite; }
 .at-2 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
-.at-2 .k-usdc { animation: ob-enter .4s ease-out, ob-swap-usdc 4.4s linear infinite; }
-.at-2 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
+.at-2 .k-usdg { animation: ob-enter .4s ease-out, ob-swap-usdg 4.4s linear infinite; }
+.at-2 .k-usdg .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-2 .p-swap { animation: ob-pop-swap 4.4s linear infinite; }
 /* 3장 브릿지 */
 @keyframes ob-bridge {
@@ -312,8 +312,8 @@
   99.55% { opacity: 1; transform: translate(66.0px, -18.0px) scale(1); }
   100% { opacity: 0; transform: translate(66.0px, -28.0px) scale(1); }
 }
-.at-3 .k-usdc { animation: ob-enter .4s ease-out, ob-bridge 4.4s linear infinite; }
-.at-3 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
+.at-3 .k-usdg { animation: ob-enter .4s ease-out, ob-bridge 4.4s linear infinite; }
+.at-3 .k-usdg .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-3 .p-bridge { animation: ob-pop-bridge 4.4s linear infinite; }
 /* 4장 스왑·브릿지를 끝없이 */
 @keyframes ob-mix-eth {
@@ -364,7 +364,7 @@
   87.5% { transform: translate(-31.2px, -57.1px); z-index: 113; }
   100% { transform: translate(-31.2px, -57.1px); z-index: 113; }
 }
-@keyframes ob-mix-usdc {
+@keyframes ob-mix-usdg {
   0% { transform: translate(31.2px, -86.9px); z-index: 83; }
   3.75% { transform: translate(31.2px, -86.9px); z-index: 83; }
   4.62% { transform: translate(32.7px, -85.9px); z-index: 84; }
@@ -411,7 +411,7 @@
   99.12% { transform: translate(31.4px, -81.6px); z-index: 88; }
   100% { transform: translate(31.2px, -86.9px); z-index: 83; }
 }
-@keyframes ob-mix-usdc2 {
+@keyframes ob-mix-usdg2 {
   0% { transform: translate(-31.2px, 86.9px); z-index: 257; }
   16.25% { transform: translate(-31.2px, 86.9px); z-index: 257; }
   17.12% { transform: translate(-32.7px, 85.9px); z-index: 256; }
@@ -555,10 +555,10 @@
 /* 4장 걸기: 8동작 한 바퀴 = 12.0s */
 .at-4 .k-eth { animation: ob-enter .4s ease-out, ob-mix-eth 12.0s linear infinite; }
 .at-4 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
-.at-4 .k-usdc { animation: ob-enter .4s ease-out, ob-mix-usdc 12.0s linear infinite; }
-.at-4 .k-usdc .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
-.at-4 .k-usdc2 { animation: ob-enter .4s ease-out, ob-mix-usdc2 12.0s linear infinite; }
-.at-4 .k-usdc2 .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
+.at-4 .k-usdg { animation: ob-enter .4s ease-out, ob-mix-usdg 12.0s linear infinite; }
+.at-4 .k-usdg .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
+.at-4 .k-usdg2 { animation: ob-enter .4s ease-out, ob-mix-usdg2 12.0s linear infinite; }
+.at-4 .k-usdg2 .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .k-eth2 { animation: ob-enter .4s ease-out, ob-mix-eth2 12.0s linear infinite; }
 .at-4 .k-eth2 .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-4 .p-swap { animation: ob-mix-pop-swap 12.0s linear infinite; }
@@ -592,7 +592,7 @@
   99% { opacity: 0; transform: translate(31.2px, 57.1px); z-index: 227; }
   100% { transform: translate(-31.2px, -57.1px); z-index: 113; opacity: 0; }
 }
-@keyframes ob-cross-usdc {
+@keyframes ob-cross-usdg {
   0% { transform: translate(31.2px, 57.1px); z-index: 227; opacity: 0; }
   14% { opacity: 0; }
   20% { opacity: 0.4; }
@@ -695,7 +695,7 @@
   100% { opacity: 0; transform: translate(-31.2px, -141.1px) scale(1); }
 }
 .at-5 .k-eth { animation: ob-cross-eth 8s linear infinite; }
-.at-5 .k-usdc { animation: ob-cross-usdc 8s linear infinite; }
+.at-5 .k-usdg { animation: ob-cross-usdg 8s linear infinite; }
 .at-5 .k-eth2 { animation: ob-cross-eth2 8s linear infinite; }
 .at-5 .k-eth .ob-lift { animation: ob-grow .5s cubic-bezier(.34, 1.4, .64, 1) both; }
 .at-5 .p-bridge { animation: ob-cross-pop-bridge 8s linear infinite; }

@@ -6,7 +6,7 @@
   'use strict';
   var EN = {
     mission: {
-      pill: 'Get 500 USDC on Robinhood Chain!',
+      pill: 'Get 500 USDG on Robinhood Chain!',
       clear: 'Quest clear',
       onboard: [
         { text: '**On-chain trading,\ntry it yourself**',
@@ -18,7 +18,7 @@
         { text: 'That’s a **cross-chain swap**.\nIt changes both the token\nand the chain it lives on.' },
         { text: 'On Robinhood Chain,\nyou can buy **stock tokens** —\nreal stocks turned into tokens.\nWant to try it yourself?' },
         { text: '**On-chain trading:\nwhat changes\nwith a solver?**',
-          note: 'Pick the tokens and chains yourself,\nand make 500 USDC on Robinhood Chain.' }
+          note: 'Pick the tokens and chains yourself,\nand make 500 USDG on Robinhood Chain.' }
       ],
       cta: 'First, let’s check my wallet'
     },
@@ -28,55 +28,48 @@
       plan: [
         {
           kind: 'Swap',
-          title: 'Swap ETH for USDC on Ethereum',
-          why: 'A bridge is a tool that moves tokens like USDC to another chain. So first, swap your ETH for USDC on Ethereum to have USDC ready to move. Exchanging tokens inside the same chain like this is called a swap.',
-          lines: [['Network fee (gas)', '$3.84'], ['Price impact', '<0.01%'], ['Slippage tolerance', '0.5%'], ['Route', 'ETH → USDC (0.05%)']],
+          title: 'Swap ETH for USDG on Ethereum',
+          why: 'First, swap your ETH for USDG on Ethereum. Exchanging tokens inside the same chain like this is called a swap.',
+          lines: [['Network fee (gas)', '$3.84'], ['Price impact', '<0.01%'], ['Slippage tolerance', '0.5%'], ['Route', 'ETH → USDG (0.05%)']],
           decide: 'Slippage tolerance'
         },
         {
           kind: 'Bridge',
-          title: 'Move USDC from Ethereum to Robinhood Chain',
-          why: 'USDC on Ethereum and USDC on Robinhood Chain are recorded on different ledgers. What we need is USDC on Robinhood Chain, not on Ethereum — so you have to bridge the USDC you just made from Ethereum to Robinhood Chain. Each bridge has its own fee and wait time, so pick the one that fits you.',
+          title: 'Move USDG from Ethereum to Robinhood Chain',
+          why: 'USDG on Ethereum and USDG on Robinhood Chain are recorded on different ledgers. What we need is USDG on Robinhood Chain, not on Ethereum — so you have to bridge the USDG you just made from Ethereum to Robinhood Chain. Each bridge has its own fee and wait time, so pick the one that fits you.',
           options: [
             { name: 'Official bridge' },
             { name: 'Third-party bridge A' },
             { name: 'Third-party bridge B' }
           ],
-          labels: { fee: 'Bridge fee', gas: 'Network fee (gas)', time: 'Est. time', dest: ['Gas on destination chain', 'Needed separately', 'warn'] },
+          labels: { fee: 'Bridge fee', gas: 'Network fee (gas)', time: 'Est. time' },
           decide: 'Which bridge to use'
-        },
-        {
-          kind: 'Bridge',
-          title: 'Get gas (ETH) to use on Robinhood Chain',
-          why: 'Every transaction you send on Robinhood Chain costs a little gas. Robinhood Chain’s gas token is ETH, but after step 2 your wallet only has USDC on Robinhood Chain. So you need some ETH too, right? Let’s move a little ETH from Ethereum to Robinhood Chain.',
-          lines: [['Network fee (gas)', '$3.40'], ['Est. time', '~8m']],
-          decide: 'How much gas to bring'
         }
       ],
       doneTitle: 'Quest clear',
       doneLine: 'Wallet signatures: {SIGS}, gas spent: {GAS}, time waited: {WAIT}.',
-      nextCta: 'Now try it again in solver mode?'
+      nextCta: 'Now try it again in Intent mode?'
     },
 
     solver: {
-      label: 'Solver mode',
+      label: 'Intent mode',
       quotes: [
         { name: 'Solver B', time: '~20s' },
         { name: 'Radius', time: '~25s' },
         { name: 'Solver A', time: '~30s' },
         { name: 'Solver C', time: '~45s' }
       ],
-      lines: [['Minimum to receive', '{MIN} USDC'], ['Network fee (gas)', '$0', 'free'], ['Gas on destination chain', 'Not needed', 'free'], ['Est. time', '~25s']],
+      lines: [['Minimum to receive', '{MIN} USDG'], ['Network fee (gas)', '$0', 'free'], ['Est. time', '~25s']],
       decide: 'Minimum to receive',
       behind: [
-        'Before quoting, the solvers checked whether this trade was possible, how to source the USDC, and which route to take. Only solvers who found it worthwhile for themselves sent a quote',
+        'Before quoting, the solvers checked whether this trade was possible, how to source the USDG, and which route to take. Only solvers who found it worthwhile for themselves sent a quote',
         'The protocol’s rules picked the quote with the best terms among the solvers',
-        'The chosen solver sent its own USDC to your wallet on Robinhood Chain first. That’s why going through a solver is this easy and fast',
+        'The chosen solver sent its own USDG to your wallet on Robinhood Chain first. That’s why going through a solver is this easy and fast',
         'The ETH you paid will be settled to that solver under the protocol’s rules',
         'The solver handled all the complicated swaps, bridges and repeated gas fees. All you had to do was receive the result'
       ],
       doneTitle: 'Quest clear — a solver did it for you!',
-      doneLine: 'You signed just once. No gas left your wallet, and you didn’t need to bring gas for the destination chain either.',
+      doneLine: 'You signed just once, and no gas left your wallet.',
       nextCta: 'Compare the two side by side?'
     },
 
@@ -88,14 +81,14 @@
         { label: 'Time waited' },
         { label: 'Choices I made myself', unit: '' },
         { label: 'ETH I paid' },
-        { label: 'USDC arrived on Robinhood Chain' }
+        { label: 'USDG arrived on Robinhood Chain' }
       ],
       empty: 'Not tried yet',
       doing: 'In progress'
     },
 
     compare: {
-      title: 'Here’s how much\nsolver mode changes',
+      title: 'Here’s how much\nIntent mode changes',
       tagline: 'Fewer signatures,\nless paid,\nfaster arrival.',
       tagSub: 'Hand it to a solver, and trading gets this much easier.',
       cta: 'Start over from the beginning?'
@@ -106,41 +99,41 @@
         { title: 'How to read this row',
           text: 'Base is the chain and ETH is the token. So this row means “ETH on the Base chain.” 0.0110 is how much of that ETH you have (0.0110 ETH), and $40.53 below it is that amount converted to dollars at today’s price.' },
         { title: 'Same token, different chain — treated differently',
-          text: 'Even with the same name, USDC is issued and recorded separately on each chain. So USDC on Arbitrum and USDC on Robinhood Chain are handled like different tokens. Tap Robinhood Chain in these tabs to see what’s on that chain.' }
+          text: 'Even with the same name, USDC is issued and recorded separately on each chain. So USDC on Arbitrum and USDC on Base are handled like different tokens. Tap Robinhood Chain in these tabs to see what’s on that chain.' }
       ],
       'wallet-empty': [
         { title: 'Nothing on Robinhood Chain yet',
-          text: 'The 500 USDC for this Quest has to be on Robinhood Chain. Your wallet doesn’t have any, so you need to make 500 USDC from assets on other chains and bring it here!' }
+          text: 'The 500 USDG for this Quest has to be on Robinhood Chain. USDG is the dollar stablecoin used on Robinhood Chain. Your wallet doesn’t have any, so you need to make 500 USDG from assets on other chains and bring it here!' }
       ],
       normal: [
         { title: 'What you pay',
           text: 'Ethereum and ETH look alike but mean different things. Ethereum is the chain (the network), and ETH is the token used on it. Your wallet has 0.84 ETH on Ethereum, and you’ll pay 0.1475 ETH of it for this trade.' },
         { title: 'What you get',
-          text: 'USDC on Robinhood Chain. Compared with what you pay, both the chain (Ethereum → Robinhood Chain) and the token (ETH → USDC) are different. So this trade needs both a swap and a bridge.' },
+          text: 'USDG on Robinhood Chain. Compared with what you pay, both the chain (Ethereum → Robinhood Chain) and the token (ETH → USDG) are different. So this trade needs both a swap and a bridge.' },
         { title: 'This trade can’t be done in one go',
-          text: 'It takes three steps: a swap, a bridge, and getting gas ready on the destination chain. Run the to-dos below in order, starting with step 1.' }
+          text: 'It takes two steps: a swap and a bridge. Run the to-dos below in order, starting with step 1.' }
       ],
       gas: [
         { title: 'So what’s gas?',
           text: 'Gas is the fee you pay the chain every time you send a transaction. The “network fee” here is the gas, and it comes out of the ETH in your wallet each time you sign.' }
       ],
       solver: [
-        { title: 'Solver mode',
-          text: 'Same wallet, same starting point. What changes is how the trade gets done. Instead of walking through each step yourself, just say the result you want and a solver handles it for you.' },
+        { title: 'Intent mode',
+          text: 'In normal mode, you swapped, bridged, and walked through each step yourself, right? In Intent mode, you just say the result: “I’ll pay this and I want that.” A solver takes care of the rest.' },
         { title: 'This is all you decide',
-          text: 'Just set the minimum USDC you’ll receive. A trade that gives you less won’t happen at all. You don’t need to pick the route, the bridge or the gas.' },
+          text: 'Just set the minimum USDG you’ll receive. A trade that gives you less won’t happen at all. You don’t need to pick the route, the bridge or the gas.' },
         { title: 'Let’s get quotes',
           text: 'Tap Get quotes and several solvers will each answer, “I’ll do it on these terms.” Who executes it is chosen by the protocol’s rules, not by you.' }
       ],
       next: 'Next', done: 'Got it', skip: 'Skip'
     },
 
-    sign: { title: 'Signature request', confirm: 'Confirm', reject: 'Reject', changes: 'Estimated changes', fee: 'Network fee (gas)', free: '$0 · no gas', approveWhat: 'Allow the bridge contract to use your USDC' },
+    sign: { title: 'Signature request', confirm: 'Confirm', reject: 'Reject', changes: 'Estimated changes', fee: 'Network fee (gas)', free: '$0 · no gas', approveWhat: 'Allow the bridge contract to use your USDG' },
 
     pending: { title: 'Processing', done: 'Done', explorer: 'View on explorer', order: 'Order' },
 
     ui: {
-      wallet: { total: 'Total balance', all: 'All', empty: 'Nothing on this chain yet', cta: 'Let’s go get 500 USDC' },
+      wallet: { total: 'Total balance', all: 'All', empty: 'Nothing on this chain yet', cta: 'Let’s go get 500 USDG' },
       swap: {
         pay: 'You pay', get: 'You get', balance: 'Balance',
         plan: 'To do', run: 'Run', ran: 'Done', optTime: 'Est.',
@@ -169,7 +162,7 @@
 
     /* index.html 에 박힌 글 — 한국어는 index.html 그대로라 영어에만 있다 */
     page: {
-      title: 'Normal mode vs Solver mode · Radius',
+      title: 'Normal mode vs Intent mode · Radius',
       skip: 'Skip to the app screen',
       home: 'Back to start',
       track: 'Progress',

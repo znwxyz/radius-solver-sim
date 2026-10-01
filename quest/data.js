@@ -1,12 +1,12 @@
-/* IDEA 2 — 일반 모드 vs 솔버 모드
+/* IDEA 2 — 일반 모드 vs Intent 모드(예전 이름 솔버 모드)
    화면에 나오는 문장·수치·순서는 전부 여기에 있다. 문장을 고칠 때 여는 파일.
 
    말투: 친한 선배가 옆에서 알려 주는 해체 반말. "~해 봐", "~하자", "~야", "~거든".
    "~다."로 끝나는 설명문은 쓰지 않는다. 존댓말도 쓰지 않는다. 화면 전체가 한 사람 목소리여야 한다.
 
    독자는 초심자다. 주어와 목적어를 생략하지 않는다. "옮겨야 해"가 아니라
-   "USDC를 Robinhood Chain으로 옮겨야 해". 체인·토큰·가스 같은 말은 처음 나오는 자리에서
-   그 자리의 예로 풀어 준다. 수량은 "500 USDC"처럼 숫자를 앞에 쓴다.
+   "USDG를 Robinhood Chain으로 옮겨야 해". 체인·토큰·가스 같은 말은 처음 나오는 자리에서
+   그 자리의 예로 풀어 준다. 수량은 "500 USDG"처럼 숫자를 앞에 쓴다.
 
    지켜야 할 것
    - 수치는 전부 예시값이다. 화면 아래 주의사항이 그렇다고 말한다. 화면 안에서는 반복하지 않는다.
@@ -21,10 +21,11 @@ window.MODE = {
   /* ── Quest ──────────────────────────────────────
      게임 퀘스트처럼. 구체적인 상황이 있어야 "왜 옮겨야 하는지"가 몸으로 느껴진다.
      Robinhood Chain 은 2026-07 메인넷이 열린 Arbitrum 계열 L2 이고 가스는 ETH 다.
+     이 체인의 달러 스테이블코인은 Paxos 의 USDG 다 — USDC 는 없고, USDC 를 보내면 USDG 로 도착한다(2026-10-01 확인, 동료 피드백).
      여기서 무엇을 살 수 있는지는 예시이며, 실제 상품·캠페인을 설명하는 것이 아니다. */
   mission: {
     word: 'Quest',
-    pill: 'Robinhood Chain에서 500 USDC 마련하기!',   /* 지갑·거래 화면 위에 계속 떠 있는 한 줄 */
+    pill: 'Robinhood Chain에서 500 USDG 마련하기!',   /* 지갑·거래 화면 위에 계속 떠 있는 한 줄 */
     clear: '퀘스트 클리어',
     /* 첫 화면 = 온보딩(2026-09-30, 사용자 요청: 글이 너무 많고 온보딩스럽지 않다).
        위의 무대(체인 층 두 장)는 그대로 있고, 장을 넘기면 움직임이 바뀐다. 한 장에 한 문장 —
@@ -39,22 +40,22 @@ window.MODE = {
       { key: 'swap',   text: '체인 안에서\n토큰들끼리 교환하는 것을\n**스왑**이라고 하고,' },
       { key: 'bridge', text: '토큰이 속해있는 체인을 바꾸는 건,\n체인을 건너가야 하니까\n**브릿지**라고 해.' },
       { key: 'ask',    text: '스왑과 브릿지를\n한 번에 할 수는 없냐고?\n가능하지.' },
-      { key: 'cross',  text: '그건 **크로스체인 스왑**이야.\n토큰 이름도 속한 체인도\n바꿔버리는 것.' },
+      { key: 'cross',  text: '그건 **크로스체인 스왑**이야.\n토큰도 속한 체인도\n바꿔버리는 것.' },   /* "토큰 이름도" → "토큰도"(동료 피드백) */
       /* 예전 첫 화면 이야기에서 살린 한 가지 — Quest 의 이유. 1장의 스톡 토큰이 다시 나온다 */
-      { key: 'why',    text: 'Robinhood Chain에서는\n기존 주식을 토큰화한\n**스톡 토큰**을 살 수 있어.\n이 과정을 직접 한 번 해볼래?' },   /* 사용자 문장. USDC 얘기는 하지 않는다 */
+      { key: 'why',    text: 'Robinhood Chain에서는\n기존 주식을 토큰화한\n**스톡 토큰**을 살 수 있어.\n이 과정을 직접 한 번 해볼래?' },   /* 사용자 문장. 달러(USDG) 얘기는 하지 않는다 */
       { key: 'quest',  text: '**온체인 거래,\n솔버가 있으면 뭐가 달라질까?**',   /* 사용자가 고침(2026-09-30) */
-        note: '직접 토큰과 체인을 골라서\nRobinhood Chain 위의 500 USDC를 만들어 보자.' }   /* 마지막 장만: 아래 작은 보통 굵기 한 문단 */
+        note: '직접 토큰과 체인을 골라서\nRobinhood Chain 위의 500 USDG를 만들어 보자.' }   /* 마지막 장만: 아래 작은 보통 굵기 한 문단 */
     ],
     /* 1장 아래층(Robinhood Chain) 위의 스톡 토큰 예시. 미국 주식 1주 = 토큰 1개. 체인 위 실제 티커 표기는 확인 못 해서
        누구나 아는 종목을 예시로 쓴다. 회사 로고는 쓰지 않고 티커 첫 글자 동전(상표). 색은 로고색이 아닌 구분용.
        Robinhood 브랜드 규칙상 "스톡 토큰"이라 부른다. key 는 tools/onboard_keyframes.py 의 STOCKS 와 같게 */
     /* 마지막 장: 체인 층 넷(위 Ethereum, 아래 왼쪽 Base, 아래 오른쪽 Arbitrum, 맨 아래 Robinhood Chain), 층마다 동전 3개.
-       같은 이름 토큰이 체인마다 따로 있다는 것 + 이번 Quest 가 만들 Robinhood Chain 의 USDC. 자리는 tools/onboard_keyframes.py 의 QUEST */
+       같은 이름 토큰이 체인마다 따로 있다는 것 + 이번 Quest 가 만들 Robinhood Chain 의 USDG. 자리는 tools/onboard_keyframes.py 의 QUEST */
     questFloors: [
       { chain: 'ethereum',  tokens: ['eth', 'usdc', 'usdt'] },
       { chain: 'base',      tokens: ['dai', 'eurc', 'aero'] },   /* 층마다 다른 토큰으로 다채롭게(사용자) */
       { chain: 'arbitrum',  tokens: ['arb', 'gmx', 'wbtc'] },
-      { chain: 'robinhood', tokens: ['usdc', 'tsla', 'nvda'] }
+      { chain: 'robinhood', tokens: ['usdg', 'tsla', 'nvda'] }
     ],
     /* 마지막 장에만 나오는 토큰. 로고 파일이 있으면 로고 동전, 없으면(상표) 색 원 + 첫 글자 동전. 색은 구분용 */
     moreTokens: [
@@ -70,7 +71,7 @@ window.MODE = {
       { key: 'aapl', name: 'AAPL', color: '#6b7280' }
     ],
     tags: { swap: 'swap!', bridge: 'bridge!', cross: 'cross-chain swap!' },   /* 일어나는 자리에서 톡 튀어나왔다 사라지는 글씨(배경 없음) */
-    need: { chain: 'robinhood', token: 'usdc', amount: 500 },
+    need: { chain: 'robinhood', token: 'usdg', amount: 500 },
     cta: '먼저 내 지갑을 확인해 볼까?'
   },
 
@@ -85,6 +86,7 @@ window.MODE = {
   tokens: {
     eth:  { name: 'ETH',  full: 'Ether',      icon: '../brand/tokens/eth.svg' + ICON_V,  color: '#627eea', price: 3684.72, dp: 4 },
     usdc: { name: 'USDC', full: 'USD Coin',   icon: '../brand/tokens/usdc.svg' + ICON_V, color: '#2775ca', price: 1,       dp: 2 },
+    usdg: { name: 'USDG', full: 'Global Dollar', icon: '../brand/tokens/usdg.png' + ICON_V, color: '#5d7f2a', price: 1,       dp: 2 },   // Paxos. Robinhood Chain 의 기본 달러
     usdt: { name: 'USDT', full: 'Tether USD', icon: '../brand/tokens/usdt.svg' + ICON_V, color: '#26a17b', price: 1,       dp: 2 },
     wbtc: { name: 'WBTC', full: 'Wrapped BTC', icon: '../brand/tokens/wbtc.svg' + ICON_V, color: '#3b3350', price: 118500, dp: 5 }
   },
@@ -109,57 +111,48 @@ window.MODE = {
     plan: [
       {
         id: 'swap', kind: '스왑',
-        title: 'Ethereum에서 ETH를 USDC로 바꾸기',
-        why: '브릿지는 USDC 같은 토큰을 다른 체인으로 옮기는 도구야. 그러니까 먼저 Ethereum 위에서 네 ETH를 USDC로 바꿔서, 옮길 USDC를 만들어 두자. 이렇게 같은 체인 안에서 토큰을 바꾸는 걸 스왑이라고 해.',
+        title: 'Ethereum에서 ETH를 USDG로 바꾸기',
+        why: '먼저 Ethereum 위에서 네 ETH를 USDG로 바꾸자. 이렇게 같은 체인 안에서 토큰을 바꾸는 걸 스왑이라고 해.',   /* 할 일부터, 두 문장만(사용자) */
         from: { chain: 'ethereum', token: 'eth',  amount: 0.1475 },
-        to:   { chain: 'ethereum', token: 'usdc', amount: 541.87 },
-        lines: [['네트워크 수수료(가스)', '$3.84'], ['가격 영향', '<0.01%'], ['슬리피지 허용', '0.5%'], ['경로', 'ETH → USDC (0.05%)']],
+        to:   { chain: 'ethereum', token: 'usdg', amount: 541.87 },
+        lines: [['네트워크 수수료(가스)', '$3.84'], ['가격 영향', '<0.01%'], ['슬리피지 허용', '0.5%'], ['경로', 'ETH → USDG (0.05%)']],
         sigs: [{ name: 'Swap', gas: 3.84 }],
         wait: 15,
         decide: '슬리피지 허용치'
       },
       {
         id: 'bridge', kind: '브릿지',
-        title: 'USDC를 Ethereum에서 Robinhood Chain으로 옮기기',
-        why: 'Ethereum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 장부에 기록돼. 우리한테 필요한 건 Ethereum 위의 USDC가 아니라 Robinhood Chain 위의 USDC니까, 방금 만든 USDC를 브릿지로 Ethereum에서 Robinhood Chain으로 옮겨야 해. 브릿지마다 수수료와 걸리는 시간이 다르니, 네 상황에 맞는 브릿지를 골라 봐.',
-        from: { chain: 'ethereum',  token: 'usdc', amount: 541.87 },
-        to:   { chain: 'robinhood', token: 'usdc' },
+        title: 'USDG를 Ethereum에서 Robinhood Chain으로 옮기기',
+        why: 'Ethereum 위의 USDG와 Robinhood Chain 위의 USDG는 서로 다른 장부에 기록돼. 우리한테 필요한 건 Ethereum 위의 USDG가 아니라 Robinhood Chain 위의 USDG니까, 방금 만든 USDG를 브릿지로 Ethereum에서 Robinhood Chain으로 옮겨야 해. 브릿지마다 수수료와 걸리는 시간이 다르니, 네 상황에 맞는 브릿지를 골라 봐.',
+        from: { chain: 'ethereum',  token: 'usdg', amount: 541.87 },
+        to:   { chain: 'robinhood', token: 'usdg' },
         /* 어느 브릿지로 갈지 유저가 고른다. 고른 것에 따라 수수료·가스·시간·도착 수량이 바뀌고,
-           그대로 서명 시트·처리 중·기록판에 오른다. slow 는 처리 중 애니메이션을 다른 것보다
-           느리게 돌린다 — 실제 7일을 기다리게 하진 않고, 표기만 7일이다.
+           그대로 서명 시트·처리 중·기록판에 오른다. slow 는 처리 중 애니메이션을 다른 것보다 느리게 돌린다.
+           Ethereum → Robinhood Chain 공식 브릿지 입금은 약 10분이다(7일은 반대 방향 출금 — 예전 값이 틀렸다, 2026-10-01).
            pick 은 아직 고르기 전 카드에 미리 보여 주는 기본값이다. */
         options: [
-          { name: '공식 브릿지',      fee: 0,    gas: [1.92, 3.60], wait: 7 * 86400 + 2 * 3600, amount: 541.87, slow: true },
-          { name: '서드파티 브릿지 A', fee: 1.63, gas: [1.92, 4.10], wait: 12 * 60,             amount: 540.24, pick: true },
-          { name: '서드파티 브릿지 B', fee: 2.90, gas: [1.92, 4.35], wait: 4 * 60,              amount: 538.97 }
+          { name: '공식 브릿지',      fee: 0,    gas: [1.92, 3.60], wait: 10 * 60, amount: 541.87, slow: true },
+          { name: '서드파티 브릿지 A', fee: 1.63, gas: [1.92, 4.10], wait: 3 * 60,  amount: 540.24, pick: true },
+          { name: '서드파티 브릿지 B', fee: 2.90, gas: [1.92, 4.35], wait: 60,      amount: 538.97 }
         ],
-        labels: { fee: '브릿지 수수료', gas: '네트워크 수수료(가스)', time: '예상 시간', dest: ['도착 체인 가스', '별도 필요', 'warn'] },   /* 셋째 칸: 줄 표시(warn = 주의) */
-        sigNames: ['Approve USDC', 'Bridge'],
+        labels: { fee: '브릿지 수수료', gas: '네트워크 수수료(가스)', time: '예상 시간' },
+        sigNames: ['Approve USDG', 'Bridge'],
         decide: '어느 브릿지로 갈지'
-      },
-      {
-        id: 'gas', kind: '브릿지',
-        title: 'Robinhood Chain에서 쓸 가스(ETH) 챙기기',
-        why: 'Robinhood Chain에서 거래를 하려면, 거래를 보낼 때마다 가스비가 조금씩 들어. Robinhood Chain의 가스 토큰은 ETH인데, 2단계까지 마치면 네 지갑에는 Robinhood Chain 위의 USDC만 있는 상황이야. 그러니 거래를 하려면 ETH도 필요하겠지? Ethereum에 있는 ETH를 조금 Robinhood Chain으로 옮겨 두자.',
-        from: { chain: 'ethereum',  token: 'eth', amount: 0.004 },
-        to:   { chain: 'robinhood', token: 'eth', amount: 0.0039 },
-        lines: [['네트워크 수수료(가스)', '$3.40'], ['예상 시간', '~8분']],
-        sigs: [{ name: 'Bridge ETH', gas: 3.40 }],
-        wait: 480,
-        decide: '가스를 얼마나 챙길지'
       }
     ],
+    /* 예전 3단계(Robinhood Chain 가스용 ETH 챙기기)는 뺐다 — 받는 데는 가스가 안 들고, 그 뒤 거래용 가스는
+       두 모드 모두 똑같이 필요해서 비교가 공정하지 않았다(동료 피드백, 2026-10-01) */
     doneTitle: '퀘스트 클리어',   /* 사용자: "네가 직접 해냈어" 빼기(2026-09-30) */
     /* {SIGS}·{GAS}·{WAIT} 는 기록판 값으로 채운다. 고른 브릿지에 따라 달라지기 때문이다. */
     doneLine: '지갑에 서명한 횟수는 {SIGS}번, 가스로 나간 돈은 {GAS}, 기다린 시간은 {WAIT}.',   /* 사용자: "네가"·마지막 문장 빼기 */
-    nextCta: '이번엔 솔버 모드로 다시 해 볼까?'
+    nextCta: '이번엔 Intent 모드로 다시 해 볼까?'
   },
 
-  /* ── 솔버 모드: 원하는 결과만 말한다 ─────────────── */
+  /* ── Intent 모드(예전 이름 솔버 모드): 원하는 결과만 말하면 솔버가 처리한다 ───── */
   solver: {
-    label: '솔버 모드',
-    pay: { chain: 'ethereum', token: 'eth', amount: 0.15 },
-    want: { chain: 'robinhood', token: 'usdc' },
+    label: 'Intent 모드',   /* 동료 피드백·사용자 결정(2026-10-01). 따로 설명 줄은 두지 않는다 */
+    pay: { chain: 'ethereum', token: 'eth', amount: 0.148 },   /* 일반 모드(낸 ETH + 가스 ≈ 0.1500)보다 덜 낸다 — 결과의 "더 적게 내고" */
+    want: { chain: 'robinhood', token: 'usdg' },
     minReceive: 517,
     minStep: 5,
     /* 응답한 솔버들의 견적. 유저가 고르지 않는다 — 규칙이 조건이 가장 좋은 것을 고른다. */
@@ -171,20 +164,20 @@ window.MODE = {
       { name: '솔버 C',  amount: 536.75, time: '~45초', delay: 3300 }
     ],
     pickAfter: 1000,   /* 마지막 견적 뒤 규칙이 고르기까지 */
-    lines: [['최소 받을 수량', '{MIN} USDC'], ['네트워크 수수료(가스)', '$0', 'free'], ['도착 체인 가스', '불필요', 'free'], ['예상 시간', '~25초']],   /* 셋째 칸: free = 가스가 안 드는 줄 */
+    lines: [['최소 받을 수량', '{MIN} USDG'], ['네트워크 수수료(가스)', '$0', 'free'], ['예상 시간', '~25초']],   /* 셋째 칸: free = 가스가 안 드는 줄 */
     sig: { name: 'Sign order', gas: 0 },
     wait: 25,
     decide: '최소 받을 수량',
     /* 서명 뒤 화면에 남는 짧은 복기. 솔버가 한 일은 공통 역할까지만. */
     behind: [
-      '솔버들은 견적을 내기 전에 이 거래가 가능한지, 필요한 USDC를 어떻게 마련할지, 어떤 경로로 옮길지를 다 계산해 봤어. 자기한테도 남는 거래라고 판단한 솔버만 견적을 냈어',
+      '솔버들은 견적을 내기 전에 이 거래가 가능한지, 필요한 USDG를 어떻게 마련할지, 어떤 경로로 옮길지를 다 계산해 봤어. 자기한테도 남는 거래라고 판단한 솔버만 견적을 냈어',
       '프로토콜의 규칙이 여러 솔버의 견적 중 조건이 가장 좋은 견적을 골라 줬어',
-      '선정된 솔버가 자기가 가진 USDC를 Robinhood Chain 위에서 네 지갑으로 먼저 보내 줬어. 그래서 솔버를 통하면 이렇게 쉽고 빨라져',
+      '선정된 솔버가 자기가 가진 USDG를 Robinhood Chain 위에서 네 지갑으로 먼저 보내 줬어. 그래서 솔버를 통하면 이렇게 쉽고 빨라져',
       '네가 낸 ETH는 프로토콜 규칙에 따라 그 솔버에게 정산될 거야',
       '복잡한 스왑·브릿지 과정과 여러 번 드는 가스비는 전부 솔버가 도맡아 처리했어. 너는 결과만 받으면 됐지'
     ],
     doneTitle: '퀘스트 클리어 — 솔버가 대신 해냈어!',
-    doneLine: '네가 서명한 건 딱 1번. 가스는 네 지갑에서 나가지 않았고, 도착 체인의 가스도 챙길 필요가 없었어.',
+    doneLine: '네가 서명한 건 딱 1번이고, 가스는 네 지갑에서 나가지 않았어.',
     nextCta: '두 방식을 나란히 비교해 볼까?'
   },
 
@@ -198,7 +191,7 @@ window.MODE = {
       { key: 'decide', label: '내가 직접 고른 것',      unit: '가지' },
       /* paid·got 은 지갑 잔액 차이에서 바로 계산한다(app.js 가 따로 세지 않는다) */
       { key: 'paid',   label: '내가 낸 ETH',           unit: 'eth' },
-      { key: 'got',    label: 'Robinhood Chain에 도착한 USDC', unit: 'usdc' }
+      { key: 'got',    label: 'Robinhood Chain에 도착한 USDG', unit: 'usdg' }
     ],
     empty: '아직 안 해 봤어',
     doing: '진행 중'
@@ -206,7 +199,7 @@ window.MODE = {
 
   /* ── 비교 화면 ── 제목과 표뿐. 문장으로 다시 설명하지 않는다 — 표의 솔버 열이 강조된다. */
   compare: {
-    title: '솔버 모드로 하면\n이만큼 달라져',
+    title: 'Intent 모드로 하면\n이만큼 달라져',
     /* 표 아래 한 줄 카피. 수치는 표에 있으니 여기선 안 쓴다. 두 모드를 다 마쳤을 때만 */
     tagline: '더 적게 서명하고,\n더 적게 내고,\n더 빨리 받았어.',   /* 사용자 확정(2026-09-30) */
     tagSub: '솔버에게 맡기면 거래가 이만큼 쉽고 편해져.',
@@ -221,19 +214,19 @@ window.MODE = {
       { at: '[data-coach="asset"]', title: '이 한 줄을 읽는 법',
         text: 'Base는 체인이고, ETH는 토큰이야. 그러니까 이 줄은 "Base 체인 위에 있는 ETH"야. 0.0110은 그 ETH의 수량(0.0110 ETH)이고, 그 아래 $40.53은 그 수량을 지금 시세로 달러로 환산한 값이야.' },
       { at: '[data-coach="chains"]', title: '같은 토큰이라도 체인이 다르면 다르게 취급돼',
-        text: '같은 USDC라는 이름이어도 체인마다 따로 발행되고 따로 기록돼. 그래서 Arbitrum 위의 USDC와 Robinhood Chain 위의 USDC는 서로 다른 토큰처럼 따로 취급돼. 이 탭에서 Robinhood Chain을 눌러서, 그 체인에 뭐가 있는지 확인해 봐.' }
+        text: '같은 USDC라는 이름이어도 체인마다 따로 발행되고 따로 기록돼. 그래서 Arbitrum 위의 USDC와 Base 위의 USDC는 서로 다른 토큰처럼 따로 취급돼. 이 탭에서 Robinhood Chain을 눌러서, 그 체인에 뭐가 있는지 확인해 봐.' }
     ],
     'wallet-empty': [
       { at: '[data-coach="empty"]', title: 'Robinhood Chain에는 아직 아무것도 없어',
-        text: 'Quest에 필요한 500 USDC는 이 Robinhood Chain 위에 있어야 해. 지금 네 지갑에는 없으니, 다른 체인에 있는 자산으로 500 USDC를 만들어서 여기로 옮겨 와야 해!' }
+        text: 'Quest에 필요한 500 USDG는 이 Robinhood Chain 위에 있어야 해. USDG는 Robinhood Chain에서 쓰는 달러 스테이블코인이야. 지금 네 지갑에는 없으니, 다른 체인에 있는 자산으로 500 USDG를 만들어서 여기로 옮겨 와야 해!' }
     ],
     normal: [
       { at: '[data-coach="pay"]', title: '네가 낼 것',
         text: 'Ethereum과 ETH는 같아 보이지만 서로 다른 걸 가리켜. Ethereum은 체인(네트워크)이고, ETH는 그 체인에서 쓰이는 토큰이야. 네 지갑에는 Ethereum 위에 0.84 ETH가 있고, 그중 0.1475 ETH를 이번 거래에 낼 거야.' },
       { at: '[data-coach="get"]', title: '네가 받을 것',
-        text: 'Robinhood Chain 위의 USDC야. 지금 낼 것과 비교하면 체인도 다르고(Ethereum → Robinhood Chain) 토큰도 달라(ETH → USDC). 그래서 이 거래는 스왑과 브릿지를 둘 다 해야 해.' },
+        text: 'Robinhood Chain 위의 USDG야. 지금 낼 것과 비교하면 체인도 다르고(Ethereum → Robinhood Chain) 토큰도 달라(ETH → USDG). 그래서 이 거래는 스왑과 브릿지를 둘 다 해야 해.' },
       { at: '[data-coach="plan"]', title: '이 거래는 한 번에 안 돼',
-        text: '스왑, 브릿지, 그리고 도착 체인의 가스 준비까지 세 단계가 필요해. 아래 해야 할 일을 1단계부터 순서대로 실행해 봐.' }
+        text: '스왑과 브릿지, 두 단계가 필요해. 아래 해야 할 일을 1단계부터 순서대로 실행해 봐.' }
     ],
     /* 1단계를 실행해서 서명 요청이 뜬 그때, 시트의 수수료 줄을 짚는다. 미리 말하면 볼 것이 없다. */
     gas: [
@@ -241,10 +234,10 @@ window.MODE = {
         text: '가스는 거래를 보낼 때마다 그 체인에 내는 수수료야. 여기 "네트워크 수수료"가 가스고, 네가 서명할 때마다 네 지갑의 ETH에서 나가.' }
     ],
     solver: [
-      { at: '[data-coach="toggle"]', title: '솔버 모드',
-        text: '같은 지갑, 같은 출발점이야. 달라지는 건 거래를 처리하는 방식이야. 네가 직접 단계를 밟는 대신, 원하는 결과만 말하면 솔버가 대신 처리해.' },
+      { at: '[data-coach="toggle"]', title: 'Intent 모드',
+        text: '일반 모드에선 스왑하고 브릿지하고, 네가 한 단계씩 직접 밟았지? Intent 모드에선 \'이걸 내고 저걸 받고 싶어\'라는 결과만 말해. 나머지 과정은 솔버가 맡아.' },   /* 사용자가 고름(2026-10-01) */
       { at: '[data-coach="min"]', title: '네가 정하는 건 이것뿐이야',
-        text: '최소 몇 USDC를 받을지만 정해. 이보다 적게 받는 거래는 아예 성립하지 않아. 경로도, 브릿지도, 가스도 네가 고를 필요가 없어.' },
+        text: '최소 몇 USDG를 받을지만 정해. 이보다 적게 받는 거래는 아예 성립하지 않아. 경로도, 브릿지도, 가스도 네가 고를 필요가 없어.' },
       { at: '[data-coach="quote"]', title: '견적을 받아 보자',
         text: '견적 받기를 누르면 여러 솔버가 각자 "이 조건으로 해 주겠다"고 답해. 그중 누가 실행할지는 네가 아니라 프로토콜의 규칙이 골라.' }
     ],
@@ -252,13 +245,13 @@ window.MODE = {
   },
 
   /* 지갑 서명 시트 — 실제 지갑 앱의 서명 요청을 본떴다 */
-  sign: { title: '서명 요청', confirm: '확인', reject: '거절', changes: '예상 변화', fee: '네트워크 수수료(가스)', free: '$0 · 가스 없음', approveWhat: '브릿지 컨트랙트가 네 USDC를 쓸 수 있게 허용' },
+  sign: { title: '서명 요청', confirm: '확인', reject: '거절', changes: '예상 변화', fee: '네트워크 수수료(가스)', free: '$0 · 가스 없음', approveWhat: '브릿지 컨트랙트가 네 USDG를 쓸 수 있게 허용' },
 
   /* 대기 화면. 실제 시간을 다 기다리게 하지 않고 빨리 감는다 — 그렇다고 말한다. */
   pending: { title: '처리 중', done: '완료', explorer: '익스플로러에서 보기', order: '주문' },
 
   ui: {
-    wallet: { total: '총 자산', all: '전체', empty: '이 체인에는 아직 아무것도 없어', cta: '500 USDC 마련하러 가자' },
+    wallet: { total: '총 자산', all: '전체', empty: '이 체인에는 아직 아무것도 없어', cta: '500 USDG 마련하러 가자' },
     swap: {
       pay: '내는 것', get: '받는 것', balance: '잔액', max: 'MAX',
       plan: '해야 할 일', run: '실행', ran: '완료', optTime: '예상',

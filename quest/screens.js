@@ -32,7 +32,7 @@ window.SCREENS = (function () {
     return Object.assign({}, step, {
       option: o,
       to: Object.assign({}, step.to, { amount: o.amount }),
-      lines: [[L.fee, money(o.fee)], [L.gas, o.gas.map(money).join(' + ')], [L.time, '~' + dur(o.wait)], L.dest],
+      lines: [[L.fee, money(o.fee)], [L.gas, o.gas.map(money).join(' + ')], [L.time, '~' + dur(o.wait)]],
       sigs: step.sigNames.map(function (name, i) { return { name: name, gas: o.gas[i] }; }),
       wait: o.wait
     });
@@ -203,12 +203,12 @@ window.SCREENS = (function () {
 
   /* ── 스왑: 솔버 모드 ── */
   function minRow(st) {
-    return '<div class="min-row" data-coach="min"><span class="lab">' + esc(S.ui.swap.min) + '<b>' + fmt(st.solver.min, 2) + ' USDC</b></span>' +
+    return '<div class="min-row" data-coach="min"><span class="lab">' + esc(S.ui.swap.min) + '<b>' + fmt(st.solver.min, 2) + ' ' + esc(S.tokens[S.solver.want.token].name) + '</b></span>' +
       '<span class="stp"><button type="button" data-act="min:-1" aria-label="' + esc(S.ui.a11y.less) + '">−</button><button type="button" data-act="min:1" aria-label="' + esc(S.ui.a11y.more) + '">+</button></span></div>';
   }
   function quoteRow(x, i, cls) {
     return '<div class="q ' + cls + '" style="--i:' + i + '"><span class="dot' + (x.radius ? ' radius' : '') + '"></span>' +
-      '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + '</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' USDC</span></div>';
+      '<span class="who">' + esc(x.name) + '<small>' + esc(x.time) + '</small></span><span class="amt-q">' + fmt(x.amount, 2) + ' ' + esc(S.tokens[S.solver.want.token].name) + '</span></div>';
   }
   /* 답하는 중: 도착한 순서대로 튀어 들어오고, 아직인 자리는 기다리는 줄.
      다 모이면: 규칙이 고른 줄에 링이 들어온다. */
@@ -253,7 +253,7 @@ window.SCREENS = (function () {
   function swap(st) { return st.mode === 'normal' ? swapNormal(st) : swapSolver(st); }
 
   /* ── 기록판 (폰 밖·비교 화면 공용) ── */
-  /* 낸 ETH · 도착한 USDC 는 출발 지갑과 지금 지갑의 차이다 */
+  /* 낸 ETH · 도착한 USDG 는 출발 지갑과 지금 지갑의 차이다 */
   function ledger(st, mode) {
     var w = st.wallet[mode], need = S.mission.need;
     return {
@@ -267,7 +267,7 @@ window.SCREENS = (function () {
       : row.unit === '$' ? money(v)
       : row.unit === 'time' ? dur(v)
       : row.unit === 'eth' ? fmt(v, 4) + '<small>ETH</small>'
-      : row.unit === 'usdc' ? fmt(v, 2) + '<small>USDC</small>'
+      : row.unit === 'usdg' ? fmt(v, 2) + '<small>USDG</small>'
       : v + '<small>' + esc(row.unit) + '</small>';
     return '<div class="v' + (zero ? ' zero' : '') + (hot && !zero ? ' hot' : '') + '" style="--i:' + i + '">' + txt + '</div>';
   }
