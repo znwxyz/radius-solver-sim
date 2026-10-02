@@ -104,22 +104,25 @@
           text: 'If someone wants the opposite,\nthe solver can **swap the directions**\nof the two orders.' },
         { method: 'Way 3 · Assets on hand',
           text: 'Solvers hold **assets in advance**\non many chains, and send them\nto your wallet right when needed.' },
-        { text: 'When an order comes in,\nthe solver **quickly** weighs\nprice, risk and rebalancing cost,\nthen decides whether to quote.' },
-        { text: 'The ETH you paid is settled\nto the solver **later**.\nThe solver carries the time it takes\nto refill its assets.' },
+        { title: 'Decided in an instant', text: 'When an order comes in,\nthe solver **quickly** weighs\nprice, risk and rebalancing cost,\nthen decides whether to quote.' },
+        { title: 'The wait is on the solver', text: 'The ETH you paid is settled\nto the solver **later**.\nThe solver carries the time it takes\nto refill its assets.' },
         { ask: 'What does the solver\nget out of it?',
           text: 'Solvers need a **profit**\nto move, too.' },
-        { text: 'This gap is where\n**the solver’s profit** comes from.\nSolvers compete to quote on orders\nthey judge profitable after costs.' },
-        { text: '**Radius** is one of these solvers.\nIt focuses on choosing\nwhich orders to take\nand which to turn down.' }
+        { title: 'The solver’s profit', text: 'This gap is where\n**the solver’s profit** comes from.\nSolvers compete to quote on orders\nthey judge profitable after costs.' },
+        { title: 'Radius solver', text: '**Radius** is one of these solvers.\nIt focuses on choosing\nwhich orders to take\nand which to turn down.' }
       ],
       ui: {
         wallet: 'Solver’s wallet',
         ringYou: 'You', ringOther: 'Another user', routeHead: 'Routes compared',
+        get: 'You get', bestRoute: 'Best route', total: 'Total balance', myWallet: 'My wallet',
+        checkVals: ['$540.90', 'Low', '63.5K USDG', '$0.80'],
         routes: [['Exchange A', 'Bridge X'], ['Exchange B', 'Bridge Y'], ['Exchange A + C', 'Split']],
         solverName: 'Radius solver', checks: ['Price', 'Risk', 'Assets held', 'Rebalancing cost'],
         decided: 'OK — send a quote!', quoteTag: 'Quote',
         you: 'You', solver: 'Solver', now: 'Now', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Rebalancing'], later: 'Later',
         paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Rebalancing cost'], profit: 'Solver profit',
-        orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline'
+        orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline',
+        ringYouOrder: 'Your order', ringOtherOrder: 'Another user’s order'
       },
       link: 'Read the Radius interview',
       cta: 'Start over from the beginning?'
