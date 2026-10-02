@@ -36,7 +36,7 @@
         {
           kind: 'Bridge',
           title: 'Move USDG from Ethereum to Robinhood Chain',
-          why: 'USDG on Ethereum and USDG on Robinhood Chain are recorded on different ledgers. What we need is USDG on Robinhood Chain, not on Ethereum — so you have to bridge the USDG you just made from Ethereum to Robinhood Chain. Each bridge has its own fee and wait time, so pick the one that fits you.',
+          why: 'USDG on Ethereum and USDG on Robinhood Chain are recorded on different ledgers. What we need is USDG on Robinhood Chain, so you have to bridge the USDG you just made from Ethereum to Robinhood Chain. Each bridge has its own fee and wait time, so pick the one that fits you.',
           options: [
             { name: 'Official bridge' },
             { name: 'Third-party bridge A' },
@@ -117,8 +117,8 @@
         routes: [['Exchange A', 'Bridge X'], ['Exchange B', 'Bridge Y'], ['Exchange A + C', 'Split']],
         solverName: 'Radius solver', checks: ['Price', 'Risk', 'Assets held', 'Rebalancing cost'],
         decided: 'OK — send a quote!', quoteTag: 'Quote',
-        you: 'You', solver: 'Solver', now: 'Now', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Refill assets'], later: 'Later',
-        paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Refilling'], profit: 'Solver profit',
+        you: 'You', solver: 'Solver', now: 'Now', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Rebalancing'], later: 'Later',
+        paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Rebalancing cost'], profit: 'Solver profit',
         orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline'
       },
       link: 'Read the Radius interview',

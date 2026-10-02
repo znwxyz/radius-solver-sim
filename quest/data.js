@@ -123,7 +123,7 @@ window.MODE = {
       {
         id: 'bridge', kind: '브릿지',
         title: 'USDG를 Ethereum에서 Robinhood Chain으로 옮기기',
-        why: 'Ethereum 위의 USDG와 Robinhood Chain 위의 USDG는 서로 다른 장부에 기록돼. 우리한테 필요한 건 Ethereum 위의 USDG가 아니라 Robinhood Chain 위의 USDG니까, 방금 만든 USDG를 브릿지로 Ethereum에서 Robinhood Chain으로 옮겨야 해. 브릿지마다 수수료와 걸리는 시간이 다르니, 네 상황에 맞는 브릿지를 골라 봐.',
+        why: 'Ethereum 위의 USDG와 Robinhood Chain 위의 USDG는 서로 다른 장부에 기록돼. 우리한테 필요한 건 Robinhood Chain의 USDG니까, 방금 만든 USDG를 Ethereum에서 Robinhood Chain으로 브릿징해야 해. 브릿지마다 수수료와 걸리는 시간이 다르니, 네 상황에 맞는 브릿지를 골라 봐.',
         from: { chain: 'ethereum',  token: 'usdg', amount: 541.87 },
         to:   { chain: 'robinhood', token: 'usdg' },
         /* 어느 브릿지로 갈지 유저가 고른다. 고른 것에 따라 수수료·가스·시간·도착 수량이 바뀌고,
@@ -242,8 +242,8 @@ window.MODE = {
       routes: [['거래소 A', '브릿지 X', -0.8], ['거래소 B', '브릿지 Y', 0], ['거래소 A + C', '나눠 보내기', -0.35]],   /* 셋째 칸: 가장 좋은 경로와의 차이(USDG) — 설명용 예시 */
       solverName: 'Radius 솔버', checks: ['가격', '위험', '가진 자산', '리밸런싱 비용'],
       decided: '좋아, 견적 보내자!', quoteTag: '견적',   /* 체크가 다 되면 말풍선 속 결론 → 견적 쪽지가 날아간다(버튼은 사람이 누르는 것처럼 보였다, 사용자) */
-      you: '너', solver: '솔버', now: '지금', youSteps: ['서명', 'USDG 도착'], solverSteps: ['ETH 정산 받기', '자산 다시 채우기'], later: '나중에',   /* 기다림 장 세로 타임라인 */
-      paid: '네가 낸 것', got: '네가 받은 것', diff: '차이', costs: ['가스', '정산 비용', '다시 채우는 비용'], profit: '솔버 수익',
+      you: '너', solver: '솔버', now: '지금', youSteps: ['서명', 'USDG 도착'], solverSteps: ['ETH 정산 받기', '리밸런싱'], later: '나중에',   /* 기다림 장 세로 타임라인 */
+      paid: '네가 낸 것', got: '네가 받은 것', diff: '차이', costs: ['가스', '정산 비용', '리밸런싱 비용'],   /* 판단 장 말풍선과 같은 이름(사용자) */ profit: '솔버 수익',
       orders: ['주문 A', '주문 B', '주문 C'], accept: '받음', decline: '거절'
     },
     link: 'Radius 인터뷰 읽기',
