@@ -96,7 +96,7 @@
 
     why: {
       pages: [
-        { ask: 'How can a solver\ndo it this fast?',
+        { ask: 'How can a solver send\nthe USDG this fast?',
           text: 'A solver solves an intent\nin **three main ways**.' },
         { method: 'Way 1 · The best route',
           text: 'First, the solver compares\nmany exchanges and bridges\nto find **the best route**,\nsometimes splitting the trade.' },
@@ -106,7 +106,7 @@
           text: 'Solvers hold **assets in advance**\non many chains, and send them\nto your wallet right when needed.' },
         { title: 'Decided in an instant', text: 'When an order comes in,\nthe solver **quickly** weighs\nprice, risk and rebalancing cost,\nthen decides whether to quote.' },
         { title: 'The wait is on the solver', text: 'The ETH you paid is settled\nto the solver **later**.\nThe solver carries the time it takes\nto refill its assets.' },
-        { ask: 'What does the solver\nget out of it?',
+        { ask: 'What does the solver\nget for doing this?',
           text: 'Solvers need a **profit**\nto move, too.' },
         { title: 'The solver’s profit', text: 'This gap is where\n**the solver’s profit** comes from.\nSolvers compete to quote on orders\nthey judge profitable after costs.' },
         { title: 'Radius solver', text: '**Radius** is one of these solvers.\nIt focuses on choosing\nwhich orders to take\nand which to turn down.' }

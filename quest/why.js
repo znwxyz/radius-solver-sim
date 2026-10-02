@@ -51,7 +51,9 @@ window.WHY = (function () {
         '<span class="wy-hand" aria-hidden="true"></span>' +   /* 솔버 지갑 → 내 지갑 */
         '<div class="wy-toast"><span class="wt-app" aria-hidden="true"><svg viewBox="0 0 24 24" data-icon="wallet"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2.5"/><circle cx="16" cy="13.5" r="1.2"/></svg></span>' +
           /* 위: 큰 금액 한 줄, 아래: 내 지갑 · 체인 한 줄(사용자). "지금"은 뺐다 — 자리만 깨뜨렸다 */
-          '<span class="wt-text"><b>+' + v.fmt(best().amount, 2) + ' ' + esc(wantName()) + '</b><small>' + esc(u.myWallet) + ' · ' + esc(S.chains[want.chain].name) + '</small></span></div>';
+          /* 왼쪽: 아이콘 + 내 지갑, 오른쪽 정렬: 금액 위·체인 아래(사용자) */
+          '<span class="wt-who">' + esc(u.myWallet) + '</span>' +
+          '<span class="wt-text"><b>+' + v.fmt(best().amount, 2) + ' ' + esc(wantName()) + '</b><small>' + esc(S.chains[want.chain].name) + '</small></span></div>';
     },
     /* 방법 2(Ring Trading): 정반대로 바꾸려는 두 주문 — 사이에 반듯한 X 자 화살표 두 개.
        내 ETH 는 왼쪽 위(너) → 오른쪽 아래(다른 사람), 상대 USDG 는 왼쪽 아래 → 오른쪽 위(너). 동전이 화살표를 따라 엇갈려 간다 */
@@ -121,11 +123,14 @@ window.WHY = (function () {
         [u.later, u.solver, u.solverSteps[0], 'is-solver', coin(S.solver.pay.token)],
         [u.later, u.solver, u.solverSteps[1], 'is-solver', ico('refresh')]
       ];
-      return '<ol class="wy-card wy-tl">' + rows.map(function (r, i) {
+      /* 시간은 오른쪽 끝 한 줄. 너 구간이 끝나는 자리에 검정 점선을 긋고, 그 오른쪽 끝에 "완료"(사용자) */
+      var li = function (r, i) {
         return '<li class="' + r[3] + '" style="--i:' + i + '"><i aria-hidden="true"></i>' + r[4] +
-          '<span class="tl-text"><small>' + esc(r[1]) + ' · <time>' + esc(r[0]) + '</time></small><b>' + esc(r[2]) + '</b></span>' +
-          (/is-end/.test(r[3]) ? '<em>' + esc(S.pending.done) + '</em>' : '') + '</li>';
-      }).join('') + '</ol>';
+          '<span class="tl-text"><small>' + esc(r[1]) + '</small><b>' + esc(r[2]) + '</b></span><time>' + esc(r[0]) + '</time></li>';
+      };
+      return '<ol class="wy-card wy-tl">' + rows.slice(0, 2).map(li).join('') +
+        '<li class="tl-sep" style="--i:2" aria-label="' + esc(S.pending.done) + '"><em>' + esc(S.pending.done) + '</em></li>' +
+        rows.slice(2).map(function (r, i) { return li(r, i + 3); }).join('') + '</ol>';
     },
     /* 이득: 낸 것과 받은 것, 그 차이 — 막대(차이가 0.8% 라 안 보였다)·알약(버튼처럼 보였다) 대신 세로 계산식 */
     earn: function () {
@@ -161,17 +166,9 @@ window.WHY = (function () {
      방법 장은 "방법 1 · 가장 좋은 경로" 를 이름표(방법 1) + 제목(가장 좋은 경로)으로 나눈다 */
   function eyebrow(m) { return '<p class="wy-eyebrow">' + esc(m.split(' · ')[0]) + '</p>'; }
   function titleOf(p) { return p.method ? p.method.split(' · ')[1] || p.method : p.title; }
-  /* 첫 질문 장: "세 가지야" 위에 세 방법 이름을 미리 보여 준다 — 질문 장이 비어 보였다 */
-  function ways(p) {
-    if (p.key !== 'askFast') return '';
-    return '<div class="wy-ways">' + pages().filter(function (x) { return x.method; }).map(function (x, i) {
-      var parts = x.method.split(' · ');
-      return '<span style="--i:' + i + '">' + ico({ route: 'route', ring: 'swap', stock: 'wallet' }[x.key] || 'route') + '<em>' + (i + 1) + '</em>' + esc(parts[1] || parts[0]) + '</span>';
-    }).join('') + '</div>';
-  }
-  /* 두 번째 질문 장: 질문 아래 Radius 솔버가 답을 쓰는 중("…") — 대화처럼 다음 장으로 이어진다 */
+  /* 질문 장: 질문 아래 Radius 솔버가 답을 쓰는 중("…") — 대화처럼 다음 장으로 이어진다. 세 방법 미리 보기는 뺐다(사용자) */
   function typing(p) {
-    if (p.key !== 'askEarn') return '';
+    /* 질문 장 둘 다 — 질문 아래 Radius 솔버가 답을 쓰는 중(사용자) */
     return '<div class="wy-typing"><img src="../brand/Radius_icon_primaryColor.svg" alt=""><span aria-hidden="true"><i></i><i></i><i></i></span></div>';
   }
   function copy(p) {
@@ -184,7 +181,7 @@ window.WHY = (function () {
   function page(p, i) {
     return '<section class="wy-page' + (i === 0 ? ' is-on' : '') + '" data-key="' + esc(p.key) + '" aria-label="' + (i + 1) + ' / ' + pages().length + '">' +
       '<div class="wy-stage' + (p.ask ? ' is-ask' : '') + '">' +
-        (p.ask ? '<p class="wy-ask">' + esc(p.ask) + '</p>' + ways(p) + typing(p) : '<div class="wy-art">' + ART[p.key]() + '</div>') +
+        (p.ask ? '<p class="wy-ask">' + esc(p.ask) + '</p>' + typing(p) : '<div class="wy-art">' + ART[p.key]() + '</div>') +
       '</div>' + copy(p) + '</section>';
   }
   function dots(at) {
@@ -200,7 +197,7 @@ window.WHY = (function () {
       '<div class="bar ob-bar' + (last ? ' is-ready' : '') + '">' +
         '<button class="ob-prev" type="button" aria-label="' + esc(S.ui.a11y.prev) + '"' + (last || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
         '<button class="ob-next" type="button" aria-label="' + esc(S.ui.a11y.next) + '"' + (last ? ' tabindex="-1"' : '') + '><span aria-hidden="true">›</span></button>' +
-        '<button class="cta now" type="button" data-act="restart"' + (last ? '' : ' tabindex="-1"') + '>' + esc(S.why.cta) + '</button>' +
+        '<button class="cta wy-again" type="button" data-act="restart"' + (last ? '' : ' tabindex="-1"') + '>' + esc(S.why.cta) + '</button>' +
       '</div>';
   }
 
