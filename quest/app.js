@@ -6,7 +6,7 @@
   var screen = document.getElementById('screen');
   var beadLists = document.querySelectorAll('.beads');   // 데스크톱은 폰 위, 폰에서는 폰 안 머리에 하나씩
   var boardEl = document.getElementById('board');
-  var FF_MS = 3200, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme', LANG_KEY = 'solver-b-lang';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다
+  var FF_MS = 3200, SOLVER_MS = 1200, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme', LANG_KEY = 'solver-b-lang';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다. SOLVER_MS: Intent 모드 처리 막대 — 일반 모드보다 확 빨라 대비가 보인다(사용자)
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
@@ -64,8 +64,7 @@
     setMode('normal', { picked: picked, phase: 'sign', sig: 0 });
   }
   /* 느린 선택지는 처리 중 애니메이션을 두 배로 끈다. 실제 시간을 기다리게 하진 않는다. */
-  function pendingFor(name, wait, where, slow) {
-    var ms = slow ? FF_MS * 2 : FF_MS;
+  function pendingFor(name, wait, where, ms) {
     return { name: name, wait: wait, ms: ms, hash: hash(), where: where };
   }
   function normalSheet() {
@@ -78,7 +77,7 @@
     var wallets = Object.assign({}, st.wallet, { normal: payGas(st.wallet.normal, step.from.chain, sig.gas) });
     var patch = { wallet: wallets, tally: bump('normal', { sigs: 1, gas: sig.gas }),
       normal: Object.assign({}, st.normal, { sig: st.normal.sig + 1, phase: last ? 'pending' : 'sign' }) };
-    if (last) patch.pending = pendingFor(step.option ? step.option.name : step.kind, step.wait, S.chains[step.to.chain].name, step.option && step.option.slow);
+    if (last) patch.pending = pendingFor(step.option ? step.option.name : step.kind, step.wait, S.chains[step.to.chain].name, step.option && step.option.slow ? FF_MS * 2 : FF_MS);
     set(patch);
     if (last) timer = setTimeout(function () { settle(finishNormal); }, patch.pending.ms);
   }
@@ -192,8 +191,8 @@
   function confirmSolver() {
     var m = S.solver;
     set({ tally: bump('solver', { sigs: 1, decide: 1 }), solver: Object.assign({}, st.solver, { phase: 'pending' }),
-      pending: pendingFor(S.pending.order, m.wait, S.chains[m.want.chain].name, false) });
-    timer = setTimeout(function () { settle(finishSolver); }, FF_MS);
+      pending: pendingFor(S.pending.order, m.wait, S.chains[m.want.chain].name, SOLVER_MS) });
+    timer = setTimeout(function () { settle(finishSolver); }, SOLVER_MS);
   }
   /* 진행 바가 다 차면 완료 표시를 잠깐 보여 주고 나서 넘어간다. 바로 사라지면 끝난 줄 모른다. */
   function settle(fn) {

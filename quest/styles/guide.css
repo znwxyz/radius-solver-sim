@@ -39,7 +39,7 @@
 .pend-top small { display: block; font: 11px var(--mono); color: var(--muted); }
 .prog { margin-top: 12px; height: 5px; border-radius: 99px; background: var(--hair-2); overflow: hidden; }
 .prog i { display: block; height: 100%; width: 0; background: var(--ink); animation: fill var(--ff, 2600ms) linear forwards; }
-.solver-on .prog i { background: var(--flowline); }
+.solver-on .prog i { background: var(--flowline); animation-timing-function: cubic-bezier(.2, .85, .3, 1); }   /* Intent 모드: 처음에 확 차오른다 — 일반 모드의 일정한 속도와 대비(사용자) */
 @keyframes fill { to { width: 100%; } }
 /* 완료 — 스피너 자리에 체크, 바는 꽉 찬 채로 잠깐 머문다 */
 .tick-s { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--ok); color: var(--on-black); font-size: 12px; font-weight: 700; flex: none; animation: popIn .5s var(--ease); }
