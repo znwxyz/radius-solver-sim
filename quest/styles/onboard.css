@@ -121,7 +121,10 @@
 @keyframes ob-btn-in { from { opacity: 0; translate: 0 8px; } }   /* transform 은 버튼 눌림·꺾쇠가 쓰고 있어 translate 로 */
 .ob-bar.is-late:not(.is-ready) .ob-next, .ob-bar.is-late.is-ready .cta { animation: ob-btn-in .5s var(--ease) both; animation-delay: var(--btn-at, 1s); }
 /* 표지와 마지막 장: 큰 제목 + 작은 한 줄 — 처음과 끝이 짝을 이룬다(사용자). 줄 간격은 145% 이상(답답하지 않게) */
-.ob-page.is-big .ob-text { font-size: 30px; line-height: 1.45; letter-spacing: -.03em; }
+.ob-page.is-big { container-type: inline-size; }
+/* 30px 이 기본, 칸이 좁으면 그만큼 작게 — 가장 긴 줄 '솔버가 있으면 뭐가 달라질까?' 가 30px 에서 332px.
+   PC 의 폰 틀은 글 칸이 308px 이라 세 줄로 넘어갔다(사용자: 두 줄이어야). 100cqw / 11.3 이면 늘 한 줄에 들어간다 */
+.ob-page.is-big .ob-text { font-size: min(30px, 100cqw / 11.3); line-height: 1.45; letter-spacing: -.03em; }
 /* 마지막 장만: 질문 아래 작은 보통 굵기 한 문단 */
 .ob-note { margin-top: 12px; font-size: 14px; line-height: 1.55; font-weight: 400; color: var(--muted); white-space: pre-line; }
 
