@@ -6,7 +6,8 @@
 window.WHY = (function () {
   'use strict';
   var S = window.MODE;
-  var DRAG_PX = 8;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
+  var DRAG_PX = 8;
+  var SETTLE_MS = 160;   /* 스크롤이 이만큼 멈춰 있으면 넘기기가 끝난 것으로 본다 */   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
   function V() { return window.SCREENS; }   /* 숫자·칩 그리기는 screens.js 의 것을 쓴다(그리는 때에 찾는다) */
   function esc(v) { return V().esc(v); }
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
@@ -211,7 +212,7 @@ window.WHY = (function () {
 
     function show(i) {
       at = i;
-      Array.prototype.forEach.call(pager.children, function (el, j) { el.classList.toggle('is-on', j === i); });
+      pager.children[i].classList.add('is-on');   /* 떠나는 장은 그대로 — 스크롤이 멈추면 prune() 이 정리(넘기는 중간에 내용이 풀려 끊겨 보였다) */
       Array.prototype.forEach.call(screen.querySelectorAll('[data-wy-go]'), function (b) {
         var j = Number(b.dataset.wyGo);
         if (j === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
@@ -226,8 +227,12 @@ window.WHY = (function () {
     }
     function go(i) { pager.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * pager.clientWidth, behavior: reduced ? 'auto' : 'smooth' }); }
 
+    /* 스크롤이 멈추면(SETTLE_MS 동안 움직임 없음) 지금 장이 아닌 장의 is-on 을 뗀다 */
+    var settle;
+    function prune() { Array.prototype.forEach.call(pager.children, function (el, j) { if (j !== at) el.classList.remove('is-on'); }); }
     var ticking = false;
     pager.addEventListener('scroll', function () {
+      clearTimeout(settle); settle = setTimeout(prune, SETTLE_MS);
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {

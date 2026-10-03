@@ -121,6 +121,8 @@
   /* ── 폰 안 스크롤 ── 브라우저의 smooth 는 엔진마다 속도가 달라 뚝뚝 끊겼고, nearest 는 카드가 화면보다 크면
      위만 맞추고 아래를 잘랐다. 직접 느긋하게(ease-out) 굴린다. 다시 그려서 canvas 가 바뀌면 멈춘다. */
   var GLIDE_MS = 750, GLIDE_PAD = 10;
+  var REVEAL_MS = 1150;   /* 지갑 화면이 위에서부터 드러나는 시간 — 그 뒤에 코치마크 */
+  var revealUntil = 0, revealTimer;
   var RISE_START_MS = 450, RISE_PX_PER_MS = 0.5;   // 퀘스트 클리어 파도: 시작 지연, 차오르는 속도
   function glide(el, to) {
     var from = el.scrollTop;
@@ -285,6 +287,8 @@
     set({ coach: { key: c.key, i: i } });
   }
   function coachAfterRender() {
+    var wait = revealUntil - performance.now();
+    if (wait > 0) { clearTimeout(revealTimer); revealTimer = setTimeout(coachAfterRender, wait); return; }   /* 화면이 다 드러난 뒤에 */
     var key = coachKey();
     if (!st.coach && key && !st.seen[key]) st.coach = { key: key, i: 0 };
     if (st.coach && st.coach.key !== key) st.coach = null;
@@ -296,7 +300,12 @@
   function transitions(type) {
     var canvas = screen.querySelector('.canvas');
     var stepChanged = last.at !== st.at, modeChanged = !stepChanged && last.mode !== st.mode;
-    if (canvas && (stepChanged || modeChanged)) canvas.classList.add('screen-in');
+    /* 지갑에 들어올 때는 한꺼번에 쏟아지지 않게 위에서부터 선명해진다(아래는 흐린 막이 걷힌다). 코치마크는 그 뒤에(사용자) */
+    if (canvas && stepChanged && type === 'wallet' && !calmMotion()) {
+      canvas.classList.add('reveal');
+      revealUntil = performance.now() + REVEAL_MS;
+      canvas.addEventListener('animationend', function (e) { if (e.pseudoElement) canvas.classList.remove('reveal'); });
+    } else if (canvas && (stepChanged || modeChanged)) canvas.classList.add('screen-in');
     if (modeChanged) screen.classList.add('flip-' + st.mode);
     if (type === 'swap' && st.mode === 'normal' && !stepChanged) {
       var now = screen.querySelector('.pstep.now');

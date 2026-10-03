@@ -23,6 +23,9 @@
 .wy-pages:focus-visible { box-shadow: inset 0 0 0 2px var(--tint-line); border-radius: 12px; }
 .wy-page { flex: 0 0 100%; min-height: 0; scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 22px; padding: 14px 20px 4px; }
 
+/* 아직 도착하지 않은 장은 판 안·글을 비워 둔다 — 넘기는 동안 미리 보였다가 도착하면 사라져 끊겨 보였다(사용자) */
+.wy-page:not(.is-on) .wy-stage > *, .wy-page:not(.is-on) .wy-copy { opacity: 0; }
+
 /* ── 그림 판 ── 남는 높이를 다 채우는 판. 위쪽은 각지고 아래 두 곳만 둥글다 — 갇힌 상자가 아니라 위에서 내려오는 패널(사용자). 위쪽에 아주 옅은 빛 */
 .wy-stage {
   position: relative; flex: 1 1 auto; min-height: 0; display: grid; place-items: center; padding: 22px 20px; overflow: hidden;

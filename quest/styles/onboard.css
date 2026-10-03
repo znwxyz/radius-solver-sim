@@ -108,6 +108,8 @@
 /* 글은 한 덩어리, 한 크기. 보통 굵기로 쓰다가 핵심 단어만 굵게(data.js 의 **…**) */
 .ob-text { font-size: 21px; line-height: 1.45; font-weight: 400; letter-spacing: -.02em; color: var(--ink); white-space: pre-line; }
 .ob-text b { font-weight: 700; }
+/* 아직 도착하지 않은 장 글은 비워 둔다 — 넘기는 동안 보였다가 도착하면 사라져 끊겨 보였다(사용자) */
+.ob-page:not(.is-on) .ob-text, .ob-page:not(.is-on) .ob-note { opacity: 0; }
 /* 글은 장에 들어와 그림 움직임이 거의 끝날 때(--text-at, onboard.js) 나타난다 — 시선이 그림 → 글로(사용자) */
 @keyframes ob-text-in { from { opacity: 0; transform: translateY(10px); } }
 .ob-page.is-on .ob-text { animation: ob-text-in .5s var(--ease) both; animation-delay: var(--text-at, .5s); }

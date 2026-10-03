@@ -15,6 +15,7 @@ window.ONBOARD = (function () {
   'use strict';
   var S = window.MODE;
   var DRAG_PX = 8;
+  var SETTLE_MS = 160;   /* 스크롤이 이만큼 멈춰 있으면 넘기기가 끝난 것으로 본다 */
   /* 장마다 글이 나타나는 때(초) — 그 장 그림 움직임이 거의 끝날 즈음 */
   var TEXT_AT_S = { cover: .3, tokens: .5, quest: 1.4 }, TEXT_AT_DEFAULT_S = .8, TEXT_FROM_COVER_S = 1.7;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
   var STACK = ['eth', 'usdg', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
@@ -123,7 +124,7 @@ window.ONBOARD = (function () {
       stageEl.className = 'ob-stage at-' + i + ' from-' + at;
       /* 글은 장에 들어와 그림 움직임이 거의 끝날 때 나타난다(사용자). 표지에서 1장으로 올 때만 층이 날아오느라 더 늦게 */
       Array.prototype.forEach.call(pager.children, function (el, j) {
-        el.classList.toggle('is-on', j === i);
+        if (j === i) el.classList.add('is-on');   /* 떠나는 장 글은 스크롤이 멈출 때까지 그대로 — prune() */
         if (j === i) el.style.setProperty('--text-at', (i === 1 && at === 0 ? TEXT_FROM_COVER_S : TEXT_AT_S[el.dataset.key] || TEXT_AT_DEFAULT_S) + 's');
       });
       at = i;
@@ -141,8 +142,11 @@ window.ONBOARD = (function () {
     }
     function go(i) { pager.scrollTo({ left: i * pager.clientWidth, behavior: reduced ? 'auto' : 'smooth' }); }
 
+    var settle;
+    function prune() { Array.prototype.forEach.call(pager.children, function (el, j) { if (j !== at) el.classList.remove('is-on'); }); }
     var ticking = false;
     pager.addEventListener('scroll', function () {
+      clearTimeout(settle); settle = setTimeout(prune, SETTLE_MS);
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
