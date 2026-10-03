@@ -109,7 +109,7 @@
         { ask: 'What does the solver\nget for doing this?',
           text: 'Solvers need a **profit**\nto move, too.' },
         { title: 'The solver’s profit', text: 'This gap is where\n**the solver’s profit** comes from.\nSolvers compete to quote on orders\nthey judge profitable after costs.' },
-        { title: 'Radius solver', text: '**Radius** is one of these solvers.\nIt focuses on choosing\nwhich orders to take\nand which to turn down.' }
+        { title: 'Radius solver', text: '**Radius** is one of these solvers.\nIt focuses on picking\nprofitable orders\nand sending quotes.' }
       ],
       ui: {
         wallet: 'Solver’s wallet',
@@ -121,7 +121,7 @@
         decided: 'OK — send a quote!', quoteTag: 'Quote',
         you: 'You', solver: 'Solver', now: 'Now', youSteps: ['Sign', 'USDG arrives'], solverSteps: ['Get settled in ETH', 'Rebalancing'], later: 'Later',
         paid: 'You paid', got: 'You got', diff: 'Gap', costs: ['Gas', 'Settlement', 'Rebalancing cost'], profit: 'Solver profit',
-        orders: ['Order A', 'Order B', 'Order C'], accept: 'Take', decline: 'Decline',
+        orders: ['Order A', 'Order B', 'Order C'], accept: 'Quoted', decline: 'Not quoted',
         ringYouOrder: 'Your order', ringOtherOrder: 'Another user’s order'
       },
       link: 'Read the Radius interview',

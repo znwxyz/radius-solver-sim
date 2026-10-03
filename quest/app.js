@@ -121,7 +121,7 @@
   /* ── 폰 안 스크롤 ── 브라우저의 smooth 는 엔진마다 속도가 달라 뚝뚝 끊겼고, nearest 는 카드가 화면보다 크면
      위만 맞추고 아래를 잘랐다. 직접 느긋하게(ease-out) 굴린다. 다시 그려서 canvas 가 바뀌면 멈춘다. */
   var GLIDE_MS = 750, GLIDE_PAD = 10;
-  var REVEAL_MS = 1150;   /* 지갑 화면이 위에서부터 드러나는 시간 — 그 뒤에 코치마크 */
+  var REVEAL_MS = 1500;   /* 지갑 화면이 위에서부터 드러나는 시간 — 그 뒤에 코치마크 */
   var revealUntil = 0, revealTimer;
   var RISE_START_MS = 450, RISE_PX_PER_MS = 0.5;   // 퀘스트 클리어 파도: 시작 지연, 차오르는 속도
   function glide(el, to) {
@@ -301,7 +301,8 @@
     var canvas = screen.querySelector('.canvas');
     var stepChanged = last.at !== st.at, modeChanged = !stepChanged && last.mode !== st.mode;
     /* 지갑에 들어올 때는 한꺼번에 쏟아지지 않게 위에서부터 선명해진다(아래는 흐린 막이 걷힌다). 코치마크는 그 뒤에(사용자) */
-    if (canvas && stepChanged && type === 'wallet' && !calmMotion()) {
+    /* 거래 화면(일반·Intent)도 같은 등장 — 단계가 바뀌거나 모드를 바꿀 때(사용자) */
+    if (canvas && (type === 'wallet' || type === 'swap') && (stepChanged || modeChanged) && !calmMotion()) {
       canvas.classList.add('reveal');
       revealUntil = performance.now() + REVEAL_MS;
       canvas.addEventListener('animationend', function (e) { if (e.pseudoElement) canvas.classList.remove('reveal'); });

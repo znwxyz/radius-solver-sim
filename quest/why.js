@@ -11,6 +11,7 @@ window.WHY = (function () {
   function V() { return window.SCREENS; }   /* 숫자·칩 그리기는 screens.js 의 것을 쓴다(그리는 때에 찾는다) */
   function esc(v) { return V().esc(v); }
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
+  function typed(text) { return window.ONBOARD.typeset(rich(text)).html; }   /* 설명은 타이핑되듯(onboard.js 와 같은 함수) */
   function pages() { return S.why.pages; }
   function isLast(i) { return i === pages().length - 1; }
   function best() { return S.solver.quotes.reduce(function (a, b) { return b.amount > a.amount ? b : a; }); }
@@ -22,7 +23,9 @@ window.WHY = (function () {
     swap: '<svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>',
     wallet: '<svg viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2.5"/><circle cx="16" cy="13.5" r="1.2"/></svg>',
     pen: '<svg viewBox="0 0 24 24"><path d="M4 20l4-1 10-10-3-3L5 16z"/><path d="M13 7l3 3"/></svg>',
-    refresh: '<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg>'
+    refresh: '<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg>',
+    check: '<svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg>',
+    cross: '<svg viewBox="0 0 24 24"><path d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg>'
   };
   function ico(name, cls) { return '<span class="wy-ico' + (cls ? ' ' + cls : '') + '" aria-hidden="true">' + ICON[name] + '</span>'; }
 
@@ -150,13 +153,14 @@ window.WHY = (function () {
     /* Radius: 주문마다 받을지 거절할지 고른다(인터뷰 링크는 글 아래 버튼) */
     radius: function () {
       var u = S.why.ui;
-      /* 주문 검토 화면: 머리줄(Radius 로고 + 이름), 주문 줄마다 토큰 쌍 + 수량 → 받음(솔버 색) / 거절(중립). 쌍·수량은 예시 */
+      /* 주문 검토 화면: 머리줄(Radius 로고 + 이름), 주문 줄마다 토큰 쌍 + 수량 → 견적 보냄 ✓(솔버 색) / 안 보냄 ✕(중립).
+         솔버는 주문을 거절하지 않는다 — 견적을 낼지 말지 고를 뿐(사용자). 글자 대신 기호, 뜻은 aria-label 로. 쌍·수량은 예시 */
       var chainOf = function (t) { return t === S.solver.want.token ? S.solver.want.chain : 'ethereum'; };
       return '<div class="wy-card wy-picks"><div class="wp-head"><img class="wy-logo" src="../brand/Radius_icon_primaryColor.svg" alt=""><b>' + esc(u.solverName) + '</b></div>' +
         u.orderPairs.map(function (o, i) {
           return '<div class="wy-pick' + (o[3] ? ' is-ok' : ' is-no') + '" style="--i:' + i + '"><span class="wp-pair">' + V().tokIcon(o[0], chainOf(o[0])) + V().tokIcon(o[1], chainOf(o[1])) + '</span>' +
             '<span class="wp-name"><small>' + esc(u.orders[i]) + '</small>' + esc(o[2]) + ' ' + esc(S.tokens[o[0]].name) + ' → ' + esc(S.tokens[o[1]].name) + '</span>' +
-            '<em>' + esc(o[3] ? u.accept : u.decline) + '</em></div>';
+            '<em role="img" aria-label="' + esc(o[3] ? u.accept : u.decline) + '">' + ICON[o[3] ? 'check' : 'cross'] + '</em></div>';
         }).join('') + '</div>';
     }
   };
@@ -171,9 +175,9 @@ window.WHY = (function () {
     return '<div class="wy-typing"><img src="../brand/Radius_icon_primaryColor.svg" alt=""><span aria-hidden="true"><i></i><i></i><i></i></span></div>';
   }
   function copy(p) {
-    if (p.ask) return '<div class="wy-copy is-ask"><h3 class="wy-title">' + rich(p.text) + '</h3></div>';   /* 질문 장은 답 한 줄이 곧 제목 */
+    if (p.ask) return '<div class="wy-copy is-ask"><h3 class="wy-title">' + typed(p.text) + '</h3></div>';   /* 질문 장은 답 한 줄이 곧 제목 */
     return '<div class="wy-copy">' + (p.method ? eyebrow(p.method) : '') + '<h3 class="wy-title">' + esc(titleOf(p)) + '</h3>' +
-      '<p class="wy-body">' + rich(p.text) + '</p>' +
+      '<p class="wy-body">' + typed(p.text) + '</p>' +
       (p.key === 'radius' ? '<a class="wy-link" href="' + esc(S.why.url) + '" target="_blank" rel="noopener noreferrer">' + esc(S.why.link) + '<i aria-hidden="true">→</i></a>' : '') +
       '</div>';
   }

@@ -79,11 +79,28 @@ window.ONBOARD = (function () {
   }
   /* **단어** → 굵게. 먼저 이스케이프하고 나서 바꾼다 */
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
+  /* 타이핑: 글자마다 <span class="tc" style="--c:순번"> 으로 감싼다(태그·&entity; 는 그대로). CSS 가 순번만큼 늦게 나타나게 한다.
+     화면 읽기에는 원래 문장(.sr-only)을 주고, 쪼갠 글자는 aria-hidden — 한 글자씩 끊어 읽지 않게. start: 앞 문단에서 이어지는 순번 */
+  function typeset(html, start) {
+    var n = start || 0;
+    var out = html.split(/(<[^>]+>)/).map(function (part) {
+      if (part.charAt(0) === '<') return part;
+      return (part.match(/&[a-z0-9#]+;|[\s\S]/gi) || []).map(function (ch) { return '<span class="tc" style="--c:' + (n++) + '">' + ch + '</span>'; }).join('');
+    }).join('');
+    return { html: '<span class="sr-only">' + html + '</span><span class="tw" aria-hidden="true">' + out + '</span>', n: n };
+  }
+  /* 표지와 마지막 장: 타이핑 대신 제목 → 부제 → 버튼이 차례로 떠오른다(사용자) */
+  function isBig(key) { return key === 'cover' || key === 'quest'; }
+  var BTN_AFTER_S = .7;   /* 제목이 뜬 뒤 버튼이 나타나기까지 — 부제(.35s 뒤) 다음 */
+  function textAt(key, fromCover) { return fromCover ? TEXT_FROM_COVER_S : TEXT_AT_S[key] || TEXT_AT_DEFAULT_S; }
   function pages(at) {
     var list = S.mission.onboard;
     return '<div class="ob-pages" tabindex="0" aria-label="' + esc(S.ui.a11y.onboard.replace('{N}', list.length)) + '">' + list.map(function (p, i) {
-      return '<section class="ob-page' + (i === at ? ' is-on' : '') + (p.key === 'cover' ? ' is-cover' : '') + (p.key === 'cover' || p.key === 'quest' ? ' is-big' : '') + '" data-key="' + esc(p.key) + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
-        (p.note ? '<p class="ob-note">' + esc(p.note) + '</p>' : '') + '</section>';
+      var big = isBig(p.key);
+      var body = big ? { html: rich(p.text) } : typeset(rich(p.text));
+      var note = !p.note ? null : big ? { html: esc(p.note) } : typeset(esc(p.note), body.n + 6);   /* 작은 글은 큰 글 다음에 이어서 */
+      return '<section class="ob-page' + (i === at ? ' is-on' : '') + (p.key === 'cover' ? ' is-cover' : '') + (big ? ' is-big' : '') + '" data-key="' + esc(p.key) + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + body.html + '</p>' +
+        (note ? '<p class="ob-note">' + note.html + '</p>' : '') + '</section>';
     }).join('') + '</div>';
   }
   /* 순서 막대는 1장부터 센다(표지는 칸이 없고, 표지에선 막대를 숨긴다 — 사용자) */
@@ -101,7 +118,8 @@ window.ONBOARD = (function () {
   function html(st, parts) {
     var at = st.ob || 0, m = S.mission;
     return '<div class="canvas onboard' + (at === 0 ? ' at-cover' : '') + '">' + parts.setup + dots(at) + stage(at) + pages(at) + '</div>' +
-      '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + '">' +
+      '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + (isBig(S.mission.onboard[at].key) ? ' is-late' : '') +
+        '" style="--btn-at:' + (textAt(S.mission.onboard[at].key) + BTN_AFTER_S) + 's">' +
         /* 아래 양옆 꺾쇠 ‹ › — 웹에선 끌기가 불편하다(사용자). 배경 없이 꺾쇠만. 마지막 장에선 시작 버튼이 대신한다 */
         '<button class="ob-prev" type="button" aria-label="' + esc(S.ui.a11y.prev) + '"' + (isLast(at) || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
         '<button class="ob-next" type="button" aria-label="' + esc(S.ui.a11y.next) + '"' + (isLast(at) ? ' tabindex="-1"' : '') + '><span aria-hidden="true">›</span></button>' +
@@ -125,7 +143,7 @@ window.ONBOARD = (function () {
       /* 글은 장에 들어와 그림 움직임이 거의 끝날 때 나타난다(사용자). 표지에서 1장으로 올 때만 층이 날아오느라 더 늦게 */
       Array.prototype.forEach.call(pager.children, function (el, j) {
         if (j === i) el.classList.add('is-on');   /* 떠나는 장 글은 스크롤이 멈출 때까지 그대로 — prune() */
-        if (j === i) el.style.setProperty('--text-at', (i === 1 && at === 0 ? TEXT_FROM_COVER_S : TEXT_AT_S[el.dataset.key] || TEXT_AT_DEFAULT_S) + 's');
+        if (j === i) el.style.setProperty('--text-at', textAt(el.dataset.key, i === 1 && at === 0) + 's');
       });
       at = i;
       Array.prototype.forEach.call(screen.querySelectorAll('[data-ob-go]'), function (b) {
@@ -135,6 +153,10 @@ window.ONBOARD = (function () {
       });
       screen.querySelector('.canvas.onboard').classList.toggle('at-cover', i === 0);   /* 표지에서만 토글, 1장부터 순서 막대 */
       bar.classList.toggle('is-ready', isLast(i));
+      /* 큰 장에서는 버튼도 부제 뒤에 — 다시 들어올 때마다 처음부터 */
+      var key = S.mission.onboard[i].key;
+      bar.classList.remove('is-late');
+      if (isBig(key)) { bar.style.setProperty('--btn-at', (textAt(key) + BTN_AFTER_S) + 's'); void bar.offsetWidth; bar.classList.add('is-late'); }
       bar.querySelector('.ob-next').tabIndex = isLast(i) ? -1 : 0;
       bar.querySelector('.ob-prev').tabIndex = isLast(i) || i === 0 ? -1 : 0;
       bar.querySelector('.cta').tabIndex = isLast(i) ? 0 : -1;
@@ -208,5 +230,5 @@ window.ONBOARD = (function () {
     area.addEventListener('pointercancel', end);
   }
 
-  return { html: html, mount: mount };
+  return { html: html, mount: mount, typeset: typeset };
 })();

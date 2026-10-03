@@ -39,8 +39,10 @@
 .wy-title { margin: 0; font: 700 22px/1.4 var(--body); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
 .wy-copy.is-ask .wy-title { font-weight: 600; }
 .wy-copy.is-ask .wy-title b { font-weight: 800; }
-.wy-body { font-size: 15.5px; line-height: 1.62; letter-spacing: -.01em; color: var(--muted); text-wrap: pretty; word-break: keep-all; }   /* 손으로 넣은 줄바꿈은 무시하고 폭에 맞게 흐른다 — 큰 글씨용 줄바꿈이라 왼쪽 반쯤에서 끊겼다(사용자) */
+.wy-body { justify-self: stretch; font-size: 15.5px; line-height: 1.62; letter-spacing: -.01em; color: var(--muted); text-wrap: pretty; word-break: keep-all; }   /* 손으로 넣은 줄바꿈은 무시하고 폭에 맞게 흐른다 — 큰 글씨용 줄바꿈이라 왼쪽 반쯤에서 끊겼다(사용자) */
 .wy-body b { font-weight: 700; color: var(--ink); }
+/* 한글은 data.js 의 줄바꿈(의미 단위)을 지킨다(사용자). 영어는 큰 글씨용 줄바꿈이라 폭에 맞게 흐르게 둔다 */
+html:lang(ko) .wy-body { white-space: pre-line; }   /* 칸은 글 칸 폭 전부(stretch) — 글자를 쪼갠 뒤 WebKit 이 칸을 좁게 재서 한 줄이 또 끊겼다 */
 /* 인터뷰 링크: 토스의 "→" 버튼처럼 설명 아래 작은 알약 */
 .wy-link { justify-self: end; display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 9px 14px 9px 16px; border-radius: 99px; background: var(--paper); box-shadow: var(--wy-shadow); font-size: 13.5px; font-weight: 700; color: var(--ink); text-decoration: none; }
 .wy-link i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--black); color: var(--on-black); font-size: 11px; font-style: normal; }
@@ -191,12 +193,13 @@
 .wq-tag b { font-weight: 700; background: var(--flowline); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* ── 기다림 ── 세로 타임라인. 시간은 오른쪽 끝 한 줄. 너(검정 점·실선) 두 단계 → 검정 점선 + 오른쪽 "완료" → 솔버(청록 빈 점·점선) 두 단계 — 빈 점은 진행 중이라 숨 쉰다 */
-.wy-tl { display: grid; margin: 0; padding: 14px 16px 6px; list-style: none; }
+.wy-tl { position: relative; display: grid; margin: 0; padding: 14px 16px 6px; list-style: none; --tl-last: 40px; }
+/* 세로선은 카드에 한 줄 — 첫 점 가운데(위 여백 14 + 점 8 + 반지름 7)에서 마지막 점 가운데까지. 줄마다 따로 그리면 끊겨 보였다(사용자).
+   너 구간은 검정, 완료 근처에서 솔버 색으로 번진다. 줄이 하나씩 나타나는 속도에 맞춰 위에서부터 그려진다 */
+.wy-tl::before { content: ""; position: absolute; left: 22px; top: 29px; bottom: calc(6px + var(--tl-last) - 15px); width: 2px; border-radius: 2px;
+  background: linear-gradient(to bottom, var(--ink) 0%, var(--ink) 40%, var(--flow-cyan) 62%, var(--flow-cyan) 100%); transform-origin: top; }
 .wy-tl li { position: relative; display: grid; grid-template-columns: 14px 30px 1fr auto; align-items: center; gap: 10px; min-height: 50px; padding-bottom: 8px; }
-.wy-tl li:last-child { min-height: 40px; padding-bottom: 6px; }
-.wy-tl li::before { content: ""; position: absolute; left: 6px; top: 20px; bottom: -4px; width: 2px; background: var(--ink); }   /* 다음 줄로 잇는 선 */
-.wy-tl li:last-child::before { display: none; }
-.wy-tl li.is-end::before, .wy-tl li.is-solver::before { background: none; border-left: 2px dashed var(--flow-cyan); width: 0; }
+.wy-tl li:last-child { min-height: 0; height: var(--tl-last); padding-bottom: 6px; }   /* 높이를 정해 둬야 세로선 끝이 마지막 점에 맞는다 */
 .wy-tl i { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: var(--black); align-self: start; margin-top: 8px; }
 .wy-tl li.is-solver i { background: var(--paper); box-shadow: inset 0 0 0 2.5px var(--flow-cyan); }
 .wy-tl li.is-solver .wy-ico:not(.is-coin) { background: var(--tint); }
@@ -208,7 +211,6 @@
 .wy-tl li.is-end time { color: var(--ink); }
 /* 너 구간이 끝나는 자리: 가로 검정 점선, 오른쪽 끝(시간과 같은 세로줄)에 "완료" */
 .wy-tl li.tl-sep { display: flex; justify-content: flex-end; align-items: center; min-height: 26px; padding: 0 0 8px; }
-.wy-tl li.tl-sep::before { left: 6px; top: -4px; bottom: 4px; width: 0; background: none; border-left: 2px dashed var(--flow-cyan); }
 .wy-tl li.tl-sep::after { content: ""; position: absolute; left: 24px; right: 54px; top: calc(50% - 4px); border-top: 1.5px dashed var(--ink); }
 .wy-tl li.tl-sep em { position: relative; padding: 3px 10px; border-radius: 99px; background: var(--black); color: var(--on-black); font: 600 11.5px var(--body); font-style: normal; }
 
@@ -237,10 +239,12 @@
 .wp-pair .tok-ic .t { box-shadow: 0 0 0 2px var(--paper-2); border-radius: 50%; }
 .wp-name { flex: 1; display: grid; min-width: 0; font-size: 13px; font-weight: 600; line-height: 1.3; white-space: nowrap; }
 .wp-name small { font-size: 11px; font-weight: 500; color: var(--muted); }
-.wy-pick em { flex: none; padding: 4px 10px; border-radius: 99px; font: 600 11.5px var(--body); font-style: normal; }
-.wy-pick.is-ok em { background: var(--tint); box-shadow: inset 0 0 0 1.5px var(--tint-line); color: var(--ink); }
+.wy-pick em { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; }
+.wy-pick em svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.wy-pick.is-ok em { background: var(--flowline); color: var(--on-flow); }   /* 견적 보냄 = 솔버가 만든 결과(솔버 색) */
 .wy-pick.is-no { opacity: .62; }
-.wy-pick.is-no em { color: var(--muted); box-shadow: inset 0 0 0 1px var(--hair); }
+.wy-pick.is-no em { color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--hair); }   /* 안 보냄 = 중립. 빨간 X 처럼 '틀림'으로 읽히지 않게 */
+.wy-pick.is-no em svg { width: 13px; height: 13px; stroke-width: 2.4; }
 
 /* ── 장에 들어올 때 한 번 ── 판은 가만히, 판 위 조각과 글만 움직인다 */
 @keyframes wy-up { from { opacity: 0; transform: translateY(14px); } }
@@ -277,6 +281,10 @@
 .wy-page.is-on .wy-copy > :nth-child(2) { animation-delay: calc(var(--copy-at, .1s) + .07s); }
 .wy-page.is-on .wy-copy > :nth-child(3) { animation-delay: calc(var(--copy-at, .1s) + .14s); }
 .wy-page.is-on .wy-copy > :nth-child(4) { animation-delay: calc(var(--copy-at, .1s) + .21s); }
+/* 설명(과 질문 장 답)은 타이핑되듯 한 글자씩 — 제목이 뜬 뒤 이어서. 문단 자체는 바로 보이고 글자만 차례로 */
+@keyframes tc-in { from { opacity: 0; } }
+.wy-page.is-on .wy-body, .wy-page.is-on .wy-copy.is-ask .wy-title { animation: none; }
+.wy-page.is-on .tc { animation: tc-in .12s linear both; animation-delay: calc(var(--copy-at, .1s) + .18s + var(--c) * 22ms); }
 /* 아이폰 메시지처럼 주고받기: 질문이 아래에서 쏙 올라오며 살짝 튕겨 자리 잡고 → 로고 → "…"가 로고 쪽에서 튕겨 나온다. 각각 한 구간 + 튕기는 곡선 */
 @keyframes wy-msg { from { opacity: 0; transform: translateY(28px) scale(.86); } }
 .wy-page.is-on .wy-ask { animation: wy-msg .55s cubic-bezier(.34, 1.56, .64, 1) .1s both; }
@@ -313,6 +321,8 @@
 .wy-page.is-on .wy-quote { animation: wy-fly 1.15s cubic-bezier(.55, -0.45, .55, 1) both; animation-delay: calc(700ms + var(--n) * 220ms); }
 .wy-page.is-on .wq-in { transform-origin: 0 50%; animation: wy-squish 1.15s cubic-bezier(.4, 0, .3, 1) both, wy-fade 1.15s linear both; animation-delay: calc(700ms + var(--n) * 220ms), calc(700ms + var(--n) * 220ms); }
 .wy-page.is-on .wy-tl li { animation: wy-up .4s var(--ease) both; animation-delay: calc(150ms + var(--i) * 260ms); }
+@keyframes wy-draw { from { transform: scaleY(0); } }
+.wy-page.is-on .wy-tl::before { animation: wy-draw 1.2s cubic-bezier(.4, 0, .3, 1) .3s both; }   /* 줄 다섯 개가 뜨는 동안 선이 따라 내려간다 */
 .wy-page.is-on .wy-tl li.is-solver i { animation: wy-busy 1.6s ease-in-out 1.4s infinite; }
 .wy-page.is-on .wy-tl li.tl-sep em { animation: wy-pop .35s var(--ease) .75s both; }
 .wy-page.is-on .wy-sum-row { animation: wy-up .4s var(--ease) both; animation-delay: calc(120ms + var(--i) * 120ms); }
@@ -368,7 +378,8 @@
   .wy-check i::after { left: 5px; top: 3px; width: 3.5px; height: 7px; }
   .wy-decide { font-size: 13.5px; padding-top: 7px; }
   .wq-tag { font-size: 11px; }
-  .wy-tl { padding: 12px 14px 4px; }
+  .wy-tl { padding: 12px 14px 4px; --tl-last: 36px; }
+  .wy-tl::before { left: 20px; top: 27px; bottom: calc(4px + var(--tl-last) - 15px); }
   .wy-tl li { min-height: 36px; padding-bottom: 6px; }
   .wy-sum { padding: 12px 14px 10px; }
   .wy-logo { width: 32px; height: 32px; margin-bottom: 6px; }
