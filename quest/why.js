@@ -66,13 +66,11 @@ window.WHY = (function () {
           '<span class="wy-to" aria-hidden="true">→</span>' +
           '<span class="wo-leg">' + v.tokIcon(to.token, to.chain) + '<span class="wo-t"><small>' + esc(S.ui.swap.get) + '</small><b>' + toAmt + ' ' + esc(S.tokens[to.token].name) + '</b></span></span></div></div>';
       };
-      var head = function (id, cls) {
-        return '<marker id="' + id + '" class="' + cls + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1 L9 5 L1 9 Z"/></marker>';
-      };
       /* 화살표 끝은 카드 속 토큰 자리 — 왼쪽(낼 토큰) 약 25%, 오른쪽(받을 토큰) 약 66%. 좌표는 카드 폭 320 기준, why.css 의 cqw 와 같게 */
-      var cross = '<div class="wy-cross" aria-hidden="true"><svg viewBox="0 0 320 72"><defs>' + head('wy-h-a', 'h-a') + head('wy-h-b', 'h-b') + '</defs>' +
-        '<line class="l-a" x1="80" y1="8" x2="211" y2="64" marker-end="url(#wy-h-a)"/>' +
-        '<line class="l-b" x1="80" y1="64" x2="211" y2="8" marker-end="url(#wy-h-b)"/></svg>' +
+      /* 화살촉은 선과 따로 그린다 — 선이 다 그려진 뒤에 나타나게(사용자: 촉이 먼저 보였다). 촉 끝 = 선 끝, 선 방향으로 놓인 삼각형 */
+      var cross = '<div class="wy-cross" aria-hidden="true"><svg viewBox="0 0 320 72">' +
+        '<line class="l-a" x1="80" y1="8" x2="203" y2="60.6"/><path class="hd-a" d="M211 64 L199.8 64.7 L203.8 55.5 Z"/>' +
+        '<line class="l-b" x1="80" y1="64" x2="203" y2="11.4"/><path class="hd-b" d="M211 8 L203.8 16.5 L199.8 7.3 Z"/></svg>' +
         '<span class="c-a">' + v.tokIcon(pay.token, pay.chain) + '</span><span class="c-b">' + v.tokIcon(want.token, want.chain) + '</span></div>';
       return '<div class="wy-ring">' + side(u.ringYouOrder, pay, v.fmt(pay.amount, 3), want, v.fmt(got, 2), 'is-you') + cross +
         side(u.ringOtherOrder, want, v.fmt(got, 2), pay, v.fmt(pay.amount, 3), 'is-other') + '</div>';

@@ -21,7 +21,7 @@
 .wy-pages::-webkit-scrollbar { display: none; }
 .wy-pages.dragging { scroll-snap-type: none; cursor: grabbing; }
 .wy-pages:focus-visible { box-shadow: inset 0 0 0 2px var(--tint-line); border-radius: 12px; }
-.wy-page { flex: 0 0 100%; min-height: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 22px; padding: 14px 20px 4px; }
+.wy-page { flex: 0 0 100%; min-height: 0; scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 22px; padding: 14px 20px 4px; }
 
 /* ── 그림 판 ── 남는 높이를 다 채우는 판. 위쪽은 각지고 아래 두 곳만 둥글다 — 갇힌 상자가 아니라 위에서 내려오는 패널(사용자). 위쪽에 아주 옅은 빛 */
 .wy-stage {
@@ -117,8 +117,8 @@
 .wy-cross line { stroke-width: 2.5; stroke-linecap: round; }
 .wy-cross .l-a { stroke: var(--muted); }
 .wy-cross .l-b { stroke: var(--flow-cyan); }
-.wy-cross .h-a path { fill: var(--muted); }
-.wy-cross .h-b path { fill: var(--flow-cyan); }
+.wy-cross .hd-a { fill: var(--muted); stroke: var(--muted); stroke-width: 1.5; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; }
+.wy-cross .hd-b { fill: var(--flow-cyan); stroke: var(--flow-cyan); stroke-width: 1.5; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; }
 /* 동전: 화살표 시작점(25cqw, 2.5cqw / 20cqw)에서 끝점 쪽으로 88% 만 간다 — 카드 테두리에 겹치지 않게 */
 .wy-cross > span { position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: var(--paper); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .4); display: grid; place-items: center; opacity: 0; }
 .wy-cross .tok-ic, .wy-cross .tok-ic .t { width: 24px; height: 24px; }
@@ -260,9 +260,20 @@
 @keyframes wy-tick { from { background: var(--paper-2); } }
 @keyframes wy-tick-mark { from { opacity: 0; transform: rotate(45deg) scale(.4); } }
 
-.wy-page.is-on .wy-copy > * { animation: wy-up .45s var(--ease) both; animation-delay: .08s; }
-.wy-page.is-on .wy-copy > :nth-child(2) { animation-delay: .14s; }
-.wy-page.is-on .wy-copy > :nth-child(3) { animation-delay: .2s; }
+/* 글은 장마다 그림 움직임이 거의 끝날 즈음(--copy-at) 이름표 → 제목 → 설명 순서로 — 시선이 그림 → 글로 흐르게(사용자) */
+.wy-page[data-key="askFast"] { --copy-at: 1.15s; }
+.wy-page[data-key="route"] { --copy-at: 1.7s; }
+.wy-page[data-key="ring"] { --copy-at: 1.45s; }
+.wy-page[data-key="stock"] { --copy-at: 1.85s; }
+.wy-page[data-key="decide"] { --copy-at: 1.2s; }
+.wy-page[data-key="later"] { --copy-at: .95s; }
+.wy-page[data-key="askEarn"] { --copy-at: 1.15s; }
+.wy-page[data-key="earn"] { --copy-at: .85s; }
+.wy-page[data-key="radius"] { --copy-at: .8s; }
+.wy-page.is-on .wy-copy > * { animation: wy-up .45s var(--ease) both; animation-delay: var(--copy-at, .1s); }
+.wy-page.is-on .wy-copy > :nth-child(2) { animation-delay: calc(var(--copy-at, .1s) + .07s); }
+.wy-page.is-on .wy-copy > :nth-child(3) { animation-delay: calc(var(--copy-at, .1s) + .14s); }
+.wy-page.is-on .wy-copy > :nth-child(4) { animation-delay: calc(var(--copy-at, .1s) + .21s); }
 /* 아이폰 메시지처럼 주고받기: 질문이 아래에서 쏙 올라오며 살짝 튕겨 자리 잡고 → 로고 → "…"가 로고 쪽에서 튕겨 나온다. 각각 한 구간 + 튕기는 곡선 */
 @keyframes wy-msg { from { opacity: 0; transform: translateY(28px) scale(.86); } }
 .wy-page.is-on .wy-ask { animation: wy-msg .55s cubic-bezier(.34, 1.56, .64, 1) .1s both; }
@@ -282,10 +293,13 @@
 .wy-page.is-on .wy-ord.is-other { animation: wy-in-r .45s var(--ease) .2s both; }
 .wy-page.is-on .wy-cross line { stroke-dasharray: 160; animation: wy-draw .5s var(--ease) .3s both; }
 .wy-page.is-on .wy-cross .l-b { animation-delay: .4s; }
+.wy-page.is-on .wy-cross .hd-a { animation: wy-pop .3s var(--ease) .78s both; }
+.wy-page.is-on .wy-cross .hd-b { animation: wy-pop .3s var(--ease) .88s both; }
 .wy-page.is-on .wy-cross .c-a { animation: wy-slide-down 1s cubic-bezier(.65, 0, .35, 1) .7s both; }
 .wy-page.is-on .wy-cross .c-b { animation: wy-slide-up 1s cubic-bezier(.65, 0, .35, 1) .7s both; }
 .wy-page.is-on .ws-row { animation: wy-up .35s var(--ease) both; animation-delay: calc(150ms + var(--i) * 70ms); }
 .wy-page.is-on .ws-row.is-hot { animation: wy-up .35s var(--ease) both, wy-glow .8s var(--ease) .65s; animation-delay: calc(150ms + var(--i) * 70ms), .65s; }
+.wy-page.is-on .wy-hand { animation: wy-up .35s var(--ease) 1.05s both; }
 .wy-page.is-on .wy-drop { animation: wy-fall .9s cubic-bezier(.5, 0, .3, 1) 1s both; }
 .wy-page.is-on .wy-toast { animation: wy-pop .45s var(--ease) 1.75s both; }
 .wy-page.is-on .wy-cloud { animation: wy-pop .45s var(--ease) .1s both; transform-origin: 0 100%; }

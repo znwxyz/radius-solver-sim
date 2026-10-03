@@ -14,7 +14,9 @@
 window.ONBOARD = (function () {
   'use strict';
   var S = window.MODE;
-  var DRAG_PX = 8;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
+  var DRAG_PX = 8;
+  /* 장마다 글이 나타나는 때(초) — 그 장 그림 움직임이 거의 끝날 즈음 */
+  var TEXT_AT_S = { cover: .3, tokens: .5, quest: 1.4 }, TEXT_AT_DEFAULT_S = .8, TEXT_FROM_COVER_S = 1.7;   /* 끌 때, 이보다 적게 움직이면 누른 것으로 본다 */
   var STACK = ['eth', 'usdg', 'usdt', 'wbtc'];   /* 첫 장에 포개 놓는 토큰 카드. 앞(ETH)부터 */
   var EXTRA = [['eth', 'eth2'], ['usdg', 'usdg2']];
   var RIMS = 4;   /* 동전 두께 = 앞면 뒤로 겹친 반투명 원 수(뒤 → 앞). tools/onboard_keyframes.py 의 RIMS 와 같게 */   /* 4장: 아래층에도 ETH·USDG 한 장씩 [토큰, 카드 이름] */
@@ -76,10 +78,10 @@ window.ONBOARD = (function () {
   }
   /* **단어** → 굵게. 먼저 이스케이프하고 나서 바꾼다 */
   function rich(text) { return esc(text).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>'); }
-  function pages() {
+  function pages(at) {
     var list = S.mission.onboard;
     return '<div class="ob-pages" tabindex="0" aria-label="' + esc(S.ui.a11y.onboard.replace('{N}', list.length)) + '">' + list.map(function (p, i) {
-      return '<section class="ob-page' + (p.key === 'cover' ? ' is-cover' : '') + (p.key === 'cover' || p.key === 'quest' ? ' is-big' : '') + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
+      return '<section class="ob-page' + (i === at ? ' is-on' : '') + (p.key === 'cover' ? ' is-cover' : '') + (p.key === 'cover' || p.key === 'quest' ? ' is-big' : '') + '" data-key="' + esc(p.key) + '" aria-label="' + (i + 1) + ' / ' + list.length + '"><p class="ob-text">' + rich(p.text) + '</p>' +
         (p.note ? '<p class="ob-note">' + esc(p.note) + '</p>' : '') + '</section>';
     }).join('') + '</div>';
   }
@@ -97,7 +99,7 @@ window.ONBOARD = (function () {
   /* parts: 화면 공통 조각(테마·언어 줄)은 screens.js 가 넘긴다 */
   function html(st, parts) {
     var at = st.ob || 0, m = S.mission;
-    return '<div class="canvas onboard' + (at === 0 ? ' at-cover' : '') + '">' + parts.setup + dots(at) + stage(at) + pages() + '</div>' +
+    return '<div class="canvas onboard' + (at === 0 ? ' at-cover' : '') + '">' + parts.setup + dots(at) + stage(at) + pages(at) + '</div>' +
       '<div class="bar ob-bar' + (isLast(at) ? ' is-ready' : '') + '">' +
         /* 아래 양옆 꺾쇠 ‹ › — 웹에선 끌기가 불편하다(사용자). 배경 없이 꺾쇠만. 마지막 장에선 시작 버튼이 대신한다 */
         '<button class="ob-prev" type="button" aria-label="' + esc(S.ui.a11y.prev) + '"' + (isLast(at) || at === 0 ? ' tabindex="-1"' : '') + '><span aria-hidden="true">‹</span></button>' +
@@ -119,6 +121,11 @@ window.ONBOARD = (function () {
     function show(i) {
       /* from-N: 어느 장에서 왔는지 — 표지에서 1장으로 올 때만 층이 천천히 날아오고 토큰이 그 뒤에 내려앉는다 */
       stageEl.className = 'ob-stage at-' + i + ' from-' + at;
+      /* 글은 장에 들어와 그림 움직임이 거의 끝날 때 나타난다(사용자). 표지에서 1장으로 올 때만 층이 날아오느라 더 늦게 */
+      Array.prototype.forEach.call(pager.children, function (el, j) {
+        el.classList.toggle('is-on', j === i);
+        if (j === i) el.style.setProperty('--text-at', (i === 1 && at === 0 ? TEXT_FROM_COVER_S : TEXT_AT_S[el.dataset.key] || TEXT_AT_DEFAULT_S) + 's');
+      });
       at = i;
       Array.prototype.forEach.call(screen.querySelectorAll('[data-ob-go]'), function (b) {
         var j = Number(b.dataset.obGo);
