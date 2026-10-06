@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 186.3 186.3">
+  <!-- 파비콘: 첫 화면 로고(Radius_icon_primaryColor.svg)에 첫 화면과 같은 둥근 모서리(폭의 25%)를 더했다 -->
+  <defs>
+    <linearGradient id="g" x1="183.9" y1="1.9" x2="2.4" y2="184.4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00b6ef"/>
+      <stop offset="1" stop-color="#01f3e7"/>
+    </linearGradient>
+  </defs>
+  <rect width="186.3" height="186.3" rx="46.6" fill="url(#g)"/>
+  <path d="M138.4,134.5l-30.1-35,46-3.4v-5.7l-46-3.4,30.1-35-4-4-34.9,30.1-3.4-46h-5.7l-3.4,46-35-30.1-4,4,30.1,35-46,3.4v5.7l50.2,4.8c1.7.1,3.1,1.5,3.2,3.2l4.8,50.3h5.7l3.4-46,35,30.1,4-4h0Z"/>
+</svg>

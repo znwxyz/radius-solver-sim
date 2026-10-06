@@ -74,9 +74,9 @@ window.SCREENS = (function () {
     var L = S.ui.lang, A = S.ui.a11y, isEn = S.lang === 'en';
     return '<div class="m-setup">' +
       '<button class="theme-btn" type="button" data-act="theme" aria-label="' + esc(A.theme) + '"><span class="sun" aria-hidden="true"></span><span class="moon" aria-hidden="true"></span></button>' +
-      '<div class="lang' + (isEn ? ' is-en' : '') + '" role="group" aria-label="' + esc(A.lang) + '"><span class="lang-thumb" aria-hidden="true"></span>' +
-      '<button class="lang-btn' + (isEn ? '' : ' on') + '" type="button" data-act="lang:ko" aria-pressed="' + !isEn + '">' + esc(L.ko) + '</button>' +
-      '<button class="lang-btn' + (isEn ? ' on' : '') + '" type="button" data-act="lang:en" aria-pressed="' + isEn + '">' + esc(L.en) + '</button></div></div>';
+      '<div class="lang' + (isEn ? '' : ' is-ko') + '" role="group" aria-label="' + esc(A.lang) + '"><span class="lang-thumb" aria-hidden="true"></span>' +
+      '<button class="lang-btn' + (isEn ? ' on' : '') + '" type="button" data-act="lang:en" aria-pressed="' + isEn + '">' + esc(L.en) + '</button>' +
+      '<button class="lang-btn' + (isEn ? '' : ' on') + '" type="button" data-act="lang:ko" aria-pressed="' + !isEn + '">' + esc(L.ko) + '</button></div></div>';
   }
 
   function mission(st) {

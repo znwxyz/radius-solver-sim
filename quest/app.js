@@ -256,7 +256,7 @@
     var notes = document.querySelector('.foot ul');
     if (P && P.notes && notes) notes.innerHTML = P.notes.map(function (n) { return '<li>' + V.esc(n) + '</li>'; }).join('');
     Array.prototype.forEach.call(document.querySelectorAll('.lang'), function (g) {
-      g.classList.toggle('is-en', isEn);
+      g.classList.toggle('is-ko', !isEn);
       Array.prototype.forEach.call(g.querySelectorAll('.lang-btn'), function (btn) {
         var on = btn.dataset.act === 'lang:' + S.lang;
         btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', String(on));

@@ -1,5 +1,5 @@
 /* English — data.js(한글) 위에 영어 글만 덮어쓴다. 수치·순서·구조는 data.js 그대로다.
-   언어는 주소 ?lang=en|ko 가 먼저, 그다음 저장된 선택(solver-b-lang), 없으면 한국어.
+   언어는 주소 ?lang=en|ko 가 먼저, 그다음 저장된 선택(solver-b-lang), 없으면 영어(기본).
    말투: 한글판의 "친한 선배"처럼 가볍고 다정한 구어체. 초심자 기준으로 주어·목적어를 다 쓴다.
    tests/i18n.test.mjs 가 한글 문장마다 영어가 있는지, 영어에 한글이 남지 않았는지 본다. */
 (function () {
@@ -219,7 +219,7 @@
   function chosenLang() {
     var m = /[?&]lang=(en|ko)\b/.exec((window.location && window.location.search) || '');
     if (m) return m[1];
-    try { return window.localStorage.getItem('solver-b-lang') === 'en' ? 'en' : 'ko'; } catch (e) { return 'ko'; }
+    try { return window.localStorage.getItem('solver-b-lang') === 'ko' ? 'ko' : 'en'; } catch (e) { return 'en'; }
   }
 
   /* 한글 데이터 위에 영어 글만 얹는다. 배열은 같은 자리끼리, 객체는 같은 키끼리. 새 객체를 만들어 돌려준다 */
