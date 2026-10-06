@@ -6,7 +6,7 @@
   var screen = document.getElementById('screen');
   var beadLists = document.querySelectorAll('.beads');   // 데스크톱은 폰 위, 폰에서는 폰 안 머리에 하나씩
   var boardEl = document.getElementById('board');
-  var FF_MS = 4000, SOLVER_MS = 1600, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme', LANG_KEY = 'solver-b-lang';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다. SOLVER_MS: Intent 모드 처리 막대 — 일반 모드보다 확 빨라 대비가 보인다(사용자)
+  var FF_MS = 4000, SOLVER_MS = 1600, TOAST_MS = 2800, DONE_MS = 900, THEME_KEY = 'solver-b-theme', LANG_KEY = 'solver-b-lang-2';   // DONE_MS: 처리 완료 표시를 잠깐 보여 주고 넘어간다. SOLVER_MS: Intent 모드 처리 막대 — 일반 모드보다 확 빨라 대비가 보인다(사용자)
   var timer = null, toastTimer = null, noteTimer = null, timers = [];   // timers: 견적 도착처럼 여러 개를 한꺼번에 거는 것
   var litKey = null;   // 받는 수량을 이미 세어 올린 적이 있는지(같은 견적 한 번만)
   var seenArrived = 0; // 견적이 몇 개까지 도착한 상태를 그렸는지 — 새로 오면 그 줄까지 스크롤
