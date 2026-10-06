@@ -194,9 +194,9 @@
 
     steps: [{ label: 'Quest' }, { label: 'Wallet' }, { label: 'Trade' }, { label: 'Result' }, { label: 'Solvers' }],
 
-    /* index.html 에 박힌 글 — 한국어는 index.html 그대로라 영어에만 있다 */
+    /* index.html 에 박힌 글 — 한국어는 index.html 그대로라 영어에만 있다(탭 제목만 data.js 에도 있다) */
     page: {
-      title: 'Normal mode vs Intent mode · Radius',
+      title: 'Radius Solver Simulator',
       skip: 'Skip to the app screen',
       home: 'Back to start',
       track: 'Progress',
